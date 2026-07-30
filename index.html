@@ -149,6 +149,17 @@
   .qna-item .a.pending{color:var(--white-dim);font-style:italic;}
   .qna-item .meta{font-size:10px;color:var(--white-dim);margin-top:4px;}
   .new-tag{color:var(--lightblue);font-size:10px;font-weight:800;margin-right:6px;}
+  .badge-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gray);box-shadow:0 0 6px 2px var(--gray);margin-right:4px;vertical-align:middle;}
+  .chat-log{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px;}
+  .chat-bubble{max-width:80%;padding:8px 12px;border-radius:10px;font-size:13px;line-height:1.6;}
+  .chat-bubble.mine{align-self:flex-end;background:var(--lightblue-dim);color:var(--white);border:1px solid var(--lightblue);}
+  .chat-bubble.theirs{align-self:flex-start;background:var(--navy-alt);border:1px solid var(--line);}
+  .chat-sender{font-size:10px;color:var(--white-dim);margin-bottom:3px;font-weight:700;}
+  .chat-time{font-size:10px;color:var(--white-dim);margin-top:4px;text-align:left;}
+  .update-card{border-right:3px solid var(--lightblue);background:var(--navy-alt);border-radius:8px;padding:10px 12px;margin-bottom:10px;}
+  .update-card .meta{font-size:11px;color:var(--white-dim);margin-top:4px;}
+  .install-btn{background:none;border:1px solid var(--white);color:var(--white);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-family:inherit;}
+  .install-btn:hover{background:var(--white);color:var(--black);}
   .member-list-row{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-top:1px solid var(--line);cursor:pointer;}
   .member-list-row:first-of-type{border-top:none;}
   .member-list-row:hover{background:var(--navy-alt);}
@@ -176,21 +187,21 @@
 
     <div id="userForm">
       <label class="field-label">کد عضویت</label>
-      <input type="text" id="regCode" placeholder="مثلاً PA_FM1_100">
+      <input type="text" id="regCode" placeholder="کد خود را وارد کنید">
       <div class="err-msg hidden" id="userErr"></div>
       <button class="btn" id="userSubmit">ورود به دفترچه</button>
     </div>
 
     <div id="mentorForm" class="hidden">
       <label class="field-label">کد منتور</label>
-      <input type="text" id="mentorCode" placeholder="مثلاً MENTOR_FM1_A1">
+      <input type="text" id="mentorCode" placeholder="کد خود را وارد کنید">
       <div class="err-msg hidden" id="mentorErr"></div>
       <button class="btn" id="mentorSubmit">ورود منتور</button>
     </div>
 
     <div id="adminForm" class="hidden">
       <label class="field-label">ایمیل مدیریت</label>
-      <input type="email" id="adminEmail" placeholder="admin@example.com">
+      <input type="email" id="adminEmail" placeholder="کد خود را وارد کنید">
       <label class="field-label">رمز عبور</label>
       <input type="password" id="adminPassword" placeholder="رمز عبور">
       <div class="err-msg hidden" id="adminErr"></div>
@@ -216,7 +227,10 @@
       <span class="view-only-badge hidden" id="viewOnlyBadge">فقط نمایش</span>
       <span class="member-chip" id="memberChip"></span>
       <button class="back-btn hidden" id="backToListBtn">↩ بازگشت به لیست</button>
-      <button class="logout-btn" id="logoutBtn">خروج</button>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
+        <button class="install-btn hidden" id="installBtn1">📲 افزودن به صفحه اصلی</button>
+        <button class="logout-btn" id="logoutBtn">خروج</button>
+      </div>
     </div>
   </div>
 
@@ -226,8 +240,8 @@
     <button class="tab-btn" data-tab="dashboard">داشبورد</button>
     <button class="tab-btn" data-tab="feedback">بازخورد</button>
     <button class="tab-btn" data-tab="achievements">افتخارات</button>
-    <button class="tab-btn" data-tab="adminmsg">پیام مدیریت</button>
-    <button class="tab-btn" data-tab="qna">سوال و جواب</button>
+    <button class="tab-btn" data-tab="adminmsg">اپدیت‌ها <span class="badge-dot hidden" id="updatesBadgeMember"></span></button>
+    <button class="tab-btn" data-tab="qna">ارتباط با تیم</button>
   </div>
 
   <div class="panel active" id="panel-tasks"></div>
@@ -247,15 +261,22 @@
       <div class="sub" id="mentorSub"></div>
     </div>
     <div class="member-box">
-      <button class="logout-btn" id="mentorLogoutBtn">خروج</button>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
+        <button class="install-btn hidden" id="installBtn2">📲 افزودن به صفحه اصلی</button>
+        <button class="logout-btn" id="mentorLogoutBtn">خروج</button>
+      </div>
     </div>
   </div>
   <div class="tabs">
     <button class="tab-btn active" data-mtab="list">لیست کاربران</button>
-    <button class="tab-btn" data-mtab="msg">پیام مدیریت</button>
-    <button class="tab-btn" data-mtab="qna">سوال و جواب</button>
+    <button class="tab-btn" data-mtab="userq">پیام کاربران</button>
+    <button class="tab-btn" data-mtab="achv">افتخارات</button>
+    <button class="tab-btn" data-mtab="msg">اپدیت‌ها <span class="badge-dot hidden" id="updatesBadgeMentor"></span></button>
+    <button class="tab-btn" data-mtab="qna">ارتباط با مدیریت</button>
   </div>
   <div class="panel active" id="mpanel-list"></div>
+  <div class="panel" id="mpanel-userq"></div>
+  <div class="panel" id="mpanel-achv"></div>
   <div class="panel" id="mpanel-msg"></div>
   <div class="panel" id="mpanel-qna"></div>
 </div>
@@ -268,21 +289,40 @@
       <div class="sub">مدیریت کاربران، منتورها، افتخارات و پیام‌ها</div>
     </div>
     <div class="member-box">
-      <button class="logout-btn" id="adminLogoutBtn">خروج</button>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
+        <button class="install-btn hidden" id="installBtn3">📲 افزودن به صفحه اصلی</button>
+        <button class="logout-btn" id="adminLogoutBtn">خروج</button>
+      </div>
     </div>
   </div>
   <div class="tabs">
     <button class="tab-btn active" data-atab="members">کاربران</button>
     <button class="tab-btn" data-atab="mentors">منتورها</button>
     <button class="tab-btn" data-atab="medals">افتخارات</button>
-    <button class="tab-btn" data-atab="msgs">پیام مدیریت</button>
-    <button class="tab-btn" data-atab="qna">سوال و جواب</button>
+    <button class="tab-btn" data-atab="msgs">اپدیت‌ها</button>
+    <button class="tab-btn" data-atab="qna">ارتباط با تیم</button>
   </div>
   <div class="panel active" id="apanel-members"></div>
   <div class="panel" id="apanel-mentors"></div>
   <div class="panel" id="apanel-medals"></div>
   <div class="panel" id="apanel-msgs"></div>
   <div class="panel" id="apanel-qna"></div>
+</div>
+
+<!-- ===================== MENTOR PROFILE VIEW (برای رئیس) ===================== -->
+<div class="wrap hidden" id="mentorProfileView">
+  <div class="masthead">
+    <div>
+      <h1>🧑‍🏫 پروفایل منتور</h1>
+      <div class="sub" id="mentorProfileSub"></div>
+    </div>
+    <div class="member-box">
+      <button class="back-btn" id="mentorProfileBackBtn">↩ بازگشت به پنل رئیس</button>
+    </div>
+  </div>
+  <div id="mentorProfileAchv"></div>
+  <div id="mentorProfileMsg"></div>
+  <div id="mentorProfileQna"></div>
 </div>
 
 <div class="save-toast" id="toast">ذخیره شد</div>
@@ -329,7 +369,7 @@ window.storage = {
   async set(key, value){
     if(!cloudReady) return localSet(key, value);
     try{
-      const { error } = await sb.from(TABLE).upsert({ key, value, updated_at: new Date().toISOString() });
+      const { error } = await sb.from(TABLE).upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
       if(error) throw error;
       return { key, value };
     }catch(e){ console.error('supabase set failed → local fallback', e); return localSet(key, value); }
@@ -371,7 +411,7 @@ async function initStorageBackend(){
   if(notConfigured){ cloudReady = false; showCloudBanner(false); return; }
   try{
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const { error } = await sb.from(TABLE).upsert({ key:'__ping__', value: JSON.stringify({ok:true,t:Date.now()}), updated_at: new Date().toISOString() });
+    const { error } = await sb.from(TABLE).upsert({ key:'__ping__', value: JSON.stringify({ok:true,t:Date.now()}), updated_at: new Date().toISOString() }, { onConflict: 'key' });
     if(error) throw error;
     cloudReady = true;
     showCloudBanner(true);
@@ -511,8 +551,12 @@ document.getElementById('mentorSubmit').addEventListener('click', guard(document
   document.getElementById('mentorHome').classList.remove('hidden');
   document.getElementById('mentorSub').textContent = `${mentor.name} · کد ${mentor.code}`;
   renderMentorMemberList();
-  renderAdminMsgPanel('mpanel-msg', currentMentorCode, true);
-  renderQnaPanel('mpanel-qna', currentMentorCode, true);
+  renderMentorUserQuestions();
+  renderAchievementsPanel('mpanel-achv', currentMentorCode, true);
+  renderBootcampLeaderboard('mpanel-achv');
+  renderUpdatesPanel('mpanel-msg', currentMentorCode, true, 'mentor', mentor.name);
+  renderMentorAdminChatPanel('mpanel-qna', currentMentorCode, 'mentor');
+  checkUpdatesBadge(currentMentorCode, 'updatesBadgeMentor');
 }));
 
 document.getElementById('adminSubmit').addEventListener('click', guard(document.getElementById('adminSubmit'), async ()=>{
@@ -565,6 +609,31 @@ function backToLogin(){
     sb.auth.signOut().catch(e=>console.error(e));
   }
 }
+// ================= افزودن به صفحه اصلی (PWA install) =================
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  ['installBtn1','installBtn2','installBtn3'].forEach(id=>{
+    const b = document.getElementById(id);
+    if(b) b.classList.remove('hidden');
+  });
+});
+['installBtn1','installBtn2','installBtn3'].forEach(id=>{
+  const b = document.getElementById(id);
+  if(!b) return;
+  b.addEventListener('click', async ()=>{
+    if(!deferredInstallPrompt){
+      showToast('مرورگرت این قابلیت رو نداره — از منوی مرورگر «Add to Home Screen» رو بزن');
+      return;
+    }
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    ['installBtn1','installBtn2','installBtn3'].forEach(bid=>document.getElementById(bid)?.classList.add('hidden'));
+  });
+});
+
 document.getElementById('logoutBtn').addEventListener('click', backToLogin);
 document.getElementById('mentorLogoutBtn').addEventListener('click', backToLogin);
 document.getElementById('adminLogoutBtn').addEventListener('click', backToLogin);
@@ -594,8 +663,15 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   renderToday();
   renderFeedback();
   renderAchievementsPanel('panel-achievements', currentCode, true);
-  renderAdminMsgPanel('panel-adminmsg', currentCode, true);
-  renderQnaPanel('panel-qna', currentCode, true);
+  renderBootcampLeaderboard('panel-achievements');
+  const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
+  if(msgViewerRole==='member'){
+    renderUpdatesPanel('panel-adminmsg', currentCode, false, null, null);
+    checkUpdatesBadge(currentCode, 'updatesBadgeMember');
+  }else{
+    document.getElementById('panel-adminmsg').innerHTML = '';
+  }
+  renderMessagesTab('panel-qna', currentCode, msgViewerRole);
   updateHeaderStats();
 
   document.querySelectorAll('#mainTabs .tab-btn').forEach(b=>b.classList.remove('active'));
@@ -622,9 +698,9 @@ async function saveCategories(){
   try{ await window.storage.set('categories:'+currentCode, JSON.stringify(categories), true); showToast(); }
   catch(e){ console.error(e); }
 }
-async function saveDaily(){
+async function saveDaily(silent){
   if(isViewOnly) return;
-  try{ await window.storage.set('daily:'+currentCode, JSON.stringify(dailyRecords), true); showToast(); }
+  try{ await window.storage.set('daily:'+currentCode, JSON.stringify(dailyRecords), true); if(!silent) showToast(); }
   catch(e){ console.error(e); }
 }
 async function saveFeedback(){
@@ -730,6 +806,7 @@ function renderToday(){
     el.innerHTML = '<div class="card"><div class="empty">در حالت مشاهده، ثبت تسک روزانه غیرفعاله. برای دیدن روند به تب «داشبورد» برو.</div></div>';
     return;
   }
+  currentDate = new Date().toISOString().slice(0,10); // قفل روی همین امروز — روزهای قبل قابل ویرایش نیستن
   const rec = dailyRecords[currentDate] || {done:{}};
   const dateObj = new Date(currentDate+'T00:00:00');
   const weekdayFa = dateObj.toLocaleDateString('fa-IR', {weekday:'long'});
@@ -738,7 +815,7 @@ function renderToday(){
   el.innerHTML = `
     <div class="card">
       <div class="today-header">
-        <div><label class="field-label">تاریخ</label><input type="date" id="dateInput" value="${currentDate}"></div>
+        <div><label class="field-label">تاریخ</label><div style="padding:9px 2px;font-size:13px;color:var(--white-dim);">${currentDate} · فقط امروز قابل ثبته</div></div>
         <span class="weekday-pill ${isWorkday?'':'warn'}">${weekdayFa}${isWorkday?'':' · روز کاری نیست'}</span>
       </div>
       <div id="checklistArea"></div>
@@ -777,10 +854,17 @@ function renderToday(){
     el.querySelector('#liveScore').textContent = score;
     return {sum, score};
   }
-  checklistArea.querySelectorAll('[data-chk]').forEach(chk=>chk.addEventListener('change', recalcLive));
+  async function autoPersist(){
+    const {sum, score} = recalcLive();
+    if(!isWorkday) return; // روز کاری نیست، چیزی ذخیره نمیشه (فقط با دکمه اخطار می‌بینه)
+    const done = {};
+    checklistArea.querySelectorAll('[data-chk]').forEach(chk=>{ done[chk.dataset.chk] = chk.checked; });
+    dailyRecords[currentDate] = {done, totalPoints:sum, dailyScore:score, weekday:weekdayFa};
+    await saveDaily(true); // silent — بدون Toast برای هر تیک، فقط ذخیره میشه که پاک نشه
+    updateHeaderStats();
+  }
+  checklistArea.querySelectorAll('[data-chk]').forEach(chk=>chk.addEventListener('change', autoPersist));
   recalcLive();
-
-  el.querySelector('#dateInput').addEventListener('change', (e)=>{ currentDate = e.target.value; renderToday(); });
 
   const saveBtn = el.querySelector('#saveDayBtn');
   saveBtn.addEventListener('click', guard(saveBtn, async ()=>{
@@ -935,6 +1019,14 @@ function renderFbList(){
 }
 
 // ================= achievements (medals) — generic by code =================
+// سه مدال ثابت با رتبه و ایموجی مشخص
+const MEDAL_TIERS = [
+  { name:'FOCUS SOLDIER', tier:1, emoji:'🥉' },
+  { name:'FOCUS FIGHTER', tier:2, emoji:'🥈' },
+  { name:'FOCUS WARRIOR', tier:3, emoji:'🥇' }
+];
+function medalInfo(name){ return MEDAL_TIERS.find(m=>m.name===name) || { name, tier:0, emoji:'🏅' }; }
+
 async function loadAchievements(code){
   try{ const r = await window.storage.get('achv:'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
   catch(e){ return []; }
@@ -946,81 +1038,260 @@ async function renderAchievementsPanel(panelId, code, readOnlyView){
   const el = document.getElementById(panelId);
   if(!el) return;
   const list = await loadAchievements(code);
-  if(list.length===0){ el.innerHTML = '<div class="card"><div class="empty">هنوز مدال یا افتخاری ثبت نشده</div></div>'; return; }
+  if(list.length===0){ el.innerHTML = '<div class="card"><div class="empty">هنوز مدالی گرفته نشده</div></div>'; return; }
   let html = '<div class="card"><h2>🏅 افتخارات</h2>';
   list.slice().reverse().forEach(a=>{
-    html += `<div class="medal-card"><div class="ic">🏅</div><div><div>${escapeHtml(a.text)}</div><div class="meta">${a.date}</div></div></div>`;
+    const info = medalInfo(a.name || a.text);
+    html += `<div class="medal-card"><div class="ic">${info.emoji}</div><div><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${a.date}</div></div></div>`;
   });
   html += '</div>';
   el.innerHTML = html;
+}
+
+// لیدربورد کلی افتخارات بوت‌کمپ — بر اساس بالاترین رتبه مدال، بعد تعداد
+async function renderBootcampLeaderboard(panelId){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  const members = (await loadMemberRegistry()).filter(m=>!m.deleted).map(m=>({code:m.code, name:m.name, role:'کاربر'}));
+  const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted).map(m=>({code:m.code, name:m.name, role:'منتور'}));
+  const people = [...members, ...mentors];
+  let rows = [];
+  for(const p of people){
+    const list = await loadAchievements(p.code);
+    if(list.length>0){
+      const bestTier = Math.max(...list.map(a=>medalInfo(a.name||a.text).tier));
+      rows.push({ ...p, count:list.length, bestTier, bestEmoji: medalInfo(MEDAL_TIERS.find(m=>m.tier===bestTier)?.name||'').emoji });
+    }
+  }
+  rows.sort((a,b)=> b.bestTier - a.bestTier || b.count - a.count);
+  let html = '<div class="card"><h2>🏆 لیدربورد افتخارات بوت‌کمپ</h2>';
+  if(rows.length===0){ html += '<div class="empty">هنوز کسی مدالی نگرفته</div>'; }
+  else{
+    const rankLabel = i => i===0?'نفر اول':i===1?'نفر دوم':i===2?'نفر سوم':`رتبه ${i+1}`;
+    rows.forEach((r,i)=>{
+      html += `<div class="del-row"><div><b>${rankLabel(i)} — ${escapeHtml(r.name)}</b> <span class="cd">(${escapeHtml(r.role)})</span></div><div class="cat-badge ok">${r.bestEmoji} ${r.count} مدال</div></div>`;
+    });
+  }
+  html += '</div>';
+  el.insertAdjacentHTML('beforeend', html);
 }
 
 // ================= admin messages — generic by code =================
-async function loadAdminMsgs(code){
-  try{ const r = await window.storage.get('amsg:'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
+// ================= اپدیت‌ها — یه فید مشترک که همه (کاربر+منتور) می‌بینن =================
+async function loadUpdates(){
+  try{ const r = await window.storage.get('updates', true); return r && r.value ? JSON.parse(r.value) : []; }
   catch(e){ return []; }
 }
-async function saveAdminMsgsFor(code, list){
-  try{ await window.storage.set('amsg:'+code, JSON.stringify(list), true); } catch(e){ console.error(e); }
+async function postUpdate(authorRole, authorName, text){
+  const list = await loadUpdates();
+  list.push({ id:uid(), authorRole, authorName, text, date:new Date().toISOString().slice(0,10), ts:Date.now() });
+  try{ await window.storage.set('updates', JSON.stringify(list), true); }catch(e){ console.error(e); }
 }
-async function renderAdminMsgPanel(panelId, code){
+async function loadLastSeenUpdates(viewerCode){
+  try{ const r = await window.storage.get('seenupdates:'+viewerCode, true); return r && r.value ? Number(r.value) : 0; }
+  catch(e){ return 0; }
+}
+async function markUpdatesSeen(viewerCode){
+  try{ await window.storage.set('seenupdates:'+viewerCode, String(Date.now()), true); }catch(e){ console.error(e); }
+}
+async function checkUpdatesBadge(viewerCode, badgeElId){
+  const badge = document.getElementById(badgeElId);
+  if(!badge) return;
+  const list = await loadUpdates();
+  if(list.length===0){ badge.classList.add('hidden'); return; }
+  const lastSeen = await loadLastSeenUpdates(viewerCode);
+  const latest = Math.max(...list.map(u=>u.ts||0));
+  badge.classList.toggle('hidden', latest <= lastSeen);
+}
+// panelId رو با فید اپدیت پر می‌کنه؛ اگه canPost=true یه فرم ارسال هم می‌ذاره (برای رئیس/منتور)
+async function renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, authorName){
   const el = document.getElementById(panelId);
   if(!el) return;
-  const list = await loadAdminMsgs(code);
-  if(list.length===0){ el.innerHTML = '<div class="card"><div class="empty">پیامی از مدیریت نیومده</div></div>'; return; }
-  let html = '<div class="card"><h2>📩 پیام مدیریت</h2>';
-  list.slice().reverse().forEach(m=>{
-    html += `<div class="msg-card"><div>${escapeHtml(m.text)}</div><div class="meta">${m.date}</div></div>`;
-  });
+  const list = await loadUpdates();
+  let html = '';
+  if(canPost){
+    html += `<div class="card"><h2>ارسال اپدیت جدید (برای همه کاربرا و منتورها)</h2>
+      <textarea id="updateInput_${panelId}" placeholder="مثلاً: تغییرات این هفته..."></textarea>
+      <div style="margin-top:10px;"><button class="btn small" id="updateBtn_${panelId}">ارسال به همه</button></div>
+    </div>`;
+  }
+  html += '<div class="card"><h2>📢 اپدیت‌ها</h2>';
+  if(list.length===0){ html += '<div class="empty">هنوز اپدیتی ثبت نشده</div>'; }
+  else{
+    list.slice().reverse().forEach(u=>{
+      const authorLabel = u.authorRole==='admin' ? 'از طرف مدیر' : `از طرف منتور ${escapeHtml(u.authorName||'')}`;
+      html += `<div class="update-card"><div>${escapeHtml(u.text)}</div><div class="meta">${authorLabel} · ${u.date}</div></div>`;
+    });
+  }
   html += '</div>';
   el.innerHTML = html;
+  if(canPost){
+    const btn = el.querySelector('#updateBtn_'+panelId);
+    btn.addEventListener('click', guard(btn, async ()=>{
+      const ta = el.querySelector('#updateInput_'+panelId);
+      const val = ta.value.trim();
+      if(!val) return;
+      await postUpdate(authorRole, authorName, val);
+      showToast('اپدیت ارسال شد');
+      renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, authorName);
+    }));
+  }
+  await markUpdatesSeen(viewerCode);
 }
 
 // ================= Q&A — generic by code =================
-async function loadQna(code){
-  try{ const r = await window.storage.get('qna:'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
+async function loadThread(code, threadKey){
+  try{ const r = await window.storage.get(threadKey+':'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
   catch(e){ return []; }
 }
-async function saveQnaFor(code, list){
-  try{ await window.storage.set('qna:'+code, JSON.stringify(list), true); } catch(e){ console.error(e); }
+async function saveThread(code, threadKey, list){
+  try{ await window.storage.set(threadKey+':'+code, JSON.stringify(list), true); } catch(e){ console.error(e); }
 }
-async function renderQnaPanel(panelId, code){
-  const el = document.getElementById(panelId);
-  if(!el) return;
-  const list = await loadQna(code);
-  el.innerHTML = `
-    <div class="card">
-      <h2>❓ پرسیدن سوال از مدیریت</h2>
-      <textarea id="qnaInput_${panelId}" placeholder="سوالتو بنویس..."></textarea>
-      <div style="margin-top:10px;"><button class="btn small" id="qnaBtn_${panelId}">ارسال سوال</button></div>
-    </div>
-    <div class="card"><h2>سوال‌ها و پاسخ‌ها</h2><div id="qnaList_${panelId}"></div></div>
-  `;
-  const listWrap = el.querySelector('#qnaList_'+panelId);
-  if(list.length===0){ listWrap.innerHTML = '<div class="empty">هنوز سوالی ثبت نشده</div>'; }
+
+// یه کارت چت دوطرفه بین «myRole» (کسی که پشت این نمایشه) و طرف مقابل، رو یه ترد مشخص (thread_admin یا thread_mentor)
+async function renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn){
+  const wrapId = 'chatwrap_'+threadKey+'_'+memberCode+'_'+myRole;
+  const list = await loadThread(memberCode, threadKey);
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `${title?`<h2>${title}</h2>`:''}<div class="chat-log" id="${wrapId}_log"></div>
+    <div class="row-flex" style="margin-top:10px;">
+      <input type="text" id="${wrapId}_input" placeholder="پیامتو بنویس...">
+      <button class="btn small" id="${wrapId}_btn">ارسال</button>
+    </div>`;
+  containerEl.appendChild(card);
+  const logEl = card.querySelector('#'+wrapId+'_log');
+  if(list.length===0){ logEl.innerHTML = '<div class="empty">هنوز پیامی نیست — همینجا می‌تونی شروع کنی</div>'; }
   else{
     let html = '';
-    list.slice().reverse().forEach(q=>{
-      html += `<div class="qna-item"><div class="q">${escapeHtml(q.q)}</div>
-        <div class="a ${q.a?'':'pending'}">${q.a?('پاسخ: '+escapeHtml(q.a)):'در انتظار پاسخ مدیریت...'}</div>
-        <div class="meta">${q.date}</div></div>`;
+    list.forEach(m=>{
+      const mine = m.from===myRole;
+      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}</div></div>`;
     });
-    listWrap.innerHTML = html;
+    logEl.innerHTML = html;
+    logEl.scrollTop = logEl.scrollHeight;
   }
-  const btn = el.querySelector('#qnaBtn_'+panelId);
+  const btn = card.querySelector('#'+wrapId+'_btn');
   btn.addEventListener('click', guard(btn, async ()=>{
-    const ta = el.querySelector('#qnaInput_'+panelId);
-    const val = ta.value.trim();
+    const input = card.querySelector('#'+wrapId+'_input');
+    const val = input.value.trim();
     if(!val) return;
-    const fresh = await loadQna(code);
-    fresh.push({id:uid(), q:val, a:'', date:new Date().toISOString().slice(0,10)});
-    await saveQnaFor(code, fresh);
-    showToast('سوال ثبت شد');
-    renderQnaPanel(panelId, code);
+    const fresh = await loadThread(memberCode, threadKey);
+    fresh.push({id:uid(), from:myRole, text:val, date:new Date().toISOString().slice(0,10)});
+    await saveThread(memberCode, threadKey, fresh);
+    input.value='';
+    containerEl.innerHTML = '';
+    await renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn);
   }));
 }
 
+// تب پیام‌های یه کاربر خاص — بسته به اینکه چه کسی داره نگاه می‌کنه (خود کاربر/منتور/رئیس) نمای مناسب رو می‌سازه
+async function renderMessagesTab(panelId, memberCode, viewerRole){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  el.innerHTML = '';
+  const adminLabel = f => f==='admin' ? 'مدیریت' : 'من';
+  if(viewerRole==='member'){
+    const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
+    const pickerWrap = document.createElement('div');
+    pickerWrap.className = 'card';
+    pickerWrap.innerHTML = `<h2>ارتباط با تیم</h2><label class="field-label">پیام به</label>
+      <select id="teamTarget_${panelId}" style="width:100%;">
+        <option value="admin">مدیریت</option>
+        ${mentors.map(m=>`<option value="${m.code}">${escapeHtml(m.name)}</option>`).join('')}
+      </select>`;
+    el.appendChild(pickerWrap);
+    const chatWrap = document.createElement('div');
+    el.appendChild(chatWrap);
+    async function renderSelected(){
+      chatWrap.innerHTML = '';
+      const target = pickerWrap.querySelector('select').value;
+      if(target==='admin'){
+        await renderChatCard(chatWrap, memberCode, 'thread_admin', 'member', '💬 چت با مدیریت', adminLabel);
+      }else{
+        const mentorName = mentors.find(m=>m.code===target)?.name || 'منتور';
+        await renderChatCard(chatWrap, memberCode, 'thread_mentor:'+target, 'member', `💬 چت با ${escapeHtml(mentorName)}`, f=>f==='mentor'?mentorName:'من');
+      }
+    }
+    pickerWrap.querySelector('select').addEventListener('change', renderSelected);
+    await renderSelected();
+  }else if(viewerRole==='admin'){
+    await renderChatCard(el, memberCode, 'thread_admin', 'admin', '💬 چت با این کاربر', f=>f==='admin'?'من':'کاربر');
+  }else if(viewerRole==='mentor'){
+    await renderChatCard(el, memberCode, 'thread_mentor:'+currentMentorCode, 'mentor', '💬 چت با این کاربر', f=>f==='mentor'?'من':'کاربر');
+  }
+}
+
+async function renderMentorAdminChatPanel(panelId, mentorCode, viewerRole){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  el.innerHTML = '';
+  if(viewerRole==='mentor'){
+    await renderChatCard(el, mentorCode, 'thread_mentor_admin', 'mentor', '💬 چت با مدیریت', f=>f==='mentor'?'من':'مدیریت');
+  }else{
+    await renderChatCard(el, mentorCode, 'thread_mentor_admin', 'admin', '💬 چت با این منتور', f=>f==='admin'?'من':'منتور');
+  }
+}
+
+// اینباکس منتورها — همه‌ی مکالمات کاربرا با منتور، یه‌جا، تا بدون باز کردن پروفایل کامل جواب بدن
+async function renderMentorUserQuestions(){
+  const el = document.getElementById('mpanel-userq');
+  if(!el) return;
+  el.innerHTML = '<div class="card"><div class="empty">در حال بارگذاری...</div></div>';
+  const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
+  const wrap = document.createElement('div');
+  const threadKey = 'thread_mentor:'+currentMentorCode; // هر منتور یه ترد جدا با هر کاربر داره
+  for(const m of members){
+    const box = document.createElement('div');
+    box.className = 'card';
+    box.innerHTML = `<h2>${escapeHtml(m.name)} (${m.code})</h2>`;
+    wrap.appendChild(box);
+    await renderChatCard(box, m.code, threadKey, 'mentor', '', f=>f==='mentor'?'من':escapeHtml(m.name));
+  }
+  el.innerHTML = '';
+  el.appendChild(wrap);
+}
+
+// اینباکس رئیس — همه‌ی مکالمات کاربرا با مدیریت
+async function renderAdminQna(){
+  const el = document.getElementById('apanel-qna');
+  el.innerHTML = '<div class="card"><div class="empty">در حال بارگذاری...</div></div>';
+  const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
+  const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<h2 style="margin:6px 2px;">💬 چت با کاربران</h2>';
+  for(const m of members){
+    const box = document.createElement('div');
+    box.className = 'card';
+    box.innerHTML = `<h2>${escapeHtml(m.name)} (${m.code})</h2>`;
+    wrap.appendChild(box);
+    await renderChatCard(box, m.code, 'thread_admin', 'admin', '', f=>f==='admin'?'من':escapeHtml(m.name));
+  }
+  wrap.insertAdjacentHTML('beforeend', '<h2 style="margin:16px 2px 6px;">💬 چت با منتورها</h2>');
+  for(const m of mentors){
+    const box = document.createElement('div');
+    box.className = 'card';
+    box.innerHTML = `<h2>${escapeHtml(m.name)} (${m.code})</h2>`;
+    wrap.appendChild(box);
+    await renderChatCard(box, m.code, 'thread_mentor_admin', 'admin', '', f=>f==='admin'?'من':escapeHtml(m.name));
+  }
+  el.innerHTML = '';
+  el.appendChild(wrap);
+}
+
 // ================= mentor: member list =================
+async function enterMentorProfileView(code, mentorProfile){
+  document.getElementById('mentorProfileSub').textContent = `${mentorProfile.name} · کد ${mentorProfile.code} · ${mentorProfile.phone||''}`;
+  document.getElementById('mentorProfileView').classList.remove('hidden');
+  renderAchievementsPanel('mentorProfileAchv', code, true);
+  document.getElementById('mentorProfileMsg').innerHTML = '';
+  renderMentorAdminChatPanel('mentorProfileQna', code, 'admin');
+}
+document.getElementById('mentorProfileBackBtn').addEventListener('click', ()=>{
+  document.getElementById('mentorProfileView').classList.add('hidden');
+  document.getElementById('adminApp').classList.remove('hidden');
+});
+
 async function renderMentorMemberList(){
   const el = document.getElementById('mpanel-list');
   const registry = (await loadMemberRegistry()).filter(m=>!m.deleted);
@@ -1133,7 +1404,7 @@ async function renderAdminMentors(){
       <div class="row-flex">
         <div><label class="field-label">نام</label><input type="text" id="newMenName" placeholder="مثلاً علی"></div>
         <div><label class="field-label">شماره تماس</label><input type="tel" id="newMenPhone" placeholder="09xxxxxxxxx"></div>
-        <div><label class="field-label">کد ورود</label><input type="text" id="newMenCode" placeholder="مثلاً MENTOR_FM1_A3"></div>
+        <div><label class="field-label">کد ورود</label><input type="text" id="newMenCode" placeholder="کد ورود دلخواه"></div>
       </div>
       <div class="err-msg hidden" id="newMenErr"></div>
       <button class="btn" id="newMenBtn" style="margin-top:8px;">ساخت منتور</button>
@@ -1146,10 +1417,21 @@ async function renderAdminMentors(){
   active.forEach(m=>{
     html += `<div class="del-row">
       <div><b>${escapeHtml(m.name)}</b><div class="cd" style="font-size:11px;color:var(--white-dim);">کد ${m.code} · ${escapeHtml(m.phone||'')}</div></div>
-      <button class="icon-btn" data-del-men="${m.code}">✕</button>
+      <div class="row-flex" style="flex:none;gap:6px;">
+        <button class="icon-btn" data-view-men="${m.code}" title="مشاهده پروفایل">👁</button>
+        <button class="icon-btn" data-del-men="${m.code}">✕</button>
+      </div>
     </div>`;
   });
   listEl.innerHTML = html || '<div class="empty">منتوری ثبت نشده</div>';
+  listEl.querySelectorAll('[data-view-men]').forEach(btn=>btn.addEventListener('click', async ()=>{
+    const code = btn.dataset.viewMen;
+    const registryNow = await loadMentorRegistry();
+    const men = registryNow.find(m=>m.code===code);
+    if(!men) return;
+    document.getElementById('adminApp').classList.add('hidden');
+    await enterMentorProfileView(code, men);
+  }));
   listEl.querySelectorAll('[data-del-men]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
     const reg = await loadMentorRegistry();
     const target = reg.find(m=>m.code===btn.dataset.delMen);
@@ -1181,100 +1463,40 @@ async function renderAdminMentors(){
 async function renderAdminMedals(){
   const el = document.getElementById('apanel-medals');
   const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
-  const opts = members.map(m=>`<option value="${m.code}">${escapeHtml(m.name)} (${m.code})</option>`).join('');
-  el.innerHTML = `
-    <div class="card">
-      <h2>اهدای مدال / افتخار</h2>
-      <label class="field-label">کاربر</label>
-      <select id="medalMember" style="width:100%;margin-bottom:10px;">${opts || '<option value="">کاربری ثبت نشده</option>'}</select>
-      <label class="field-label">متن افتخار</label>
-      <textarea id="medalText" placeholder="مثلاً برترین امتیاز هفته ۳ 🏅"></textarea>
-      <div style="margin-top:10px;"><button class="btn" id="medalBtn">ثبت مدال</button></div>
-    </div>
-  `;
-  const btn = el.querySelector('#medalBtn');
-  btn.addEventListener('click', guard(btn, async ()=>{
-    const code = el.querySelector('#medalMember').value;
-    const text = el.querySelector('#medalText').value.trim();
-    if(!code || !text) return;
-    const list = await loadAchievements(code);
-    list.push({id:uid(), text, date:new Date().toISOString().slice(0,10)});
-    await saveAchievements(code, list);
-    showToast('مدال ثبت شد');
-    el.querySelector('#medalText').value='';
-  }));
-}
-
-// ================= admin: send management messages =================
-async function renderAdminMsgs(){
-  const el = document.getElementById('apanel-msgs');
-  const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
   const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
   const opts = [
     ...members.map(m=>`<option value="${m.code}">👤 ${escapeHtml(m.name)} (${m.code})</option>`),
     ...mentors.map(m=>`<option value="${m.code}">🧑‍🏫 ${escapeHtml(m.name)} (${m.code})</option>`)
   ].join('');
+  const medalOpts = MEDAL_TIERS.map(m=>`<option value="${m.name}">${m.emoji} ${m.name}</option>`).join('');
   el.innerHTML = `
     <div class="card">
-      <h2>ارسال پیام مدیریت</h2>
-      <label class="field-label">گیرنده</label>
-      <select id="msgTarget" style="width:100%;margin-bottom:10px;">${opts || '<option value="">کسی ثبت نشده</option>'}</select>
-      <label class="field-label">متن پیام</label>
-      <textarea id="msgText" placeholder="مثلاً آفرین، کارتو خوب انجام دادی!"></textarea>
-      <div style="margin-top:10px;"><button class="btn" id="msgBtn">ارسال پیام</button></div>
+      <h2>اهدای مدال</h2>
+      <label class="field-label">گیرنده (کاربر یا منتور)</label>
+      <select id="medalMember" style="width:100%;margin-bottom:10px;">${opts || '<option value="">کسی ثبت نشده</option>'}</select>
+      <label class="field-label">مدال</label>
+      <select id="medalPick" style="width:100%;">${medalOpts}</select>
+      <div style="margin-top:10px;"><button class="btn" id="medalBtn">ثبت مدال</button></div>
     </div>
   `;
-  const btn = el.querySelector('#msgBtn');
+  el.innerHTML += '<div id="apanelLeaderboard"></div>';
+  renderBootcampLeaderboard('apanelLeaderboard');
+  const btn = el.querySelector('#medalBtn');
   btn.addEventListener('click', guard(btn, async ()=>{
-    const code = el.querySelector('#msgTarget').value;
-    const text = el.querySelector('#msgText').value.trim();
-    if(!code || !text) return;
-    const list = await loadAdminMsgs(code);
-    list.push({id:uid(), text, date:new Date().toISOString().slice(0,10)});
-    await saveAdminMsgsFor(code, list);
-    showToast('پیام ارسال شد');
-    el.querySelector('#msgText').value='';
+    const code = el.querySelector('#medalMember').value;
+    const name = el.querySelector('#medalPick').value;
+    if(!code || !name) return;
+    const list = await loadAchievements(code);
+    list.push({id:uid(), name, date:new Date().toISOString().slice(0,10)});
+    await saveAchievements(code, list);
+    showToast('مدال ثبت شد');
+    renderBootcampLeaderboard('apanelLeaderboard');
   }));
 }
 
-// ================= admin: Q&A aggregation =================
-async function renderAdminQna(){
-  const el = document.getElementById('apanel-qna');
-  el.innerHTML = '<div class="card"><h2>سوال و جواب</h2><div id="adminQnaList" class="empty">در حال بارگذاری...</div></div>';
-  const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
-  const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
-  const people = [...members.map(m=>({code:m.code,name:m.name,role:'کاربر'})), ...mentors.map(m=>({code:m.code,name:m.name,role:'منتور'}))];
-  let entries = [];
-  for(const p of people){
-    const list = await loadQna(p.code);
-    list.forEach(q=>entries.push({...q, ownerCode:p.code, ownerName:p.name, ownerRole:p.role}));
-  }
-  const wrap = el.querySelector('#adminQnaList');
-  if(entries.length===0){ wrap.innerHTML = '<div class="empty">سوالی ثبت نشده</div>'; return; }
-  entries.sort((a,b)=> (a.date<b.date?1:-1));
-  let html = '';
-  entries.forEach(q=>{
-    html += `<div class="qna-item">
-      <div class="meta">${q.ownerRole} · ${escapeHtml(q.ownerName)} (${q.ownerCode}) · ${q.date}</div>
-      <div class="q">${escapeHtml(q.q)}</div>
-      <div class="row-flex" style="margin-top:8px;">
-        <input type="text" value="${escapeHtml(q.a||'')}" data-ans="${q.id}" data-owner="${q.ownerCode}" placeholder="پاسخ بده...">
-        <button class="btn small" data-ans-btn="${q.id}" data-owner2="${q.ownerCode}">ثبت پاسخ</button>
-      </div>
-    </div>`;
-  });
-  wrap.innerHTML = html;
-  wrap.querySelectorAll('[data-ans-btn]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
-    const id = btn.dataset.ansBtn, ownerCode = btn.dataset.owner2;
-    const input = wrap.querySelector(`[data-ans="${id}"]`);
-    const val = input.value.trim();
-    const list = await loadQna(ownerCode);
-    const item = list.find(q=>q.id===id);
-    if(item){ item.a = val; }
-    await saveQnaFor(ownerCode, list);
-    showToast('پاسخ ثبت شد');
-    renderAdminQna();
-  })));
+// ================= admin: اپدیت‌ها =================
+async function renderAdminMsgs(){
+  await renderUpdatesPanel('apanel-msgs', 'ADMIN_VIEWER', true, 'admin', 'مدیریت');
 }
 
 // ================= admin tabs =================
