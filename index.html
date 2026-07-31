@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="دفترچه امتیاز">
 <meta name="theme-color" content="#0B0D10">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D8%AF%D9%81%D8%AA%D8%B1%DA%86%D9%87%20%D8%A7%D9%85%D8%AA%DB%8C%D8%A7%D8%B2%20%D8%A8%D9%88%D8%AA%E2%80%8C%DA%A9%D9%85%D9%BE%22%2C%22short_name%22%3A%22%D8%AF%D9%81%D8%AA%D8%B1%DA%86%D9%87%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230B0D10%22%2C%22theme_color%22%3A%22%230B0D10%22%7D">
-<title>دفترچه امتیاز بوت‌کمپ</title>
+<title>Focus Mode</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
@@ -43,6 +43,14 @@
   .quote-line:hover{animation:shineFast 1.1s ease-in-out infinite;}
   @keyframes shine{0%{background-position:180% 0;}50%{background-position:0% 0;}100%{background-position:-180% 0;}}
   @keyframes shineFast{0%{background-position:220% 0;filter:brightness(1);}50%{background-position:0% 0;filter:brightness(1.6);}100%{background-position:-220% 0;filter:brightness(1);}}
+
+  .brand-title{
+    font-size:20px;font-weight:800;margin:6px 0 2px;letter-spacing:.5px;
+    background:linear-gradient(100deg,var(--white) 20%, #ffffff 50%, var(--white) 80%);
+    background-size:220% 100%; -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shine 5s ease-in-out infinite; text-shadow:0 0 10px rgba(255,255,255,.35);
+  }
+  .brand-title:hover{animation:shineFast 1.1s ease-in-out infinite;}
 
   .mode-switch{display:flex;gap:6px;margin-bottom:18px;background:var(--navy-alt);padding:4px;border-radius:8px;}
   .mode-switch button{flex:1;background:none;border:none;color:var(--white-dim);font-family:inherit;font-size:11px;font-weight:700;padding:8px 4px;border-radius:6px;cursor:pointer;transition:.15s;}
@@ -193,8 +201,10 @@
 
 <!-- ===================== LOGIN ===================== -->
 <div id="loginScreen">
+  <div class="quote-line">داستانت از وقتی شروع میشه که نظم رو انتخاب کنی</div>
+
   <div class="id-card">
-    <h1>📒 دفترچه امتیاز بوت‌کمپ</h1>
+    <h1 class="brand-title">Focus Mode</h1>
     <div class="sub">برای ورود، اطلاعات ورودت رو وارد کن</div>
 
     <div class="mode-switch">
@@ -230,15 +240,40 @@
       کد عضویت رو رئیس دوره برات می‌سازه. اگه کد نداری، با ادمین هماهنگ کن.
     </div>
   </div>
+</div>
 
-  <div class="quote-line">داستانت از وقتی شروع میشه که نظم رو انتخاب کنی</div>
+<!-- ===================== COMMITMENT GATE (فقط کاربرا، قبل از ورود به پنل) ===================== -->
+<div class="wrap hidden" id="commitmentScreen" style="max-width:560px;">
+  <div class="card">
+    <h2 class="brand-title" style="font-size:18px;">Commitment</h2>
+    <div class="sub" style="color:var(--white-dim);font-size:12px;margin-bottom:12px;">قبل از شروع، این تعهدنامه رو بخون، دوباره بنویس و امضا کن</div>
+    <label class="field-label">متن تعهدنامه (نمونه)</label>
+    <textarea id="commitmentSample" readonly style="min-height:120px;background:var(--navy-alt);color:var(--white-dim);">تعهد می‌دهم که در مسیر رشد، نظم و تلاش مداوم، طبق اصول و قوانین بوت‌کمپ عمل کنم و با اراده کامل وارد مسیر رشد و نظم شوم. و تعهد می‌دهم که نتیجه خود را صادقانه و درست ثبت کنم و مسئولیت کامل پیشرفت یا عقب‌ماندن خود را بپذیرم و این مسیر را برای توسعه و پیشرفت انتخاب می‌کنم. با احترام به خود، این پلن را تا آخر ادامه دهم و نتیجه را جایگزین کنم.</textarea>
+
+    <label class="field-label" style="margin-top:12px;">حالا خودت اینو (یا برداشت خودت رو) اینجا بنویس</label>
+    <textarea id="commitmentUserText" style="min-height:100px;" placeholder="متن تعهد رو اینجا بنویس..."></textarea>
+
+    <label class="field-label" style="margin-top:12px;">امضا (با ماوس یا انگشت بکش)</label>
+    <div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--navy-alt);">
+      <canvas id="signaturePad" width="1000" height="320" style="width:100%;height:160px;touch-action:none;cursor:crosshair;"></canvas>
+    </div>
+    <div style="margin-top:6px;"><button class="btn ghost small" id="clearSignatureBtn" type="button">پاک کردن امضا</button></div>
+
+    <div class="chk-row" style="margin-top:14px;">
+      <input type="checkbox" id="commitmentCheck">
+      <label for="commitmentCheck">من تعهد می‌دهم</label>
+    </div>
+    <div class="err-msg hidden" id="commitmentErr"></div>
+    <div style="margin-top:12px;"><button class="btn" id="commitmentSubmitBtn">ثبت تعهدنامه و ورود به پنل</button></div>
+  </div>
 </div>
 
 <!-- ===================== MEMBER / VIEW APP ===================== -->
 <div class="wrap hidden" id="mainApp">
   <div class="masthead">
     <div>
-      <h1>📒 دفترچه امتیاز بوت‌کمپ</h1>
+      <h1 class="brand-title">Focus Mode</h1>
+      <div style="font-size:11px;color:var(--white-dim);font-weight:700;letter-spacing:.5px;">PARTICIPANT PANEL</div>
       <div class="sub" id="masSub">۵ دسته تسک · امتیاز روزانه، هفتگی، ماهانه</div>
     </div>
     <div class="member-box">
@@ -253,20 +288,26 @@
   </div>
 
   <div class="tabs" id="mainTabs">
+    <button class="tab-btn" data-tab="commitment">Commitment</button>
     <button class="tab-btn active" data-tab="tasks">Task Set</button>
     <button class="tab-btn" data-tab="today">To Do</button>
     <button class="tab-btn" data-tab="dashboard">Scores</button>
     <button class="tab-btn" data-tab="feedback">FeedBack</button>
+    <button class="tab-btn" data-tab="notes">Personal Notes</button>
+    <button class="tab-btn" data-tab="rules">Rules</button>
     <button class="tab-btn" data-tab="achievements">Honor Room</button>
     <button class="tab-btn" data-tab="adminmsg">Updates <span class="badge-dot hidden" id="updatesBadgeMember"></span></button>
     <button class="tab-btn" data-tab="qna">Connect To Team</button>
     <button class="tab-btn" data-tab="status">Status</button>
   </div>
 
+  <div class="panel" id="panel-commitment"></div>
   <div class="panel active" id="panel-tasks"></div>
   <div class="panel" id="panel-today"></div>
   <div class="panel" id="panel-dashboard"></div>
   <div class="panel" id="panel-feedback"></div>
+  <div class="panel" id="panel-notes"></div>
+  <div class="panel" id="panel-rules"></div>
   <div class="panel" id="panel-achievements"></div>
   <div class="panel" id="panel-adminmsg"></div>
   <div class="panel" id="panel-qna"></div>
@@ -277,7 +318,7 @@
 <div class="wrap hidden" id="mentorHome">
   <div class="masthead">
     <div>
-      <h1>👤 پنل منتور</h1>
+      <h1>👤 MENTOR PANEL</h1>
       <div class="sub" id="mentorSub"></div>
     </div>
     <div class="member-box">
@@ -288,12 +329,13 @@
     </div>
   </div>
   <div class="tabs">
-    <button class="tab-btn active" data-mtab="list">لیست کاربران</button>
-    <button class="tab-btn" data-mtab="userq">پیام کاربران</button>
+    <button class="tab-btn active" data-mtab="list">Participants</button>
+    <button class="tab-btn" data-mtab="userq">Participant msg</button>
     <button class="tab-btn" data-mtab="achv">Honor Room</button>
     <button class="tab-btn" data-mtab="msg">Updates <span class="badge-dot hidden" id="updatesBadgeMentor"></span></button>
-    <button class="tab-btn" data-mtab="qna">ارتباط با مدیریت</button>
+    <button class="tab-btn" data-mtab="qna">Connect To Team</button>
     <button class="tab-btn" data-mtab="status">Status</button>
+    <button class="tab-btn" data-mtab="rules">Rules</button>
   </div>
   <div class="panel active" id="mpanel-list"></div>
   <div class="panel" id="mpanel-userq"></div>
@@ -301,13 +343,14 @@
   <div class="panel" id="mpanel-msg"></div>
   <div class="panel" id="mpanel-qna"></div>
   <div class="panel" id="mpanel-status"></div>
+  <div class="panel" id="mpanel-rules"></div>
 </div>
 
 <!-- ===================== ADMIN PANEL ===================== -->
 <div class="wrap hidden" id="adminApp">
   <div class="masthead">
     <div>
-      <h1>👑 پنل رئیس</h1>
+      <h1>👑 BOSS PANEL</h1>
       <div class="sub">مدیریت کاربران، منتورها، افتخارات و پیام‌ها</div>
     </div>
     <div class="member-box">
@@ -318,12 +361,13 @@
     </div>
   </div>
   <div class="tabs">
-    <button class="tab-btn active" data-atab="members">کاربران</button>
-    <button class="tab-btn" data-atab="mentors">منتورها</button>
+    <button class="tab-btn active" data-atab="members">Participants</button>
+    <button class="tab-btn" data-atab="mentors">Mentors</button>
     <button class="tab-btn" data-atab="medals">Honor Room</button>
     <button class="tab-btn" data-atab="msgs">Updates</button>
     <button class="tab-btn" data-atab="qna">Connect To Team</button>
     <button class="tab-btn" data-atab="status">Status</button>
+    <button class="tab-btn" data-atab="rules">Rules</button>
   </div>
   <div class="panel active" id="apanel-members"></div>
   <div class="panel" id="apanel-mentors"></div>
@@ -331,13 +375,14 @@
   <div class="panel" id="apanel-msgs"></div>
   <div class="panel" id="apanel-qna"></div>
   <div class="panel" id="apanel-status"></div>
+  <div class="panel" id="apanel-rules"></div>
 </div>
 
 <!-- ===================== MENTOR PROFILE VIEW (برای رئیس) ===================== -->
 <div class="wrap hidden" id="mentorProfileView">
   <div class="masthead">
     <div>
-      <h1>🧑‍🏫 پروفایل منتور</h1>
+      <h1>🧑‍🏫 MENTOR PROFILE</h1>
       <div class="sub" id="mentorProfileSub"></div>
     </div>
     <div class="member-box">
@@ -489,7 +534,9 @@ function guard(btn, fn){
   return async (...args)=>{
     if(btn.dataset.busy==='1') return;
     btn.dataset.busy='1'; btn.disabled=true;
-    try{ await fn(...args); } finally{ btn.dataset.busy='0'; btn.disabled=false; }
+    try{ await fn(...args); }
+    catch(e){ console.error('guard caught error', e); showToast('خطایی پیش اومد — دوباره امتحان کن'); }
+    finally{ btn.dataset.busy='0'; btn.disabled=false; }
   };
 }
 
@@ -552,7 +599,13 @@ document.getElementById('userSubmit').addEventListener('click', guard(document.g
   }
   errEl.classList.add('hidden');
   viaMentorList = false;
-  await enterMemberApp(code, false, mem);
+  const commitRec = await loadCommitment(code);
+  if(!commitRec || commitmentExpired(commitRec)){
+    document.getElementById('loginScreen').classList.add('hidden');
+    initCommitmentScreen(code, mem.name);
+  }else{
+    await enterMemberApp(code, false, mem);
+  }
 }));
 
 document.getElementById('mentorSubmit').addEventListener('click', guard(document.getElementById('mentorSubmit'), async ()=>{
@@ -582,6 +635,7 @@ document.getElementById('mentorSubmit').addEventListener('click', guard(document
   renderUpdatesPanel('mpanel-msg', currentMentorCode, true, 'mentor', mentor.name);
   renderMentorAdminChatPanel('mpanel-qna', currentMentorCode, 'mentor');
   renderStatusPanel('mpanel-status', 'mentor');
+  renderRulesPanel('mpanel-rules', true, 'mentor', mentor.name);
   checkUpdatesBadge(currentMentorCode, 'updatesBadgeMentor');
 }));
 
@@ -617,11 +671,13 @@ document.getElementById('adminSubmit').addEventListener('click', guard(document.
   renderAdminMsgs();
   renderAdminQna();
   renderStatusPanel('apanel-status', 'admin');
+  renderRulesPanel('apanel-rules', true, 'admin', 'مدیریت');
 }));
 
 // ================= logout handlers =================
 function backToLogin(){
   stopPresenceHeartbeat();
+  clearLiveRefreshers();
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('mentorHome').classList.add('hidden');
   document.getElementById('adminApp').classList.add('hidden');
@@ -691,6 +747,9 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   renderTasks();
   renderToday();
   renderFeedback();
+  renderCommitmentPanel('panel-commitment', currentCode, memberInfo.name||'');
+  renderPersonalNotesPanel('panel-notes', currentCode, isViewOnly);
+  renderRulesPanel('panel-rules', false, null, null);
   renderAchievementsPanel('panel-achievements', currentCode, true);
   renderBootcampLeaderboard('panel-achievements');
   const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
@@ -1070,7 +1129,272 @@ function renderFbList(){
   wrap.querySelectorAll('[data-del-fb]').forEach(btn=>btn.addEventListener('click', ()=>{ feedbackList = feedbackList.filter(f=>f.id!==btn.dataset.delFb); saveFeedback(); renderFbList(); }));
 }
 
-// ================= achievements (medals) — generic by code =================
+// ================= Personal Notes: Journal + Monthly Goal — کاربر می‌نویسه، منتور/رئیس می‌بینن =================
+async function loadJournal(code){
+  try{ const r = await window.storage.get('journal:'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
+  catch(e){ return []; }
+}
+async function saveJournal(code, list){
+  try{ await window.storage.set('journal:'+code, JSON.stringify(list), true); }catch(e){ console.error(e); }
+}
+async function loadMonthlyGoal(code){
+  try{ const r = await window.storage.get('monthlygoal:'+code, true); return r && r.value ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function saveMonthlyGoal(code, obj){
+  try{ await window.storage.set('monthlygoal:'+code, JSON.stringify(obj), true); return true; }
+  catch(e){ console.error(e); return false; }
+}
+async function renderPersonalNotesPanel(panelId, code, viewOnly){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  const goal = await loadMonthlyGoal(code);
+  const journal = await loadJournal(code);
+
+  let html = '<div class="card"><h2>🎯 Monthly Goal</h2>';
+  if(viewOnly){
+    if(goal){
+      html += `<div class="fb-line"><b>هدف:</b> ${escapeHtml(goal.goal||'')}</div>
+        <div class="fb-line"><b>تا کی:</b> ${escapeHtml(goal.deadline||'')}</div>
+        <div class="fb-line"><b>دلیل:</b> ${escapeHtml(goal.reason||'')}</div>
+        <div class="meta">آخرین ثبت: ${goal.date||''}</div>`;
+    }else{ html += '<div class="empty">هنوز هدفی ثبت نشده</div>'; }
+  }else{
+    html += `<label class="field-label">هدف ماه من چیه؟</label>
+      <textarea id="goalText_${panelId}">${escapeHtml(goal?.goal||'')}</textarea>
+      <label class="field-label" style="margin-top:8px;">تا کی می‌خوام بهش برسم؟</label>
+      <input type="text" id="goalDeadline_${panelId}" value="${escapeHtml(goal?.deadline||'')}" placeholder="مثلاً پایان ماه">
+      <label class="field-label" style="margin-top:8px;">دلیل رسیدن بهش چیه؟</label>
+      <textarea id="goalReason_${panelId}">${escapeHtml(goal?.reason||'')}</textarea>
+      <div style="margin-top:10px;"><button class="btn small" id="goalBtn_${panelId}">ثبت هدف ماه</button></div>`;
+  }
+  html += '</div>';
+
+  html += '<div class="card"><h2>📔 Journal</h2>';
+  if(!viewOnly){
+    html += `<textarea id="journalText_${panelId}" placeholder="امروز چی گذشت؟..."></textarea>
+      <div style="margin-top:10px;"><button class="btn small" id="journalBtn_${panelId}">ثبت ژورنال</button></div>`;
+  }
+  html += '<div id="journalList_'+panelId+'" style="margin-top:12px;"></div></div>';
+  el.innerHTML = html;
+
+  const jWrap = el.querySelector('#journalList_'+panelId);
+  if(journal.length===0){ jWrap.innerHTML = '<div class="empty">هنوز ژورنالی ثبت نشده</div>'; }
+  else{
+    let jHtml = '';
+    journal.slice().reverse().forEach(j=>{
+      jHtml += `<div class="fb-entry"><div class="cyc">${j.date} ${(!viewOnly)?`<button class="icon-btn" style="float:left;" data-del-j="${j.id}" title="حذف">✕</button>`:''}</div><div class="fb-line">${escapeHtml(j.text)}</div></div>`;
+    });
+    jWrap.innerHTML = jHtml;
+    jWrap.querySelectorAll('[data-del-j]').forEach(btn=>btn.addEventListener('click', async ()=>{
+      const fresh = await loadJournal(code);
+      await saveJournal(code, fresh.filter(j=>j.id!==btn.dataset.delJ));
+      renderPersonalNotesPanel(panelId, code, viewOnly);
+    }));
+  }
+
+  if(!viewOnly){
+    const goalBtn = el.querySelector('#goalBtn_'+panelId);
+    goalBtn.addEventListener('click', guard(goalBtn, async ()=>{
+      const goalTa = el.querySelector('#goalText_'+panelId);
+      const deadlineInp = el.querySelector('#goalDeadline_'+panelId);
+      const reasonTa = el.querySelector('#goalReason_'+panelId);
+      if(!goalTa || !deadlineInp || !reasonTa){
+        showToast('خطا — فرم پیدا نشد، صفحه رو دوباره باز کن');
+        return;
+      }
+      const obj = {
+        goal: goalTa.value.trim(),
+        deadline: deadlineInp.value.trim(),
+        reason: reasonTa.value.trim(),
+        date: new Date().toISOString().slice(0,10)
+      };
+      const ok = await saveMonthlyGoal(code, obj);
+      if(ok){
+        showToast('هدف ماه ثبت شد');
+        await renderPersonalNotesPanel(panelId, code, viewOnly);
+      }else{
+        showToast('ثبت نشد — دوباره امتحان کن');
+      }
+    }));
+    const jBtn = el.querySelector('#journalBtn_'+panelId);
+    jBtn.addEventListener('click', guard(jBtn, async ()=>{
+      const ta = el.querySelector('#journalText_'+panelId);
+      const val = ta.value.trim();
+      if(!val) return;
+      const fresh = await loadJournal(code);
+      fresh.push({id:uid(), text:val, date:new Date().toISOString().slice(0,10)});
+      await saveJournal(code, fresh);
+      showToast('ژورنال ثبت شد');
+      renderPersonalNotesPanel(panelId, code, viewOnly);
+    }));
+  }
+}
+
+// ================= Rules — فقط رئیس/منتور می‌نویسن، کاربرا فقط می‌بینن =================
+async function loadRules(){
+  try{ const r = await window.storage.get('rules', true); return r && r.value ? JSON.parse(r.value) : []; }
+  catch(e){ return []; }
+}
+async function saveRulesList(list){
+  try{ await window.storage.set('rules', JSON.stringify(list), true); }catch(e){ console.error(e); }
+}
+async function renderRulesPanel(panelId, canEdit, authorRole, authorName){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  const list = await loadRules();
+  let html = '';
+  if(canEdit){
+    html += `<div class="card"><h2>افزودن قانون جدید</h2>
+      <textarea id="ruleInput_${panelId}" placeholder="متن قانون..."></textarea>
+      <div style="margin-top:10px;"><button class="btn small" id="ruleBtn_${panelId}">ثبت قانون</button></div>
+    </div>`;
+  }
+  html += '<div class="card"><h2>📜 Rules</h2>';
+  if(list.length===0){ html += '<div class="empty">هنوز قانونی ثبت نشده</div>'; }
+  else{
+    list.slice().reverse().forEach(r=>{
+      const authorLabel = r.authorRole==='admin' ? 'مدیر' : `منتور ${escapeHtml(r.authorName||'')}`;
+      html += `<div class="update-card"><div>${escapeHtml(r.text)}</div><div class="meta">${authorLabel} · ${r.date} ${canEdit?`<button class="icon-btn-sm" data-del-rule="${r.id}" style="margin-right:8px;">✕</button>`:''}</div></div>`;
+    });
+  }
+  html += '</div>';
+  el.innerHTML = html;
+  if(canEdit){
+    const btn = el.querySelector('#ruleBtn_'+panelId);
+    btn.addEventListener('click', guard(btn, async ()=>{
+      const ta = el.querySelector('#ruleInput_'+panelId);
+      const val = ta.value.trim();
+      if(!val) return;
+      const fresh = await loadRules();
+      fresh.push({id:uid(), text:val, authorRole, authorName, date:new Date().toISOString().slice(0,10)});
+      await saveRulesList(fresh);
+      showToast('قانون ثبت شد');
+      renderRulesPanel(panelId, canEdit, authorRole, authorName);
+    }));
+    el.querySelectorAll('[data-del-rule]').forEach(delBtn=>delBtn.addEventListener('click', async ()=>{
+      const fresh = await loadRules();
+      await saveRulesList(fresh.filter(r=>r.id!==delBtn.dataset.delRule));
+      renderRulesPanel(panelId, canEdit, authorRole, authorName);
+    }));
+  }
+}
+
+// ================= Commitment — تعهدنامه با امضا؛ فقط کاربرا، قبل از ورود به پنل =================
+const COMMITMENT_TTL_DAYS = 30;
+async function loadCommitment(code){
+  try{ const r = await window.storage.get('commitment:'+code, true); return r && r.value ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function saveCommitment(code, obj){
+  try{ await window.storage.set('commitment:'+code, JSON.stringify(obj), true); }catch(e){ console.error(e); }
+}
+function commitmentExpired(rec){
+  if(!rec) return true;
+  const days = (Date.now() - new Date(rec.date).getTime()) / 86400000;
+  return days > COMMITMENT_TTL_DAYS;
+}
+async function renderCommitmentPanel(panelId, code, memberName){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  const rec = await loadCommitment(code);
+  if(!rec){ el.innerHTML = '<div class="card"><div class="empty">هنوز تعهدنامه‌ای ثبت نشده</div></div>'; return; }
+  el.innerHTML = `<div class="card">
+    <h2>Commitment</h2>
+    <div class="fb-line"><b>نام:</b> ${escapeHtml(rec.name||memberName||'')}</div>
+    <div class="fb-line"><b>تاریخ ثبت:</b> ${rec.date}</div>
+    <div class="fb-line" style="margin-top:8px;"><b>متن تعهد کاربر:</b></div>
+    <div class="fb-line" style="white-space:pre-wrap;">${escapeHtml(rec.text)}</div>
+    <div class="fb-line" style="margin-top:10px;"><b>امضا:</b></div>
+    <div style="border:1px solid var(--line);border-radius:8px;background:var(--navy-alt);padding:6px;display:inline-block;">
+      <img src="${rec.signature}" style="max-width:280px;display:block;">
+    </div>
+    ${commitmentExpired(rec)?'<div class="err-msg" style="margin-top:10px;">⚠️ این تعهدنامه منقضی شده (بیش از یک ماه از ثبتش گذشته)</div>':''}
+  </div>`;
+}
+
+// ---- بوم امضا (Signature Pad) ----
+function setupSignaturePad(canvas){
+  const ctx = canvas.getContext('2d');
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--white') || '#E9EAEC';
+  ctx.lineWidth = 4.2; ctx.lineJoin='round'; ctx.lineCap='round';
+  let drawing = false, hasDrawn = false, lastPoint = null;
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return { x: cx*scaleX, y: cy*scaleY };
+  }
+  function start(e){ e.preventDefault(); drawing = true; const p = pos(e); lastPoint = p; ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+  function move(e){
+    if(!drawing) return; e.preventDefault();
+    const p = pos(e);
+    const mid = { x:(lastPoint.x+p.x)/2, y:(lastPoint.y+p.y)/2 };
+    ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, mid.x, mid.y);
+    ctx.stroke();
+    lastPoint = p;
+    hasDrawn = true;
+  }
+  function end(){ drawing = false; lastPoint = null; }
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+  return {
+    clear(){ ctx.clearRect(0,0,canvas.width,canvas.height); hasDrawn = false; },
+    isEmpty(){ return !hasDrawn; },
+    dataURL(){ return canvas.toDataURL('image/png'); }
+  };
+}
+async function proceedToMainApp(code, name){
+  const registry = await loadMemberRegistry();
+  const mem = registry.find(m=>m.code===code && !m.deleted) || { code, name };
+  await enterMemberApp(code, false, mem);
+}
+let signaturePadInstance = null;
+function initCommitmentScreen(memberCode, memberName){
+  const canvas = document.getElementById('signaturePad');
+  if(!signaturePadInstance){ signaturePadInstance = setupSignaturePad(canvas); }
+  else{ signaturePadInstance.clear(); }
+  document.getElementById('commitmentUserText').value = '';
+  document.getElementById('commitmentCheck').checked = false;
+  document.getElementById('commitmentErr').classList.add('hidden');
+  document.getElementById('commitmentScreen').classList.remove('hidden');
+
+  const submitBtn = document.getElementById('commitmentSubmitBtn');
+  const COMMIT_BTN_LABEL = 'ثبت تعهدنامه و ورود به پنل';
+  submitBtn.textContent = COMMIT_BTN_LABEL;
+  const newBtn = submitBtn.cloneNode(true);
+  submitBtn.parentNode.replaceChild(newBtn, submitBtn); // پاک کردن listenerهای قبلی برای جلوگیری از تکرار
+  newBtn.addEventListener('click', guard(newBtn, async ()=>{
+    const errEl = document.getElementById('commitmentErr');
+    const text = document.getElementById('commitmentUserText').value.trim();
+    const checked = document.getElementById('commitmentCheck').checked;
+    if(text.length < 10){ errEl.textContent = 'لطفاً متن تعهد رو کامل بنویس.'; errEl.classList.remove('hidden'); return; }
+    if(signaturePadInstance.isEmpty()){ errEl.textContent = 'لطفاً امضا کن.'; errEl.classList.remove('hidden'); return; }
+    if(!checked){ errEl.textContent = 'باید تیک «من تعهد می‌دهم» رو بزنی.'; errEl.classList.remove('hidden'); return; }
+    errEl.classList.add('hidden');
+    newBtn.textContent = 'در حال ثبت...';
+    const rec = { text, signature: signaturePadInstance.dataURL(), name: memberName, date: new Date().toISOString().slice(0,10) };
+    await saveCommitment(memberCode, rec);
+    newBtn.textContent = '✔ ثبت شد — در حال ورود به پنل...';
+    showToast('تعهدنامه ثبت شد');
+    await new Promise(resolve=>setTimeout(resolve, 600));
+    newBtn.textContent = COMMIT_BTN_LABEL;
+    document.getElementById('commitmentScreen').classList.add('hidden');
+    await proceedToMainApp(memberCode, memberName);
+  }));
+
+  const clearBtn = document.getElementById('clearSignatureBtn');
+  const newClearBtn = clearBtn.cloneNode(true);
+  clearBtn.parentNode.replaceChild(newClearBtn, clearBtn);
+  newClearBtn.addEventListener('click', ()=>signaturePadInstance.clear());
+}
+
+
 // سه مدال ثابت با رتبه و ایموجی مشخص
 const MEDAL_TIERS = [
   { name:'FOCUS SOLDIER', tier:1, emoji:'🥉' },
@@ -1131,6 +1455,20 @@ async function renderBootcampLeaderboard(panelId){
 // ================= admin messages — generic by code =================
 // ================= اپدیت‌ها — یه فید مشترک که همه (کاربر+منتور) می‌بینن =================
 // ================= وضعیت آنلاین/آفلاین (Status) — با ضربان دوره‌ای، تقریبی و نه لحظه‌ای واقعی =================
+// ================= به‌روزرسانی نزدیک‌به‌آنی — هر ۴ ثانیه چک می‌کنه (پولینگ، نه پوش واقعی) =================
+let activeChatRefreshers = [];
+let currentStatusRefresh = null;
+function clearLiveRefreshers(){ activeChatRefreshers = []; currentStatusRefresh = null; }
+setInterval(async ()=>{
+  activeChatRefreshers = activeChatRefreshers.filter(fn=>true); // نگه‌داری آرایه
+  for(const fn of activeChatRefreshers.slice()){
+    try{ const alive = await fn(); if(alive===false){ activeChatRefreshers = activeChatRefreshers.filter(f=>f!==fn); } }catch(e){}
+  }
+  if(currentStatusRefresh){ try{ await currentStatusRefresh(); }catch(e){} }
+  if(currentCode && !isViewOnly) checkUpdatesBadge(currentCode, 'updatesBadgeMember');
+  if(currentMentorCode) checkUpdatesBadge(currentMentorCode, 'updatesBadgeMentor');
+}, 1500);
+
 const PRESENCE_TTL = 45000; // اگه تا ۴۵ ثانیه پیش heartbeat نداشته باشه، آفلاین حساب میشه
 let presenceInterval = null;
 async function updatePresence(code){
@@ -1156,7 +1494,8 @@ async function isOnline(code){
 async function renderStatusPanel(panelId, mode){
   const el = document.getElementById(panelId);
   if(!el) return;
-  el.innerHTML = '<div class="card"><div class="empty">در حال بررسی وضعیت...</div></div>';
+  currentStatusRefresh = ()=>renderStatusPanel(panelId, mode);
+  if(el.children.length===0) el.innerHTML = '<div class="card"><div class="empty">در حال بررسی وضعیت...</div></div>';
   let html = '';
   if(mode==='member'){
     const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
@@ -1265,7 +1604,6 @@ async function saveThread(code, threadKey, list){
 // یه کارت چت دوطرفه بین «myRole» (کسی که پشت این نمایشه) و طرف مقابل، رو یه ترد مشخص (thread_admin یا thread_mentor)
 async function renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn){
   const wrapId = ('chatwrap_'+threadKey+'_'+memberCode+'_'+myRole).replace(/[^a-zA-Z0-9_-]/g, '_');
-  const list = await loadThread(memberCode, threadKey);
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = `${title?`<h2>${title}</h2>`:''}<div class="chat-log" id="${wrapId}_log"></div>
@@ -1275,23 +1613,31 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     </div>`;
   containerEl.appendChild(card);
   const logEl = card.querySelector('#'+wrapId+'_log');
-  if(list.length===0){ logEl.innerHTML = '<div class="empty">هنوز پیامی نیست — همینجا می‌تونی شروع کنی</div>'; }
-  else{
+
+  async function refreshLog(){
+    if(!document.body.contains(logEl)) return false; // دیگه رو صفحه نیست، از رفرش‌های بعدی حذف شه
+    const list = await loadThread(memberCode, threadKey);
+    const nearBottom = logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight < 40;
+    if(list.length===0){ logEl.innerHTML = '<div class="empty">هنوز پیامی نیست — همینجا می‌تونی شروع کنی</div>'; return true; }
     let html = '';
     list.forEach(m=>{
       const mine = m.from===myRole;
       html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))} ${mine?`<button class="icon-btn-sm" data-del-msg="${m.id}" title="حذف">✕</button>`:''}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}</div></div>`;
     });
     logEl.innerHTML = html;
-    logEl.scrollTop = logEl.scrollHeight;
+    if(nearBottom) logEl.scrollTop = logEl.scrollHeight;
     logEl.querySelectorAll('[data-del-msg]').forEach(delBtn=>delBtn.addEventListener('click', async ()=>{
       const fresh = await loadThread(memberCode, threadKey);
       const filtered = fresh.filter(m=>m.id!==delBtn.dataset.delMsg);
       await saveThread(memberCode, threadKey, filtered);
-      containerEl.innerHTML = '';
-      await renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn);
+      await refreshLog();
     }));
+    return true;
   }
+  await refreshLog();
+  logEl.scrollTop = logEl.scrollHeight;
+  activeChatRefreshers.push(refreshLog);
+
   const btn = card.querySelector('#'+wrapId+'_btn');
   btn.addEventListener('click', guard(btn, async ()=>{
     const input = card.querySelector('#'+wrapId+'_input');
@@ -1301,8 +1647,7 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     fresh.push({id:uid(), from:myRole, text:val, date:new Date().toISOString().slice(0,10)});
     await saveThread(memberCode, threadKey, fresh);
     input.value='';
-    containerEl.innerHTML = '';
-    await renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn);
+    await refreshLog();
   }));
 }
 
