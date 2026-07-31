@@ -228,7 +228,7 @@
       <label class="field-label">کد منتور</label>
       <input type="text" id="mentorCode" placeholder="کد خود را وارد کنید">
       <div class="err-msg hidden" id="mentorErr"></div>
-      <button class="btn" id="mentorSubmit">ورود منتور</button>
+      <button class="btn" id="mentorSubmit">ورود به پنل منتوری</button>
     </div>
 
     <div id="adminForm" class="hidden">
@@ -240,7 +240,7 @@
         <button type="button" id="togglePassBtn" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--white-dim);cursor:pointer;font-size:15px;padding:4px;" title="نمایش رمز">👁</button>
       </div>
       <div class="err-msg hidden" id="adminErr"></div>
-      <button class="btn" id="adminSubmit">ورود مدیریت</button>
+      <button class="btn" id="adminSubmit">ورود به پنل مدیریت</button>
     </div>
 
     <div class="stamp-note">
@@ -438,8 +438,11 @@ window.storage = {
     try{
       const { data, error } = await sb.from(TABLE).select('value').eq('key', key).maybeSingle();
       if(error) throw error;
-      if(!data) return null;
-      return { key, value: data.value };
+      if(!data){
+        // ممکنه قبلاً به‌خاطر یه خطای موقت روی Supabase، این کلید فقط لوکال ذخیره شده باشه؛ چک می‌کنیم که چیزی گم نشه
+        return localGet(key);
+      }
+      return { key, value: data.value, source:'cloud' };
     }catch(e){ console.error('supabase get failed → local fallback', e); return localGet(key); }
   },
   async set(key, value){
@@ -447,8 +450,13 @@ window.storage = {
     try{
       const { error } = await sb.from(TABLE).upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
       if(error) throw error;
-      return { key, value };
-    }catch(e){ console.error('supabase set failed → local fallback', e); return localSet(key, value); }
+      return { key, value, source:'cloud' };
+    }catch(e){
+      console.error('supabase set failed → local fallback', e);
+      const r = localSet(key, value);
+      r.source = 'local'; r.error = (e && e.message) ? e.message : String(e);
+      return r;
+    }
   },
   async delete(key){
     if(!cloudReady) return localDelete(key);
@@ -534,7 +542,8 @@ function showToast(msg){
   t.textContent = msg || 'ذخیره شد';
   t.classList.add('show');
   clearTimeout(showToast._h);
-  showToast._h = setTimeout(()=>t.classList.remove('show'), 1600);
+  const dur = (msg && msg.length > 25) ? 3200 : 1600;
+  showToast._h = setTimeout(()=>t.classList.remove('show'), dur);
 }
 // simple guard to stop double-submits on a button while an async save is in flight
 function guard(btn, fn){
@@ -788,12 +797,14 @@ async function enterMemberApp(code, viewOnly, memberInfo){
 
 // ================= storage: per-member state =================
 async function loadMemberState(){
-  try{ const r = await window.storage.get('categories:'+currentCode, true); categories = r && r.value ? JSON.parse(r.value) : defaultCategories(); }
-  catch(e){ categories = defaultCategories(); }
-  try{ const r = await window.storage.get('daily:'+currentCode, true); dailyRecords = r && r.value ? JSON.parse(r.value) : {}; }
-  catch(e){ dailyRecords = {}; }
-  try{ const r = await window.storage.get('feedback:'+currentCode, true); feedbackList = r && r.value ? JSON.parse(r.value) : []; }
-  catch(e){ feedbackList = []; }
+  const [catRes, dailyRes, fbRes] = await Promise.all([
+    window.storage.get('categories:'+currentCode, true).catch(()=>null),
+    window.storage.get('daily:'+currentCode, true).catch(()=>null),
+    window.storage.get('feedback:'+currentCode, true).catch(()=>null)
+  ]);
+  categories = catRes && catRes.value ? JSON.parse(catRes.value) : defaultCategories();
+  dailyRecords = dailyRes && dailyRes.value ? JSON.parse(dailyRes.value) : {};
+  feedbackList = fbRes && fbRes.value ? JSON.parse(fbRes.value) : [];
 }
 async function saveCategories(){
   if(isViewOnly) return;
@@ -1156,8 +1167,11 @@ async function loadMonthlyGoal(code){
   catch(e){ return null; }
 }
 async function saveMonthlyGoal(code, obj){
-  try{ await window.storage.set('monthlygoal:'+code, JSON.stringify(obj), true); return true; }
-  catch(e){ console.error(e); return false; }
+  try{
+    const r = await window.storage.set('monthlygoal:'+code, JSON.stringify(obj), true);
+    if(r && r.source==='local'){ return { ok:false, err: r.error || 'اتصال به دیتابیس مشترک برقرار نشد' }; }
+    return { ok:true };
+  }catch(e){ console.error(e); return { ok:false, err: (e&&e.message)||String(e) }; }
 }
 async function renderPersonalNotesPanel(panelId, code, viewOnly){
   const el = document.getElementById(panelId);
@@ -1223,12 +1237,12 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
         reason: reasonTa.value.trim(),
         date: new Date().toISOString().slice(0,10)
       };
-      const ok = await saveMonthlyGoal(code, obj);
-      if(ok){
+      const res = await saveMonthlyGoal(code, obj);
+      if(res.ok){
         showToast('هدف ماه ثبت شد');
         await renderPersonalNotesPanel(panelId, code, viewOnly);
       }else{
-        showToast('ثبت نشد — دوباره امتحان کن');
+        showToast('ثبت نشد: ' + res.err);
       }
     }));
     const jBtn = el.querySelector('#journalBtn_'+panelId);
