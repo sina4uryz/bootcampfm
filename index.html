@@ -29,8 +29,8 @@
 
   /* ---------- login screen ---------- */
   #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:18px;}
-  .id-card{width:100%;max-width:420px;background:var(--navy);border:1px solid var(--line);border-radius:14px;padding:26px;position:relative;overflow:hidden;}
-  .id-card::before{content:'';position:absolute;top:0;right:0;left:0;height:5px;background:repeating-linear-gradient(90deg,var(--lightblue) 0 10px, transparent 10px 20px);}
+  .id-card{width:100%;max-width:420px;background:var(--navy);border:1.5px solid #000;box-shadow:0 0 14px 1px rgba(0,0,0,0.7), 0 0 2px 1px rgba(74,85,102,0.5);border-radius:14px;padding:26px;position:relative;overflow:hidden;}
+  .id-card::before{content:'';position:absolute;top:0;right:0;left:0;height:5px;background:repeating-linear-gradient(90deg,var(--gray) 0 10px, transparent 10px 20px);}
   .id-card h1{font-size:19px;font-weight:800;margin:6px 0 2px;}
   .id-card .sub{color:var(--white-dim);font-size:12px;margin-bottom:14px;}
 
@@ -61,11 +61,15 @@
   .member-chip{background:var(--navy-alt);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:12px;}
   .member-chip b{color:var(--lightblue);}
   .view-only-badge{background:var(--lightblue-dim);color:var(--lightblue);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;}
-  .logout-btn,.back-btn{background:none;border:1px solid var(--line);color:var(--white-dim);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-family:inherit;}
-  .logout-btn:hover,.back-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
+  .logout-btn{background:none;border:1px solid #C94F4F;color:#C94F4F;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-family:inherit;}
+  .logout-btn:hover{background:#C94F4F;color:var(--white);}
+  .back-btn{background:none;border:1px solid var(--line);color:var(--white-dim);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-family:inherit;}
+  .back-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
 
-  .tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
-  .tab-btn{background:none;border:none;color:var(--white-dim);font-family:inherit;font-size:13px;font-weight:600;padding:10px 12px;cursor:pointer;border-bottom:2px solid transparent;transition:.15s;}
+  .tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;scrollbar-width:thin;}
+  .tabs::-webkit-scrollbar{height:4px;}
+  .tabs::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+  .tab-btn{background:none;border:none;color:var(--white-dim);font-family:inherit;font-size:13px;font-weight:600;padding:10px 10px;cursor:pointer;border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;flex-shrink:0;}
   .tab-btn:hover{color:var(--white);}
   .tab-btn.active{color:var(--lightblue);border-bottom-color:var(--lightblue);}
   .panel{display:none;}
@@ -78,7 +82,10 @@
   .cat-badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;font-variant-numeric:tabular-nums;}
   .cat-badge.ok{background:var(--lightblue-dim);color:var(--lightblue);}
   .cat-badge.bad{background:var(--gray-dim);color:var(--gray);}
-  .task-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line);}
+  .task-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;}
+  @media (max-width:520px){ .task-list{grid-template-columns:1fr;} }
+  .task-row{display:flex;align-items:center;gap:6px;padding:7px 0;border-top:1px solid var(--line);min-width:0;}
+  .task-row input[type=text]{min-width:0;}
   .task-row:first-of-type{border-top:none;}
   .task-row input[type=text]{flex:1;}
   .task-row input[type=number]{width:64px;text-align:center;}
@@ -94,7 +101,8 @@
     caret-color: var(--white);
     transition: background-color 9999s ease-in-out 0s;
   }
-  .icon-btn{background:none;border:1px solid var(--line);color:var(--white-dim);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+  .icon-btn{background:none;border:1px solid var(--line);color:var(--white-dim);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+  .icon-row{display:flex;gap:5px;align-items:center;}
   .icon-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
   .add-task-btn{margin-top:10px;background:none;border:1px dashed var(--line);color:var(--white-dim);border-radius:6px;padding:8px;width:100%;cursor:pointer;font-family:inherit;font-size:12px;}
   .add-task-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
@@ -113,7 +121,15 @@
   .chk-row:first-of-type{border-top:none;}
   .chk-row label{flex:1;font-size:13px;}
   .chk-row .pts{color:var(--lightblue);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;}
-  input[type=checkbox]{width:18px;height:18px;accent-color:var(--lightblue);cursor:pointer;}
+  input[type=checkbox]{
+    appearance:none; -webkit-appearance:none; width:20px; height:20px; border-radius:6px;
+    border:1.5px solid var(--line); background:var(--navy-alt); cursor:pointer; position:relative; flex-shrink:0;
+  }
+  input[type=checkbox]:checked{ background:var(--navy-alt); border-color:var(--gray); }
+  input[type=checkbox]:checked::after{
+    content:''; position:absolute; left:5px; top:1px; width:6px; height:11px;
+    border:solid var(--gray); border-width:0 2.5px 2.5px 0; transform:rotate(40deg);
+  }
   .today-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px;}
   .live-score{font-size:13px;color:var(--white-dim);}
   .live-score b{color:var(--lightblue);font-size:16px;}
@@ -154,7 +170,9 @@
   .chat-bubble{max-width:80%;padding:8px 12px;border-radius:10px;font-size:13px;line-height:1.6;}
   .chat-bubble.mine{align-self:flex-end;background:var(--lightblue-dim);color:var(--white);border:1px solid var(--lightblue);}
   .chat-bubble.theirs{align-self:flex-start;background:var(--navy-alt);border:1px solid var(--line);}
-  .chat-sender{font-size:10px;color:var(--white-dim);margin-bottom:3px;font-weight:700;}
+  .chat-sender{font-size:10px;color:var(--white-dim);margin-bottom:3px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .icon-btn-sm{background:none;border:none;color:var(--white-dim);cursor:pointer;font-size:10px;padding:0 2px;}
+  .icon-btn-sm:hover{color:#C94F4F;}
   .chat-time{font-size:10px;color:var(--white-dim);margin-top:4px;text-align:left;}
   .update-card{border-right:3px solid var(--lightblue);background:var(--navy-alt);border-radius:8px;padding:10px 12px;margin-bottom:10px;}
   .update-card .meta{font-size:11px;color:var(--white-dim);margin-top:4px;}
@@ -235,13 +253,14 @@
   </div>
 
   <div class="tabs" id="mainTabs">
-    <button class="tab-btn active" data-tab="tasks">تسک‌ها</button>
-    <button class="tab-btn" data-tab="today">امروز</button>
-    <button class="tab-btn" data-tab="dashboard">داشبورد</button>
-    <button class="tab-btn" data-tab="feedback">بازخورد</button>
-    <button class="tab-btn" data-tab="achievements">افتخارات</button>
-    <button class="tab-btn" data-tab="adminmsg">اپدیت‌ها <span class="badge-dot hidden" id="updatesBadgeMember"></span></button>
-    <button class="tab-btn" data-tab="qna">ارتباط با تیم</button>
+    <button class="tab-btn active" data-tab="tasks">Task Set</button>
+    <button class="tab-btn" data-tab="today">To Do</button>
+    <button class="tab-btn" data-tab="dashboard">Scores</button>
+    <button class="tab-btn" data-tab="feedback">FeedBack</button>
+    <button class="tab-btn" data-tab="achievements">Honor Room</button>
+    <button class="tab-btn" data-tab="adminmsg">Updates <span class="badge-dot hidden" id="updatesBadgeMember"></span></button>
+    <button class="tab-btn" data-tab="qna">Connect To Team</button>
+    <button class="tab-btn" data-tab="status">Status</button>
   </div>
 
   <div class="panel active" id="panel-tasks"></div>
@@ -251,6 +270,7 @@
   <div class="panel" id="panel-achievements"></div>
   <div class="panel" id="panel-adminmsg"></div>
   <div class="panel" id="panel-qna"></div>
+  <div class="panel" id="panel-status"></div>
 </div>
 
 <!-- ===================== MENTOR HOME (member list) ===================== -->
@@ -270,15 +290,17 @@
   <div class="tabs">
     <button class="tab-btn active" data-mtab="list">لیست کاربران</button>
     <button class="tab-btn" data-mtab="userq">پیام کاربران</button>
-    <button class="tab-btn" data-mtab="achv">افتخارات</button>
-    <button class="tab-btn" data-mtab="msg">اپدیت‌ها <span class="badge-dot hidden" id="updatesBadgeMentor"></span></button>
+    <button class="tab-btn" data-mtab="achv">Honor Room</button>
+    <button class="tab-btn" data-mtab="msg">Updates <span class="badge-dot hidden" id="updatesBadgeMentor"></span></button>
     <button class="tab-btn" data-mtab="qna">ارتباط با مدیریت</button>
+    <button class="tab-btn" data-mtab="status">Status</button>
   </div>
   <div class="panel active" id="mpanel-list"></div>
   <div class="panel" id="mpanel-userq"></div>
   <div class="panel" id="mpanel-achv"></div>
   <div class="panel" id="mpanel-msg"></div>
   <div class="panel" id="mpanel-qna"></div>
+  <div class="panel" id="mpanel-status"></div>
 </div>
 
 <!-- ===================== ADMIN PANEL ===================== -->
@@ -298,15 +320,17 @@
   <div class="tabs">
     <button class="tab-btn active" data-atab="members">کاربران</button>
     <button class="tab-btn" data-atab="mentors">منتورها</button>
-    <button class="tab-btn" data-atab="medals">افتخارات</button>
-    <button class="tab-btn" data-atab="msgs">اپدیت‌ها</button>
-    <button class="tab-btn" data-atab="qna">ارتباط با تیم</button>
+    <button class="tab-btn" data-atab="medals">Honor Room</button>
+    <button class="tab-btn" data-atab="msgs">Updates</button>
+    <button class="tab-btn" data-atab="qna">Connect To Team</button>
+    <button class="tab-btn" data-atab="status">Status</button>
   </div>
   <div class="panel active" id="apanel-members"></div>
   <div class="panel" id="apanel-mentors"></div>
   <div class="panel" id="apanel-medals"></div>
   <div class="panel" id="apanel-msgs"></div>
   <div class="panel" id="apanel-qna"></div>
+  <div class="panel" id="apanel-status"></div>
 </div>
 
 <!-- ===================== MENTOR PROFILE VIEW (برای رئیس) ===================== -->
@@ -547,6 +571,7 @@ document.getElementById('mentorSubmit').addEventListener('click', guard(document
   errEl.classList.add('hidden');
   currentMentorCode = code;
   currentMentorProfile = mentor;
+  startPresenceHeartbeat(code);
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('mentorHome').classList.remove('hidden');
   document.getElementById('mentorSub').textContent = `${mentor.name} · کد ${mentor.code}`;
@@ -556,6 +581,7 @@ document.getElementById('mentorSubmit').addEventListener('click', guard(document
   renderBootcampLeaderboard('mpanel-achv');
   renderUpdatesPanel('mpanel-msg', currentMentorCode, true, 'mentor', mentor.name);
   renderMentorAdminChatPanel('mpanel-qna', currentMentorCode, 'mentor');
+  renderStatusPanel('mpanel-status', 'mentor');
   checkUpdatesBadge(currentMentorCode, 'updatesBadgeMentor');
 }));
 
@@ -590,10 +616,12 @@ document.getElementById('adminSubmit').addEventListener('click', guard(document.
   renderAdminMedals();
   renderAdminMsgs();
   renderAdminQna();
+  renderStatusPanel('apanel-status', 'admin');
 }));
 
 // ================= logout handlers =================
 function backToLogin(){
+  stopPresenceHeartbeat();
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('mentorHome').classList.add('hidden');
   document.getElementById('adminApp').classList.add('hidden');
@@ -648,6 +676,7 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   currentCode = code;
   currentMember = memberInfo;
   isViewOnly = viewOnly;
+  if(!viewOnly) startPresenceHeartbeat(code);
 
   await loadMemberState();
 
@@ -748,6 +777,7 @@ document.querySelectorAll('#mainTabs .tab-btn').forEach(btn=>{
     document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
     if(btn.dataset.tab==='dashboard') renderDashboard();
     if(btn.dataset.tab==='today') renderToday();
+    if(btn.dataset.tab==='status') renderStatusPanel('panel-status', 'member');
   });
 });
 
@@ -828,6 +858,7 @@ function renderToday(){
       </div>
     </div>
     <div class="card"><h2>روزهای ثبت‌شده</h2><div id="recordedDaysList"></div></div>
+    <div class="card hidden" id="dayDetailCard"></div>
   `;
 
   const checklistArea = el.querySelector('#checklistArea');
@@ -890,11 +921,32 @@ function renderRecordedDays(){
   let html = '<table><tr><th>تاریخ</th><th>روز</th><th>امتیاز روزانه</th><th></th></tr>';
   dates.slice().reverse().forEach(d=>{
     const r = dailyRecords[d];
-    html += `<tr><td>${d}</td><td>${r.weekday||''}</td><td>${r.dailyScore}</td><td>${isViewOnly?'':`<button class="icon-btn" data-del-day="${d}">✕</button>`}</td></tr>`;
+    html += `<tr><td>${d}</td><td>${r.weekday||''}</td><td>${r.dailyScore}</td><td><div class="icon-row">
+      <button class="icon-btn" data-view-day="${d}" title="مشاهده جزئیات">◉</button>
+      ${isViewOnly?'':`<button class="icon-btn" data-del-day="${d}" title="حذف">✕</button>`}
+    </div></td></tr>`;
   });
   html += '</table>';
   wrap.innerHTML = html;
   wrap.querySelectorAll('[data-del-day]').forEach(btn=>btn.addEventListener('click', ()=>{ delete dailyRecords[btn.dataset.delDay]; saveDaily(); updateHeaderStats(); renderToday(); }));
+  wrap.querySelectorAll('[data-view-day]').forEach(btn=>btn.addEventListener('click', ()=>{
+    const d = btn.dataset.viewDay;
+    const rec = dailyRecords[d];
+    const card = document.getElementById('dayDetailCard');
+    if(!card) return;
+    card.classList.remove('hidden');
+    let html2 = `<h2>جزئیات روز ${d} (${rec.weekday||''}) — فقط نمایش</h2>`;
+    categories.forEach(cat=>{
+      html2 += `<div class="checklist-cat"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
+      cat.tasks.forEach(task=>{
+        const checked = rec.done && rec.done[task.id] ? 'checked' : '';
+        html2 += `<div class="chk-row"><input type="checkbox" disabled ${checked}><label>${escapeHtml(task.name)}</label><span class="pts">${task.points}</span></div>`;
+      });
+      html2 += '</div>';
+    });
+    card.innerHTML = html2;
+    card.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }));
 }
 
 // ================= dashboard panel =================
@@ -1078,6 +1130,68 @@ async function renderBootcampLeaderboard(panelId){
 
 // ================= admin messages — generic by code =================
 // ================= اپدیت‌ها — یه فید مشترک که همه (کاربر+منتور) می‌بینن =================
+// ================= وضعیت آنلاین/آفلاین (Status) — با ضربان دوره‌ای، تقریبی و نه لحظه‌ای واقعی =================
+const PRESENCE_TTL = 45000; // اگه تا ۴۵ ثانیه پیش heartbeat نداشته باشه، آفلاین حساب میشه
+let presenceInterval = null;
+async function updatePresence(code){
+  if(!code) return;
+  try{ await window.storage.set('presence:'+code, String(Date.now()), true); }catch(e){}
+}
+function startPresenceHeartbeat(code){
+  stopPresenceHeartbeat();
+  updatePresence(code);
+  presenceInterval = setInterval(()=>updatePresence(code), 20000);
+}
+function stopPresenceHeartbeat(){
+  if(presenceInterval){ clearInterval(presenceInterval); presenceInterval = null; }
+}
+async function isOnline(code){
+  try{
+    const r = await window.storage.get('presence:'+code, true);
+    if(!r || !r.value) return false;
+    return (Date.now() - Number(r.value)) < PRESENCE_TTL;
+  }catch(e){ return false; }
+}
+// mode: 'member' → فقط منتورهای آنلاین / 'mentor' → همه‌ی کاربرا با وضعیت / 'admin' → همه‌ی کاربرا و منتورها با وضعیت
+async function renderStatusPanel(panelId, mode){
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  el.innerHTML = '<div class="card"><div class="empty">در حال بررسی وضعیت...</div></div>';
+  let html = '';
+  if(mode==='member'){
+    const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
+    const online = [];
+    for(const m of mentors){ if(await isOnline(m.code)) online.push(m); }
+    html += '<div class="card"><h2>Status — منتورهای آنلاین</h2>';
+    if(online.length===0){ html += '<div class="empty">در حال حاضر منتوری آنلاین نیست</div>'; }
+    else{
+      online.forEach(m=>{
+        html += `<div class="del-row"><div><span class="badge-dot" style="box-shadow:0 0 6px 2px var(--lightblue);background:var(--lightblue);"></span> <b>${escapeHtml(m.name)}</b> آنلاین است</div><div class="cd">می‌تونی از «Connect To Team» پیام بدی</div></div>`;
+      });
+    }
+    html += '</div>';
+  }else{
+    const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
+    let mentors = [];
+    if(mode==='admin') mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
+    html += '<div class="card"><h2>Status — کاربران</h2>';
+    for(const m of members){
+      const on = await isOnline(m.code);
+      html += `<div class="del-row"><div><span class="badge-dot" style="box-shadow:0 0 6px 2px ${on?'var(--lightblue)':'var(--gray)'};background:${on?'var(--lightblue)':'var(--gray)'};"></span> ${escapeHtml(m.name)}</div><div class="cd">${on?'آنلاین':'آفلاین'}</div></div>`;
+    }
+    html += '</div>';
+    if(mode==='admin'){
+      html += '<div class="card"><h2>Status — منتورها</h2>';
+      for(const m of mentors){
+        const on = await isOnline(m.code);
+        html += `<div class="del-row"><div><span class="badge-dot" style="box-shadow:0 0 6px 2px ${on?'var(--lightblue)':'var(--gray)'};background:${on?'var(--lightblue)':'var(--gray)'};"></span> ${escapeHtml(m.name)}</div><div class="cd">${on?'آنلاین':'آفلاین'}</div></div>`;
+      }
+      html += '</div>';
+    }
+  }
+  el.innerHTML = html;
+}
+
 async function loadUpdates(){
   try{ const r = await window.storage.get('updates', true); return r && r.value ? JSON.parse(r.value) : []; }
   catch(e){ return []; }
@@ -1150,7 +1264,7 @@ async function saveThread(code, threadKey, list){
 
 // یه کارت چت دوطرفه بین «myRole» (کسی که پشت این نمایشه) و طرف مقابل، رو یه ترد مشخص (thread_admin یا thread_mentor)
 async function renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn){
-  const wrapId = 'chatwrap_'+threadKey+'_'+memberCode+'_'+myRole;
+  const wrapId = ('chatwrap_'+threadKey+'_'+memberCode+'_'+myRole).replace(/[^a-zA-Z0-9_-]/g, '_');
   const list = await loadThread(memberCode, threadKey);
   const card = document.createElement('div');
   card.className = 'card';
@@ -1166,10 +1280,17 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     let html = '';
     list.forEach(m=>{
       const mine = m.from===myRole;
-      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}</div></div>`;
+      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))} ${mine?`<button class="icon-btn-sm" data-del-msg="${m.id}" title="حذف">✕</button>`:''}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}</div></div>`;
     });
     logEl.innerHTML = html;
     logEl.scrollTop = logEl.scrollHeight;
+    logEl.querySelectorAll('[data-del-msg]').forEach(delBtn=>delBtn.addEventListener('click', async ()=>{
+      const fresh = await loadThread(memberCode, threadKey);
+      const filtered = fresh.filter(m=>m.id!==delBtn.dataset.delMsg);
+      await saveThread(memberCode, threadKey, filtered);
+      containerEl.innerHTML = '';
+      await renderChatCard(containerEl, memberCode, threadKey, myRole, title, senderLabelFn);
+    }));
   }
   const btn = card.querySelector('#'+wrapId+'_btn');
   btn.addEventListener('click', guard(btn, async ()=>{
@@ -1300,7 +1421,7 @@ async function renderMentorMemberList(){
   registry.forEach(m=>{
     html += `<div class="member-list-row" data-open="${m.code}">
       <div><div class="nm">${escapeHtml(m.name)} ${m.isNew?'<span class="new-tag">جدید</span>':''}</div><div class="cd">کد ${m.code}</div></div>
-      <button class="icon-btn" title="مشاهده پروفایل">👁</button>
+      <button class="icon-btn" title="مشاهده پروفایل">◉</button>
     </div>`;
   });
   html += '</div>';
@@ -1321,8 +1442,44 @@ document.querySelectorAll('#mentorHome [data-mtab]').forEach(btn=>{
     document.querySelectorAll('#mentorHome .panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('mpanel-'+btn.dataset.mtab).classList.add('active');
+    if(btn.dataset.mtab==='status') renderStatusPanel('mpanel-status', 'mentor');
   });
 });
+
+async function migrateStorageKey(oldKey, newKey){
+  try{
+    const r = await window.storage.get(oldKey, true);
+    if(r && r.value){
+      await window.storage.set(newKey, r.value, true);
+      await window.storage.delete(oldKey, true);
+    }
+  }catch(e){ console.error('migrate failed', oldKey, newKey, e); }
+}
+async function migrateMemberCode(oldCode, newCode){
+  if(oldCode===newCode) return;
+  await migrateStorageKey('categories:'+oldCode, 'categories:'+newCode);
+  await migrateStorageKey('daily:'+oldCode, 'daily:'+newCode);
+  await migrateStorageKey('feedback:'+oldCode, 'feedback:'+newCode);
+  await migrateStorageKey('achv:'+oldCode, 'achv:'+newCode);
+  await migrateStorageKey('thread_admin:'+oldCode, 'thread_admin:'+newCode);
+  await migrateStorageKey('seenupdates:'+oldCode, 'seenupdates:'+newCode);
+  await migrateStorageKey('presence:'+oldCode, 'presence:'+newCode);
+  const mentors = await loadMentorRegistry();
+  for(const m of mentors){
+    await migrateStorageKey('thread_mentor:'+m.code+':'+oldCode, 'thread_mentor:'+m.code+':'+newCode);
+  }
+}
+async function migrateMentorCode(oldCode, newCode){
+  if(oldCode===newCode) return;
+  await migrateStorageKey('achv:'+oldCode, 'achv:'+newCode);
+  await migrateStorageKey('thread_mentor_admin:'+oldCode, 'thread_mentor_admin:'+newCode);
+  await migrateStorageKey('seenupdates:'+oldCode, 'seenupdates:'+newCode);
+  await migrateStorageKey('presence:'+oldCode, 'presence:'+newCode);
+  const members = await loadMemberRegistry();
+  for(const mem of members){
+    await migrateStorageKey('thread_mentor:'+oldCode+':'+mem.code, 'thread_mentor:'+newCode+':'+mem.code);
+  }
+}
 
 // ================= admin: members management =================
 async function renderAdminMembers(){
@@ -1349,9 +1506,10 @@ async function renderAdminMembers(){
     active.slice().reverse().forEach(m=>{
       html += `<div class="del-row">
         <div><b>${escapeHtml(m.name)}</b> ${m.isNew?'<span class="new-tag">جدید</span>':''}<div class="cd" style="font-size:11px;color:var(--white-dim);">کد ${m.code} · ${escapeHtml(m.phone||'')}</div></div>
-        <div class="row-flex" style="flex:none;gap:6px;">
-          <button class="icon-btn" data-view-mem="${m.code}" title="مشاهده پروفایل">👁</button>
-          <button class="icon-btn" data-del-mem="${m.code}">✕</button>
+        <div class="icon-row">
+          <button class="icon-btn" data-view-mem="${m.code}" title="مشاهده پروفایل">◉</button>
+          <button class="icon-btn" data-edit-mem="${m.code}" title="ویرایش">✎</button>
+          <button class="icon-btn" data-del-mem="${m.code}" title="حذف">✕</button>
         </div>
       </div>`;
     });
@@ -1366,6 +1524,28 @@ async function renderAdminMembers(){
     document.getElementById('adminApp').classList.add('hidden');
     await enterMemberApp(code, true, mem);
   }));
+  listEl.querySelectorAll('[data-edit-mem]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+    const reg = await loadMemberRegistry();
+    const target = reg.find(m=>m.code===btn.dataset.editMem);
+    if(!target) return;
+    const newName = prompt('نام جدید:', target.name);
+    if(newName===null) return;
+    const newCode = prompt('کد جدید:', target.code);
+    if(newCode===null) return;
+    const newPhone = prompt('شماره جدید:', target.phone||'');
+    if(newPhone===null) return;
+    if(newCode !== target.code && reg.some(m=>m.code===newCode && !m.deleted)){
+      showToast('این کد قبلاً برای یکی دیگه ثبت شده'); return;
+    }
+    const oldCode = target.code;
+    target.name = newName.trim() || target.name;
+    target.code = newCode.trim() || target.code;
+    target.phone = newPhone.trim();
+    if(target.code !== oldCode) await migrateMemberCode(oldCode, target.code);
+    await saveMemberRegistry(reg);
+    showToast('ویرایش شد');
+    renderAdminMembers();
+  })));
   listEl.querySelectorAll('[data-del-mem]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
     const reg = await loadMemberRegistry();
     const target = reg.find(m=>m.code===btn.dataset.delMem);
@@ -1417,9 +1597,10 @@ async function renderAdminMentors(){
   active.forEach(m=>{
     html += `<div class="del-row">
       <div><b>${escapeHtml(m.name)}</b><div class="cd" style="font-size:11px;color:var(--white-dim);">کد ${m.code} · ${escapeHtml(m.phone||'')}</div></div>
-      <div class="row-flex" style="flex:none;gap:6px;">
-        <button class="icon-btn" data-view-men="${m.code}" title="مشاهده پروفایل">👁</button>
-        <button class="icon-btn" data-del-men="${m.code}">✕</button>
+      <div class="icon-row">
+        <button class="icon-btn" data-view-men="${m.code}" title="مشاهده پروفایل">◉</button>
+        <button class="icon-btn" data-edit-men="${m.code}" title="ویرایش">✎</button>
+        <button class="icon-btn" data-del-men="${m.code}" title="حذف">✕</button>
       </div>
     </div>`;
   });
@@ -1432,6 +1613,28 @@ async function renderAdminMentors(){
     document.getElementById('adminApp').classList.add('hidden');
     await enterMentorProfileView(code, men);
   }));
+  listEl.querySelectorAll('[data-edit-men]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+    const reg = await loadMentorRegistry();
+    const target = reg.find(m=>m.code===btn.dataset.editMen);
+    if(!target) return;
+    const newName = prompt('نام جدید:', target.name);
+    if(newName===null) return;
+    const newCode = prompt('کد جدید:', target.code);
+    if(newCode===null) return;
+    const newPhone = prompt('شماره جدید:', target.phone||'');
+    if(newPhone===null) return;
+    if(newCode !== target.code && reg.some(m=>m.code===newCode && !m.deleted)){
+      showToast('این کد قبلاً برای یکی دیگه ثبت شده'); return;
+    }
+    const oldCode = target.code;
+    target.name = newName.trim() || target.name;
+    target.code = newCode.trim() || target.code;
+    target.phone = newPhone.trim();
+    if(target.code !== oldCode) await migrateMentorCode(oldCode, target.code);
+    await saveMentorRegistry(reg);
+    showToast('ویرایش شد');
+    renderAdminMentors();
+  })));
   listEl.querySelectorAll('[data-del-men]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
     const reg = await loadMentorRegistry();
     const target = reg.find(m=>m.code===btn.dataset.delMen);
@@ -1506,6 +1709,7 @@ document.querySelectorAll('#adminApp [data-atab]').forEach(btn=>{
     document.querySelectorAll('#adminApp .panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('apanel-'+btn.dataset.atab).classList.add('active');
+    if(btn.dataset.atab==='status') renderStatusPanel('apanel-status', 'admin');
   });
 });
 </script>
