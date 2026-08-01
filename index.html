@@ -145,7 +145,31 @@
   .member-chip{background:var(--navy-alt);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:12px;}
   .member-chip b{color:var(--lightblue);}
   .view-only-badge{background:var(--lightblue-dim);color:var(--lightblue);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;}
-  .logout-btn{background:none;border:1px solid #C94F4F;color:#C94F4F;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-family:inherit;}
+  .logout-btn{
+    position:relative;overflow:hidden;background:rgba(201,79,79,0.12);border:1px solid rgba(201,79,79,0.5);color:#E37272;
+    border-radius:10px;padding:7px 12px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;
+    backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .logout-btn::after{
+    content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle, rgba(255,120,120,.55) 0%, transparent 70%);
+    opacity:0;transform:scale(.3);pointer-events:none;transition:opacity .5s ease, transform .5s ease;
+  }
+  .logout-btn:active{ transform:scale(.94); }
+  .logout-btn:active::after{ opacity:1;transform:scale(1.6);transition:none; }
+  .btn-glass-cta{
+    position:relative;overflow:hidden;
+    background:linear-gradient(160deg, rgba(150,197,238,.95), rgba(88,132,205,.9)) !important;
+    border:1px solid rgba(255,255,255,.28) !important;
+    backdrop-filter:blur(12px) saturate(170%);-webkit-backdrop-filter:blur(12px) saturate(170%);
+    box-shadow:0 5px 18px rgba(111,168,220,.4), inset 0 1px 0 rgba(255,255,255,.55) !important;
+  }
+  .btn-glass-cta::after{
+    content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle, rgba(255,255,255,.6) 0%, transparent 70%);
+    opacity:0;transform:scale(.3);pointer-events:none;transition:opacity .5s ease, transform .5s ease;
+  }
+  .btn-glass-cta:active{ transform:scale(.95); }
+  .btn-glass-cta:active::after{ opacity:1;transform:scale(1.5);transition:none; }
   .logout-btn:hover{background:#C94F4F;color:var(--white);}
   .back-btn{background:none;border:1px solid var(--line);color:var(--white-dim);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-family:inherit;}
   .back-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
@@ -227,6 +251,8 @@
   .chk-row:first-of-type{border-top:none;}
   .chk-row label{flex:1;font-size:13px;}
   .chk-row .pts{color:var(--lightblue);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .ink-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;padding:0;}
+  .ink-swatch.active{border-color:var(--lightblue);box-shadow:0 0 0 2px rgba(111,168,220,.35);transform:scale(1.08);}
   input[type=checkbox]{
     appearance:none; -webkit-appearance:none; width:20px; height:20px; border-radius:6px;
     border:1.5px solid var(--line); background:var(--navy-alt); cursor:pointer; position:relative; flex-shrink:0;
@@ -324,14 +350,14 @@
       <label class="field-label">کد عضویت</label>
       <input type="text" id="regCode" placeholder="کد خود را وارد کنید">
       <div class="err-msg hidden" id="userErr"></div>
-      <button class="btn" id="userSubmit">ورود به پنل کاربری</button>
+      <button class="btn btn-glass-cta" id="userSubmit">ورود به پنل کاربری</button>
     </div>
 
     <div id="mentorForm" class="hidden">
       <label class="field-label">کد منتور</label>
       <input type="text" id="mentorCode" placeholder="کد خود را وارد کنید">
       <div class="err-msg hidden" id="mentorErr"></div>
-      <button class="btn" id="mentorSubmit">ورود به پنل منتوری</button>
+      <button class="btn btn-glass-cta" id="mentorSubmit">ورود به پنل منتوری</button>
     </div>
 
     <div id="adminForm" class="hidden">
@@ -343,7 +369,7 @@
         <button type="button" id="togglePassBtn" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--white-dim);cursor:pointer;font-size:15px;padding:4px;" title="نمایش رمز">👁</button>
       </div>
       <div class="err-msg hidden" id="adminErr"></div>
-      <button class="btn" id="adminSubmit">ورود به پنل مدیریت</button>
+      <button class="btn btn-glass-cta" id="adminSubmit">ورود به پنل مدیریت</button>
     </div>
 
     <div class="stamp-note">
@@ -367,7 +393,12 @@
     <div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--navy-alt);">
       <canvas id="signaturePad" width="1000" height="320" style="width:100%;height:160px;touch-action:none;cursor:crosshair;"></canvas>
     </div>
-    <div style="margin-top:6px;"><button class="btn ghost small" id="clearSignatureBtn" type="button">پاک کردن امضا</button></div>
+    <div style="margin-top:6px;display:flex;align-items:center;gap:10px;">
+      <button class="btn ghost small" id="clearSignatureBtn" type="button">پاک کردن امضا</button>
+      <span style="font-size:11px;color:var(--white-dim);">رنگ جوهر:</span>
+      <button type="button" class="ink-swatch active" id="inkBlackBtn" style="background:#12172A;" title="مشکی"></button>
+      <button type="button" class="ink-swatch" id="inkBlueBtn" style="background:#1B4E9B;" title="آبی"></button>
+    </div>
 
     <div class="chk-row" style="margin-top:14px;">
       <input type="checkbox" id="commitmentCheck">
@@ -990,8 +1021,8 @@ function computeMonths(weeks){
   }
   return months;
 }
-function weeklyStatus(s){ if(s<=49) return {label:'ضعیف',cls:'bad'}; if(s<=79) return {label:'متوسط خوب',cls:'mid'}; return {label:'عالی',cls:'good'}; }
-function monthlyStatus(s){ if(s<=49) return {label:'افتضاح',cls:'bad'}; if(s<=69) return {label:'متوسط ضعیف',cls:'bad'}; if(s<=79) return {label:'خوب',cls:'mid'}; return {label:'عالی',cls:'good'}; }
+function weeklyStatus(s){ if(s<=49) return {label:'ضعیف',grade:'D',cls:'bad'}; if(s<=79) return {label:'متوسط خوب',grade:'C+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
+function monthlyStatus(s){ if(s<=49) return {label:'افتضاح',grade:'D',cls:'bad'}; if(s<=69) return {label:'متوسط ضعیف',grade:'C+',cls:'bad'}; if(s<=79) return {label:'خوب',grade:'B+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
 
 function updateHeaderStats(){
   const el = document.getElementById('masSub');
@@ -1199,14 +1230,24 @@ function renderDashboard(){
   if(weeks.length===0){ wWrap.innerHTML = '<div class="empty">هنوز ۵ روز کامل ثبت نشده</div>'; }
   else{
     let h = '<table><tr><th>هفته</th><th>امتیاز</th><th>وضعیت</th></tr>';
-    weeks.forEach(w=>{ const st=weeklyStatus(w.score); h+=`<tr><td>هفته ${w.index}</td><td>${Math.round(w.score*10)/10}</td><td><span class="stamp ${st.cls}">${st.label}</span></td></tr>`; });
+    weeks.forEach(w=>{
+      const st=weeklyStatus(w.score);
+      const dayBreak = w.dates.map((d,i)=>`${dailyRecords[d]?.weekday||iranWeekday(d)}: ${w.scores[i]}`).join(' — ');
+      h+=`<tr><td>هفته ${w.index}</td><td>${Math.round(w.score*10)/10}</td><td><span class="stamp ${st.cls}">${st.label} · ${st.grade}</span></td></tr>
+        <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${dayBreak}</td></tr>`;
+    });
     wWrap.innerHTML = h+'</table>';
   }
   const mWrap = document.getElementById('monthlyTable');
   if(months.length===0){ mWrap.innerHTML = '<div class="empty">هنوز ۴ هفته کامل ثبت نشده</div>'; }
   else{
     let h = '<table><tr><th>ماه</th><th>امتیاز</th><th>وضعیت</th></tr>';
-    months.forEach(m=>{ const st=monthlyStatus(m.score); h+=`<tr><td>ماه ${m.index}</td><td>${Math.round(m.score*10)/10}</td><td><span class="stamp ${st.cls}">${st.label}</span></td></tr>`; });
+    months.forEach(m=>{
+      const st=monthlyStatus(m.score);
+      const weekBreak = m.weeks.map((w,i)=>`هفته ${i+1}: ${Math.round(w.score*10)/10}`).join(' — ');
+      h+=`<tr><td>ماه ${m.index}</td><td>${Math.round(m.score*10)/10}</td><td><span class="stamp ${st.cls}">${st.label} · ${st.grade}</span></td></tr>
+        <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${weekBreak}</td></tr>`;
+    });
     mWrap.innerHTML = h+'</table>';
   }
 
@@ -1493,7 +1534,7 @@ async function renderCommitmentPanel(panelId, code, memberName){
     <div class="fb-line" style="white-space:pre-wrap;">${escapeHtml(rec.text)}</div>
     <div class="fb-line" style="margin-top:10px;"><b>امضا:</b></div>
     <div style="border:1px solid var(--line);border-radius:8px;background:var(--navy-alt);padding:6px;display:inline-block;">
-      <img src="${rec.signature}" style="max-width:280px;display:block;">
+      <img src="${rec.signature}" style="max-width:280px;display:block;background:#F4F6F9;border:2px solid var(--line);border-radius:8px;padding:4px;">
     </div>
     ${commitmentExpired(rec)?'<div class="err-msg" style="margin-top:10px;">⚠️ این تعهدنامه منقضی شده (بیش از یک ماه از ثبتش گذشته)</div>':''}
   </div>`;
@@ -1503,8 +1544,8 @@ async function renderCommitmentPanel(panelId, code, memberName){
 function setupSignaturePad(canvas){
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#F4F6F9'; ctx.fillRect(0,0,canvas.width,canvas.height); // زمینه‌ی ثابت روشن، مستقل از تم، تا امضا همیشه خونا بمونه
-  ctx.strokeStyle = '#12172A'; // جوهر تیره‌ی ثابت
-  ctx.lineWidth = 4.2; ctx.lineJoin='round'; ctx.lineCap='round';
+  ctx.strokeStyle = '#12172A'; // جوهر تیره‌ی ثابت (پیش‌فرض: مشکی)
+  ctx.lineWidth = 5.6; ctx.lineJoin='round'; ctx.lineCap='round';
   let drawing = false, hasDrawn = false, lastPoint = null;
   function pos(e){
     const rect = canvas.getBoundingClientRect();
@@ -1533,7 +1574,8 @@ function setupSignaturePad(canvas){
   return {
     clear(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#F4F6F9'; ctx.fillRect(0,0,canvas.width,canvas.height); hasDrawn = false; },
     isEmpty(){ return !hasDrawn; },
-    dataURL(){ return canvas.toDataURL('image/png'); }
+    dataURL(){ return canvas.toDataURL('image/png'); },
+    setColor(c){ ctx.strokeStyle = c; }
   };
 }
 async function proceedToMainApp(code, name){
@@ -1579,6 +1621,9 @@ function initCommitmentScreen(memberCode, memberName){
   const newClearBtn = clearBtn.cloneNode(true);
   clearBtn.parentNode.replaceChild(newClearBtn, clearBtn);
   newClearBtn.addEventListener('click', ()=>signaturePadInstance.clear());
+  const inkBlack = document.getElementById('inkBlackBtn'), inkBlue = document.getElementById('inkBlueBtn');
+  inkBlack.onclick = ()=>{ signaturePadInstance.setColor('#12172A'); inkBlack.classList.add('active'); inkBlue.classList.remove('active'); };
+  inkBlue.onclick = ()=>{ signaturePadInstance.setColor('#1B4E9B'); inkBlue.classList.add('active'); inkBlack.classList.remove('active'); };
 }
 
 
@@ -1851,11 +1896,12 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
   containerEl.appendChild(card);
   const logEl = card.querySelector('#'+wrapId+'_log');
 
-  async function refreshLog(){
-    if(!document.body.contains(logEl)) return false; // دیگه رو صفحه نیست، از رفرش‌های بعدی حذف شه
-    const list = await loadThread(memberCode, threadKey);
+  let lastList = [];
+  let sending = false;
+  function renderList(list){
+    lastList = list;
     const nearBottom = logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight < 40;
-    if(list.length===0){ logEl.innerHTML = '<div class="empty">هنوز پیامی نیست — همینجا می‌تونی شروع کنی</div>'; return true; }
+    if(list.length===0){ logEl.innerHTML = '<div class="empty">هنوز پیامی نیست — همینجا می‌تونی شروع کنی</div>'; return; }
     let html = '';
     list.forEach(m=>{
       const mine = m.from===myRole;
@@ -1870,6 +1916,12 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
       await saveThread(memberCode, threadKey, filtered);
       await refreshLog();
     })));
+  }
+  async function refreshLog(){
+    if(!document.body.contains(logEl)) return false; // دیگه رو صفحه نیست، از رفرش‌های بعدی حذف شه
+    if(sending) return true; // یه پیام همین الان داره ارسال میشه، فعلاً رفرش نکن که پیام محو نشه
+    const list = await loadThread(memberCode, threadKey);
+    renderList(list);
     return true;
   }
   await refreshLog();
@@ -1881,11 +1933,15 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     const input = card.querySelector('#'+wrapId+'_input');
     const val = input.value.trim();
     if(!val) return;
-    const fresh = await loadThread(memberCode, threadKey);
-    fresh.push({id:uid(), from:myRole, text:val, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
-    await saveThread(memberCode, threadKey, fresh);
     input.value='';
-    await refreshLog();
+    const newMsg = {id:uid(), from:myRole, text:val, date:new Date().toISOString().slice(0,10), time:iranNowTime()};
+    renderList([...lastList, newMsg]); // نمایش فوری بدون معطلی، ذخیره‌سازی پشت‌صحنه انجام میشه
+    sending = true;
+    const fresh = await loadThread(memberCode, threadKey); // آخرین نسخه رو می‌گیریم که پیام کس دیگه‌ای که هم‌زمان فرستاده گم نشه
+    fresh.push(newMsg);
+    await saveThread(memberCode, threadKey, fresh);
+    lastList = fresh;
+    sending = false;
   }));
 }
 
