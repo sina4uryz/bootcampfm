@@ -12,7 +12,7 @@
 <title>Focus Mode</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <!-- Supabase (رایگان) — این اسکریپت دیتابیس رو فراهم می‌کنه تا خارج از Claude هم کار کنه -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -533,6 +533,35 @@ let achievementsList = [];
 let adminMsgList = [];
 let qnaList = [];
 let currentDate = new Date().toISOString().slice(0,10);
+// امروز رو دقیقاً طبق منطقه زمانی ایران حساب می‌کنه (نه UTC) تا سر ساعت ۱۲ شب درست بره روز بعد
+function iranTodayISO(){
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Tehran', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(new Date());
+  const y = parts.find(p=>p.type==='year').value, m = parts.find(p=>p.type==='month').value, d = parts.find(p=>p.type==='day').value;
+  return `${y}-${m}-${d}`;
+}
+// تبدیل یه تاریخ (به فرمت YYYY-MM-DD) به تاریخ شمسی برای نمایش
+function iranJalaliDate(isoDate){
+  const dateObj = new Date(isoDate+'T12:00:00');
+  try{ return dateObj.toLocaleDateString('fa-IR-u-ca-persian', { timeZone:'Asia/Tehran', year:'numeric', month:'long', day:'numeric' }); }
+  catch(e){ return dateObj.toLocaleDateString('fa-IR', { timeZone:'Asia/Tehran' }); }
+}
+function iranJalaliShort(isoDate){
+  const dateObj = new Date(isoDate+'T12:00:00');
+  try{ return dateObj.toLocaleDateString('fa-IR-u-ca-persian', { timeZone:'Asia/Tehran', month:'long', day:'numeric' }); }
+  catch(e){ return isoDate; }
+}
+function iranWeekday(isoDate){
+  const dateObj = new Date(isoDate+'T12:00:00');
+  return dateObj.toLocaleDateString('fa-IR', { timeZone:'Asia/Tehran', weekday:'long' });
+}
+// ساعت دقیق الان به وقت ایران (برای کنار تاریخِ ثبت‌ها)
+function iranNowTime(){
+  return new Date().toLocaleTimeString('fa-IR', { timeZone:'Asia/Tehran', hour:'2-digit', minute:'2-digit' });
+}
+function iranTimeFromTs(ts){
+  try{ return new Date(ts).toLocaleTimeString('fa-IR', { timeZone:'Asia/Tehran', hour:'2-digit', minute:'2-digit' }); }
+  catch(e){ return ''; }
+}
 let chartInstance = null;
 
 const uid = () => Math.random().toString(36).slice(2,9);
@@ -654,11 +683,14 @@ document.getElementById('mentorSubmit').addEventListener('click', guard(document
   renderMentorMemberList();
   renderMentorUserQuestions();
   renderAchievementsPanel('mpanel-achv', currentMentorCode, true);
+  registerLiveListRefresh('mpanel-achv', ()=>loadAchievements(currentMentorCode), renderAchievementsPanel, currentMentorCode, true);
   renderBootcampLeaderboard('mpanel-achv');
   renderUpdatesPanel('mpanel-msg', currentMentorCode, true, 'mentor', mentor.name);
+  registerLiveListRefresh('mpanel-msg', loadUpdates, renderUpdatesPanel, currentMentorCode, true, 'mentor', mentor.name);
   renderMentorAdminChatPanel('mpanel-qna', currentMentorCode, 'mentor');
   renderStatusPanel('mpanel-status', 'mentor');
   renderRulesPanel('mpanel-rules', true, 'mentor', mentor.name);
+  registerLiveListRefresh('mpanel-rules', loadRules, renderRulesPanel, true, 'mentor', mentor.name);
   checkUpdatesBadge(currentMentorCode, 'updatesBadgeMentor');
 }));
 
@@ -695,6 +727,7 @@ document.getElementById('adminSubmit').addEventListener('click', guard(document.
   renderAdminQna();
   renderStatusPanel('apanel-status', 'admin');
   renderRulesPanel('apanel-rules', true, 'admin', 'مدیریت');
+  registerLiveListRefresh('apanel-rules', loadRules, renderRulesPanel, true, 'admin', 'مدیریت');
 }));
 
 // ================= logout handlers =================
@@ -773,11 +806,14 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   renderCommitmentPanel('panel-commitment', currentCode, memberInfo.name||'');
   renderPersonalNotesPanel('panel-notes', currentCode, isViewOnly);
   renderRulesPanel('panel-rules', false, null, null);
-  renderAchievementsPanel('panel-achievements', currentCode, true);
-  renderBootcampLeaderboard('panel-achievements');
+  registerLiveListRefresh('panel-rules', loadRules, renderRulesPanel, false, null, null);
   const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
+  renderAchievementsPanel('panel-achievements', currentCode, msgViewerRole!=='admin');
+  registerLiveListRefresh('panel-achievements', ()=>loadAchievements(currentCode), renderAchievementsPanel, currentCode, msgViewerRole!=='admin');
+  renderBootcampLeaderboard('panel-achievements');
   if(msgViewerRole==='member'){
     renderUpdatesPanel('panel-adminmsg', currentCode, false, null, null);
+    registerLiveListRefresh('panel-adminmsg', loadUpdates, renderUpdatesPanel, currentCode, false, null, null);
     checkUpdatesBadge(currentCode, 'updatesBadgeMember');
   }else{
     document.getElementById('panel-adminmsg').innerHTML = '';
@@ -920,16 +956,15 @@ function renderToday(){
     el.innerHTML = '<div class="card"><div class="empty">در حالت مشاهده، ثبت تسک روزانه غیرفعاله. برای دیدن روند به تب «داشبورد» برو.</div></div>';
     return;
   }
-  currentDate = new Date().toISOString().slice(0,10); // قفل روی همین امروز — روزهای قبل قابل ویرایش نیستن
+  currentDate = iranTodayISO(); // قفل روی همین امروز (به وقت ایران) — روزهای قبل قابل ویرایش نیستن
   const rec = dailyRecords[currentDate] || {done:{}};
-  const dateObj = new Date(currentDate+'T00:00:00');
-  const weekdayFa = dateObj.toLocaleDateString('fa-IR', {weekday:'long'});
+  const weekdayFa = iranWeekday(currentDate);
   const isWorkday = !['جمعه','پنجشنبه'].includes(weekdayFa);
 
   el.innerHTML = `
     <div class="card">
       <div class="today-header">
-        <div><label class="field-label">تاریخ</label><div style="padding:9px 2px;font-size:13px;color:var(--white-dim);">${currentDate} · فقط امروز قابل ثبته</div></div>
+        <div><label class="field-label">تاریخ</label><div style="padding:9px 2px;font-size:13px;color:var(--white-dim);">${iranJalaliDate(currentDate)} · فقط امروز قابل ثبته</div></div>
         <span class="weekday-pill ${isWorkday?'':'warn'}">${weekdayFa}${isWorkday?'':' · روز کاری نیست'}</span>
       </div>
       <div id="checklistArea"></div>
@@ -1005,7 +1040,7 @@ function renderRecordedDays(){
   let html = '<table><tr><th>تاریخ</th><th>روز</th><th>امتیاز روزانه</th><th></th></tr>';
   dates.slice().reverse().forEach(d=>{
     const r = dailyRecords[d];
-    html += `<tr><td>${d}</td><td>${r.weekday||''}</td><td>${r.dailyScore}</td><td><div class="icon-row">
+    html += `<tr><td>${iranJalaliDate(d)}</td><td>${r.weekday||''}</td><td>${r.dailyScore}</td><td><div class="icon-row">
       <button class="icon-btn" data-view-day="${d}" title="مشاهده جزئیات">◉</button>
       ${isViewOnly?'':`<button class="icon-btn" data-del-day="${d}" title="حذف">✕</button>`}
     </div></td></tr>`;
@@ -1019,7 +1054,7 @@ function renderRecordedDays(){
     const card = document.getElementById('dayDetailCard');
     if(!card) return;
     card.classList.remove('hidden');
-    let html2 = `<h2>جزئیات روز ${d} (${rec.weekday||''}) — فقط نمایش</h2>`;
+    let html2 = `<h2>جزئیات روز ${iranJalaliDate(d)} (${rec.weekday||''}) — فقط نمایش</h2>`;
     categories.forEach(cat=>{
       html2 += `<div class="checklist-cat"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
       cat.tasks.forEach(task=>{
@@ -1073,7 +1108,7 @@ function renderDashboard(){
   }
   chartWrap.classList.remove('hidden');
   chartEmptyMsg.classList.add('hidden');
-  const labels = dates;
+  const labels = dates.map(d=>iranJalaliShort(d));
   const data = dates.map(d=>dailyRecords[d].dailyScore);
   const weekIndexOf = (i)=>Math.floor(i/5);
   const weekBandsPlugin = {
@@ -1095,14 +1130,22 @@ function renderDashboard(){
       }
     }
   };
-  chartInstance = new Chart(ctx, {
-    type:'line',
-    data:{ labels, datasets:[{ label:'امتیاز روزانه', data, borderColor:'#6FA8DC', backgroundColor:'rgba(111,168,220,0.15)',
-      pointBackgroundColor:'#E9EAEC', pointBorderColor:'#6FA8DC', pointRadius:4, pointHoverRadius:6, borderWidth:2.5, tension:0.25, fill:true }] },
-    options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{rtl:true} },
-      scales:{ y:{min:0,max:100,ticks:{color:'#9AA3B2'},grid:{color:'#3A4152'}}, x:{ticks:{color:'#9AA3B2',font:{size:10}},grid:{display:false}} } },
-    plugins:[weekBandsPlugin]
-  });
+  try{
+    if(typeof Chart === 'undefined') throw new Error('chartjs-not-loaded');
+    chartInstance = new Chart(ctx, {
+      type:'line',
+      data:{ labels, datasets:[{ label:'امتیاز روزانه', data, borderColor:'#3E5FCB', backgroundColor:'rgba(62,95,203,0.45)',
+        pointBackgroundColor:'#3E5FCB', pointBorderColor:'#3E5FCB', pointRadius:4, pointHoverRadius:6, borderWidth:2.5, tension:0.25, fill:true }] },
+      options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{rtl:true} },
+        scales:{ y:{min:0,max:100,ticks:{color:'#9AA3B2'},grid:{color:'#3A4152'}}, x:{ticks:{color:'#9AA3B2',font:{size:10}},grid:{display:false}} } },
+      plugins:[weekBandsPlugin]
+    });
+  }catch(e){
+    console.error('chart render failed', e);
+    chartWrap.classList.add('hidden');
+    chartEmptyMsg.classList.remove('hidden');
+    chartEmptyMsg.textContent = 'نمودار لود نشد — اتصال اینترنتت رو چک کن و صفحه رو باز کن دوباره';
+  }
 }
 
 // ================= feedback panel =================
@@ -1129,7 +1172,7 @@ function renderFeedback(){
       const g = el.querySelector('#fbG').value.trim();
       const w = el.querySelector('#fbW').value.trim();
       const i = el.querySelector('#fbI').value.trim();
-      feedbackList.push({id:uid(), cycle, g, w, i, date:new Date().toISOString().slice(0,10)});
+      feedbackList.push({id:uid(), cycle, g, w, i, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
       await saveFeedback(); renderFeedback();
     }));
   }
@@ -1142,7 +1185,7 @@ function renderFbList(){
   let html = '';
   feedbackList.slice().reverse().forEach(f=>{
     html += `<div class="fb-entry">
-      <div class="cyc">${escapeHtml(f.cycle)} <span style="color:var(--white-dim);font-weight:400;font-size:11px;">· ${f.date}</span>
+      <div class="cyc">${escapeHtml(f.cycle)} <span style="color:var(--white-dim);font-weight:400;font-size:11px;">· ${f.date}${f.time?` · ساعت ${f.time}`:''}</span>
         ${isViewOnly?'':`<button class="icon-btn" style="float:left;" data-del-fb="${f.id}">✕</button>`}
       </div>
       ${f.g?`<div class="fb-line"><b>✅ قوت:</b> ${escapeHtml(f.g)}</div>`:''}
@@ -1185,7 +1228,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
       html += `<div class="fb-line"><b>هدف:</b> ${escapeHtml(goal.goal||'')}</div>
         <div class="fb-line"><b>تا کی:</b> ${escapeHtml(goal.deadline||'')}</div>
         <div class="fb-line"><b>دلیل:</b> ${escapeHtml(goal.reason||'')}</div>
-        <div class="meta">آخرین ثبت: ${goal.date||''}</div>`;
+        <div class="meta">آخرین ثبت: ${goal.date||''}${goal.time?` · ساعت ${goal.time}`:''}</div>`;
     }else{ html += '<div class="empty">هنوز هدفی ثبت نشده</div>'; }
   }else{
     html += `<label class="field-label">هدف ماه من چیه؟</label>
@@ -1211,7 +1254,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
   else{
     let jHtml = '';
     journal.slice().reverse().forEach(j=>{
-      jHtml += `<div class="fb-entry"><div class="cyc">${j.date} ${(!viewOnly)?`<button class="icon-btn" style="float:left;" data-del-j="${j.id}" title="حذف">✕</button>`:''}</div><div class="fb-line">${escapeHtml(j.text)}</div></div>`;
+      jHtml += `<div class="fb-entry"><div class="cyc">${j.date}${j.time?` · ساعت ${j.time}`:''} ${(!viewOnly)?`<button class="icon-btn" style="float:left;" data-del-j="${j.id}" title="حذف">✕</button>`:''}</div><div class="fb-line">${escapeHtml(j.text)}</div></div>`;
     });
     jWrap.innerHTML = jHtml;
     jWrap.querySelectorAll('[data-del-j]').forEach(btn=>btn.addEventListener('click', async ()=>{
@@ -1235,7 +1278,8 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
         goal: goalTa.value.trim(),
         deadline: deadlineInp.value.trim(),
         reason: reasonTa.value.trim(),
-        date: new Date().toISOString().slice(0,10)
+        date: new Date().toISOString().slice(0,10),
+        time: iranNowTime()
       };
       const res = await saveMonthlyGoal(code, obj);
       if(res.ok){
@@ -1251,7 +1295,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
       const val = ta.value.trim();
       if(!val) return;
       const fresh = await loadJournal(code);
-      fresh.push({id:uid(), text:val, date:new Date().toISOString().slice(0,10)});
+      fresh.push({id:uid(), text:val, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
       await saveJournal(code, fresh);
       showToast('ژورنال ثبت شد');
       renderPersonalNotesPanel(panelId, code, viewOnly);
@@ -1283,7 +1327,8 @@ async function renderRulesPanel(panelId, canEdit, authorRole, authorName){
   else{
     list.slice().reverse().forEach(r=>{
       const authorLabel = r.authorRole==='admin' ? 'مدیر' : `منتور ${escapeHtml(r.authorName||'')}`;
-      html += `<div class="update-card"><div>${escapeHtml(r.text)}</div><div class="meta">${authorLabel} · ${r.date} ${canEdit?`<button class="icon-btn-sm" data-del-rule="${r.id}" style="margin-right:8px;">✕</button>`:''}</div></div>`;
+      const canDelete = canEdit && (authorRole==='admin' || (r.authorRole===authorRole && r.authorName===authorName));
+      html += `<div class="update-card"><div>${escapeHtml(r.text)}</div><div class="meta">${authorLabel} · ${r.date}${r.time?` · ساعت ${r.time}`:''} ${canDelete?`<button class="icon-btn-sm" data-del-rule="${r.id}" style="margin-right:8px;">✕</button>`:''}</div></div>`;
     });
   }
   html += '</div>';
@@ -1295,7 +1340,7 @@ async function renderRulesPanel(panelId, canEdit, authorRole, authorName){
       const val = ta.value.trim();
       if(!val) return;
       const fresh = await loadRules();
-      fresh.push({id:uid(), text:val, authorRole, authorName, date:new Date().toISOString().slice(0,10)});
+      fresh.push({id:uid(), text:val, authorRole, authorName, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
       await saveRulesList(fresh);
       showToast('قانون ثبت شد');
       renderRulesPanel(panelId, canEdit, authorRole, authorName);
@@ -1446,10 +1491,18 @@ async function renderAchievementsPanel(panelId, code, readOnlyView){
   let html = '<div class="card"><h2>🏅 افتخارات</h2>';
   list.slice().reverse().forEach(a=>{
     const info = medalInfo(a.name || a.text);
-    html += `<div class="medal-card"><div class="ic">${info.emoji}</div><div><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${a.date}</div></div></div>`;
+    html += `<div class="medal-card"><div class="ic">${info.emoji}</div><div style="flex:1;"><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${a.date}${a.time?` · ساعت ${a.time}`:''}</div></div>${readOnlyView?'':`<button class="icon-btn" data-del-medal="${a.id}" title="حذف مدال">✕</button>`}</div>`;
   });
   html += '</div>';
   el.innerHTML = html;
+  if(!readOnlyView){
+    el.querySelectorAll('[data-del-medal]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+      const fresh = await loadAchievements(code);
+      await saveAchievements(code, fresh.filter(a=>a.id!==btn.dataset.delMedal));
+      showToast('مدال حذف شد');
+      renderAchievementsPanel(panelId, code, readOnlyView);
+    })));
+  }
 }
 
 // لیدربورد کلی افتخارات بوت‌کمپ — بر اساس بالاترین رتبه مدال، بعد تعداد
@@ -1487,6 +1540,28 @@ async function renderBootcampLeaderboard(panelId){
 let activeChatRefreshers = [];
 let currentStatusRefresh = null;
 function clearLiveRefreshers(){ activeChatRefreshers = []; currentStatusRefresh = null; }
+// یه پنل لیستی (قانون‌ها/اپدیت‌ها/مدال‌ها) رو به چرخه‌ی رفرش خودکار وصل می‌کنه — فقط وقتی محتوا واقعاً عوض شده دوباره رندر می‌کنه
+async function registerLiveListRefresh(panelId, loadFn, renderFn, ...renderArgs){
+  let lastSnapshot;
+  try{ lastSnapshot = JSON.stringify(await loadFn()); }catch(e){ lastSnapshot = null; }
+  async function refresh(){
+    const el = document.getElementById(panelId);
+    if(!el || !document.body.contains(el)) return false;
+    try{
+      const snap = JSON.stringify(await loadFn());
+      if(snap !== lastSnapshot){
+        // اگه کاربر همین الان داره تو فرم این پنل تایپ می‌کنه، فعلاً رندر نکن که پاک نشه — تیک بعدی دوباره چک می‌کنیم
+        if(el.contains(document.activeElement) && document.activeElement !== document.body){
+          return true;
+        }
+        lastSnapshot = snap;
+        await renderFn(panelId, ...renderArgs);
+      }
+    }catch(e){}
+    return true;
+  }
+  activeChatRefreshers.push(refresh);
+}
 setInterval(async ()=>{
   activeChatRefreshers = activeChatRefreshers.filter(fn=>true); // نگه‌داری آرایه
   for(const fn of activeChatRefreshers.slice()){
@@ -1495,9 +1570,9 @@ setInterval(async ()=>{
   if(currentStatusRefresh){ try{ await currentStatusRefresh(); }catch(e){} }
   if(currentCode && !isViewOnly) checkUpdatesBadge(currentCode, 'updatesBadgeMember');
   if(currentMentorCode) checkUpdatesBadge(currentMentorCode, 'updatesBadgeMentor');
-}, 1500);
+}, 800);
 
-const PRESENCE_TTL = 15000; // اگه تا ۱۵ ثانیه پیش heartbeat نداشته باشه، آفلاین حساب میشه (قبلاً ۴۵ ثانیه بود، خیلی دیر بود)
+const PRESENCE_TTL = 6000; // اگه تا ۶ ثانیه پیش heartbeat نداشته باشه، آفلاین حساب میشه
 let presenceInterval = null;
 let currentPresenceCode = null;
 async function updatePresence(code){
@@ -1508,7 +1583,7 @@ function startPresenceHeartbeat(code){
   stopPresenceHeartbeat();
   currentPresenceCode = code;
   updatePresence(code);
-  presenceInterval = setInterval(()=>updatePresence(code), 6000);
+  presenceInterval = setInterval(()=>updatePresence(code), 2500);
 }
 async function stopPresenceHeartbeat(){
   if(presenceInterval){ clearInterval(presenceInterval); presenceInterval = null; }
@@ -1570,10 +1645,17 @@ async function loadUpdates(){
   try{ const r = await window.storage.get('updates', true); return r && r.value ? JSON.parse(r.value) : []; }
   catch(e){ return []; }
 }
+async function saveUpdates(list){
+  try{ await window.storage.set('updates', JSON.stringify(list), true); }catch(e){ console.error(e); }
+}
 async function postUpdate(authorRole, authorName, text){
   const list = await loadUpdates();
   list.push({ id:uid(), authorRole, authorName, text, date:new Date().toISOString().slice(0,10), ts:Date.now() });
-  try{ await window.storage.set('updates', JSON.stringify(list), true); }catch(e){ console.error(e); }
+  await saveUpdates(list);
+}
+async function deleteUpdate(updateId){
+  const list = await loadUpdates();
+  await saveUpdates(list.filter(u=>u.id!==updateId));
 }
 async function loadLastSeenUpdates(viewerCode){
   try{ const r = await window.storage.get('seenupdates:'+viewerCode, true); return r && r.value ? Number(r.value) : 0; }
@@ -1608,12 +1690,18 @@ async function renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, auth
   else{
     list.slice().reverse().forEach(u=>{
       const authorLabel = u.authorRole==='admin' ? 'از طرف مدیر' : `از طرف منتور ${escapeHtml(u.authorName||'')}`;
-      html += `<div class="update-card"><div>${escapeHtml(u.text)}</div><div class="meta">${authorLabel} · ${u.date}</div></div>`;
+      const canDelete = canPost && (authorRole==='admin' || (u.authorRole===authorRole && u.authorName===authorName));
+      html += `<div class="update-card"><div>${escapeHtml(u.text)}</div><div class="meta">${authorLabel} · ${u.date}${u.ts?` · ساعت ${iranTimeFromTs(u.ts)}`:''}${canDelete?` <button class="icon-btn" data-del-update="${u.id}" title="حذف" style="margin-right:8px;">✕</button>`:''}</div></div>`;
     });
   }
   html += '</div>';
   el.innerHTML = html;
   if(canPost){
+    el.querySelectorAll('[data-del-update]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+      await deleteUpdate(btn.dataset.delUpdate);
+      showToast('اپدیت حذف شد');
+      renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, authorName);
+    })));
     const btn = el.querySelector('#updateBtn_'+panelId);
     btn.addEventListener('click', guard(btn, async ()=>{
       const ta = el.querySelector('#updateInput_'+panelId);
@@ -1657,16 +1745,17 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     let html = '';
     list.forEach(m=>{
       const mine = m.from===myRole;
-      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))} ${mine?`<button class="icon-btn-sm" data-del-msg="${m.id}" title="حذف">✕</button>`:''}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}</div></div>`;
+      const canDel = mine || myRole==='admin';
+      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))} ${canDel?`<button class="icon-btn-sm" data-del-msg="${m.id}" title="حذف">✕</button>`:''}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}${m.time?` · ${m.time}`:''}</div></div>`;
     });
     logEl.innerHTML = html;
     if(nearBottom) logEl.scrollTop = logEl.scrollHeight;
-    logEl.querySelectorAll('[data-del-msg]').forEach(delBtn=>delBtn.addEventListener('click', async ()=>{
+    logEl.querySelectorAll('[data-del-msg]').forEach(delBtn=>delBtn.addEventListener('click', guard(delBtn, async ()=>{
       const fresh = await loadThread(memberCode, threadKey);
       const filtered = fresh.filter(m=>m.id!==delBtn.dataset.delMsg);
       await saveThread(memberCode, threadKey, filtered);
       await refreshLog();
-    }));
+    })));
     return true;
   }
   await refreshLog();
@@ -1679,7 +1768,7 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     const val = input.value.trim();
     if(!val) return;
     const fresh = await loadThread(memberCode, threadKey);
-    fresh.push({id:uid(), from:myRole, text:val, date:new Date().toISOString().slice(0,10)});
+    fresh.push({id:uid(), from:myRole, text:val, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
     await saveThread(memberCode, threadKey, fresh);
     input.value='';
     await refreshLog();
@@ -1784,7 +1873,8 @@ async function renderAdminQna(){
 async function enterMentorProfileView(code, mentorProfile){
   document.getElementById('mentorProfileSub').textContent = `${mentorProfile.name} · کد ${mentorProfile.code} · ${mentorProfile.phone||''}`;
   document.getElementById('mentorProfileView').classList.remove('hidden');
-  renderAchievementsPanel('mentorProfileAchv', code, true);
+  renderAchievementsPanel('mentorProfileAchv', code, false);
+  registerLiveListRefresh('mentorProfileAchv', ()=>loadAchievements(code), renderAchievementsPanel, code, false);
   document.getElementById('mentorProfileMsg').innerHTML = '';
   renderMentorAdminChatPanel('mentorProfileQna', code, 'admin');
 }
@@ -2070,7 +2160,7 @@ async function renderAdminMedals(){
     const name = el.querySelector('#medalPick').value;
     if(!code || !name) return;
     const list = await loadAchievements(code);
-    list.push({id:uid(), name, date:new Date().toISOString().slice(0,10)});
+    list.push({id:uid(), name, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
     await saveAchievements(code, list);
     showToast('مدال ثبت شد');
     renderBootcampLeaderboard('apanelLeaderboard');
@@ -2080,6 +2170,7 @@ async function renderAdminMedals(){
 // ================= admin: اپدیت‌ها =================
 async function renderAdminMsgs(){
   await renderUpdatesPanel('apanel-msgs', 'ADMIN_VIEWER', true, 'admin', 'مدیریت');
+  registerLiveListRefresh('apanel-msgs', loadUpdates, renderUpdatesPanel, 'ADMIN_VIEWER', true, 'admin', 'مدیریت');
 }
 
 // ================= admin tabs =================
