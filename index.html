@@ -48,8 +48,9 @@
   }
   /* ---------- دکمه‌ی تعویض حالت روشن/تاریک ---------- */
   #themeToggle{
-    position:fixed;top:calc(env(safe-area-inset-top, 0px) + 46px);right:14px;z-index:999;width:44px;height:44px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;user-select:none;
+    position:fixed;top:calc(env(safe-area-inset-top, 0px) + 14px);left:14px;z-index:999;
+    height:30px;min-width:34px;padding:0 9px;border-radius:10px;color:var(--white);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;
     background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);
     backdrop-filter:blur(14px) saturate(170%);-webkit-backdrop-filter:blur(14px) saturate(170%);
     box-shadow:0 4px 16px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.18);
@@ -57,7 +58,7 @@
   }
   body.light #themeToggle{ background:rgba(20,30,50,0.06); border:1px solid rgba(20,30,50,0.16); box-shadow:0 4px 16px rgba(30,40,60,.15), inset 0 1px 0 rgba(255,255,255,.6); }
   #themeToggle:active{ transform:scale(.86) rotate(20deg); }
-  #themeToggle .themeIcon{ display:inline-block; transition:transform .55s cubic-bezier(.22,1,.36,1); }
+  #themeToggle .themeIcon{ display:flex;align-items:center;justify-content:center;transition:transform .55s cubic-bezier(.22,1,.36,1); }
   #themeToggle.spin .themeIcon{ transform:rotate(360deg); }
   *{box-sizing:border-box;}
   /* ---------- روان‌سازی کلی سایت: ترنزیشن نرم برای همه‌ی المان‌های تعاملی ---------- */
@@ -76,12 +77,23 @@
 
   /* ---------- login screen ---------- */
   #loginScreen{
+    position:relative;overflow:hidden;
     min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:18px;
+    background:var(--black);
+  }
+  #loginScreen::before{
+    content:'';position:absolute;inset:-18%;z-index:-1;
     background:
-      radial-gradient(900px 500px at 15% 10%, rgba(45,168,150,.35), transparent 60%),
-      radial-gradient(900px 600px at 85% 30%, rgba(62,95,203,.40), transparent 60%),
-      radial-gradient(700px 700px at 50% 100%, rgba(20,30,55,.9), transparent 70%),
-      var(--black);
+      radial-gradient(900px 500px at 15% 10%, rgba(45,168,150,.42), transparent 60%),
+      radial-gradient(900px 600px at 85% 30%, rgba(62,95,203,.48), transparent 60%),
+      radial-gradient(700px 700px at 50% 100%, rgba(20,30,55,.9), transparent 70%);
+    animation:loginGradientMove 16s ease-in-out infinite alternate;
+  }
+  body.light #loginScreen::before{ animation:none; background:none; }
+  @keyframes loginGradientMove{
+    0%{ transform:translate(0,0) rotate(0deg) scale(1); }
+    50%{ transform:translate(-4%,3%) rotate(5deg) scale(1.1); }
+    100%{ transform:translate(4%,-3%) rotate(-5deg) scale(1.05); }
   }
   .id-card{
     width:100%;max-width:420px;position:relative;overflow:hidden;border-radius:22px;padding:26px;
@@ -253,6 +265,15 @@
   .chk-row .pts{color:var(--lightblue);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;}
   .ink-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;padding:0;}
   .ink-swatch.active{border-color:var(--lightblue);box-shadow:0 0 0 2px rgba(111,168,220,.35);transform:scale(1.08);}
+  .cycle-reminder{
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:8px 12px;
+    backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);min-width:190px;
+  }
+  .cr-title{font-size:12px;font-weight:800;}
+  .cr-bar{height:5px;border-radius:4px;background:rgba(255,255,255,.12);margin:6px 0;overflow:hidden;}
+  .cr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg, rgba(150,197,238,.95), rgba(88,132,205,.9));transition:width .4s ease;}
+  .cr-sub{font-size:10.5px;color:var(--white-dim);line-height:1.5;}
   input[type=checkbox]{
     appearance:none; -webkit-appearance:none; width:20px; height:20px; border-radius:6px;
     border:1.5px solid var(--line); background:var(--navy-alt); cursor:pointer; position:relative; flex-shrink:0;
@@ -328,7 +349,7 @@
 </style>
 </head>
 <body>
-<div id="themeToggle" title="روشن/تاریک"><span class="themeIcon">🌙</span></div>
+<div id="themeToggle" title="روشن/تاریک"><span class="themeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span></div>
 
 <div id="cloudBanner" class="cloud-banner hidden"></div>
 
@@ -366,7 +387,7 @@
       <label class="field-label">رمز عبور</label>
       <div style="position:relative;">
         <input type="password" id="adminPassword" placeholder="رمز عبور" style="width:100%;padding-left:38px;">
-        <button type="button" id="togglePassBtn" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--white-dim);cursor:pointer;font-size:15px;padding:4px;" title="نمایش رمز">👁</button>
+        <button type="button" id="togglePassBtn" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--white-dim);cursor:pointer;padding:4px;display:flex;" title="نمایش رمز"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="err-msg hidden" id="adminErr"></div>
       <button class="btn btn-glass-cta" id="adminSubmit">ورود به پنل مدیریت</button>
@@ -420,6 +441,7 @@
     <div class="member-box">
       <span class="view-only-badge hidden" id="viewOnlyBadge">فقط نمایش</span>
       <span class="member-chip" id="memberChip"></span>
+      <div id="cycleReminder"></div>
       <button class="back-btn hidden" id="backToListBtn">↩ بازگشت به لیست</button>
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
         <button class="install-btn hidden" id="installBtn1">📲 افزودن به صفحه اصلی</button>
@@ -772,7 +794,9 @@ document.getElementById('togglePassBtn').addEventListener('click', ()=>{
   const btn = document.getElementById('togglePassBtn');
   const showing = inp.type === 'text';
   inp.type = showing ? 'password' : 'text';
-  btn.textContent = showing ? '👁' : '🙈';
+  const eyeOpen = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const eyeClosed = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.8 21.8 0 015.06-6.06M9.9 4.24A10.94 10.94 0 0112 5c7 0 11 7 11 7a21.8 21.8 0 01-2.16 3.19M14.12 14.12a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
+  btn.innerHTML = showing ? eyeOpen : eyeClosed;
 });
 document.getElementById('modeUser').addEventListener('click', ()=>setLoginMode('user'));
 document.getElementById('modeMentor').addEventListener('click', ()=>setLoginMode('mentor'));
@@ -945,11 +969,11 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   renderTasks();
   renderToday();
   renderFeedback();
-  renderCommitmentPanel('panel-commitment', currentCode, memberInfo.name||'');
+  const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
+  renderCommitmentPanel('panel-commitment', currentCode, memberInfo.name||'', msgViewerRole==='admin');
   renderPersonalNotesPanel('panel-notes', currentCode, isViewOnly);
   renderRulesPanel('panel-rules', false, null, null);
   registerLiveListRefresh('panel-rules', loadRules, renderRulesPanel, false, null, null);
-  const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
   renderAchievementsPanel('panel-achievements', currentCode, msgViewerRole!=='admin');
   registerLiveListRefresh('panel-achievements', ()=>loadAchievements(currentCode), renderAchievementsPanel, currentCode, msgViewerRole!=='admin');
   renderBootcampLeaderboard('panel-achievements');
@@ -1002,32 +1026,115 @@ async function saveFeedback(){
 
 // ================= derived data =================
 function sortedDates(){ return Object.keys(dailyRecords).sort(); }
-function computeWeeks(){
-  const dates = sortedDates(); const weeks = [];
-  for(let i=0;i<dates.length;i+=5){
-    const chunk = dates.slice(i,i+5);
-    if(chunk.length<5) break;
-    const scores = chunk.map(d=>dailyRecords[d].dailyScore);
-    weeks.push({index:weeks.length+1, dates:chunk, scores, score:scores.reduce((a,b)=>a+b,0)/5});
-  }
-  return weeks;
+
+// ---------- سیستم دوره‌ی تقویمی (شنبه تا چهارشنبه، ۴ هفته = ۱ ماه) ----------
+function addDays(isoDate, n){
+  const d = new Date(isoDate+'T12:00:00');
+  d.setDate(d.getDate()+n);
+  return d.toISOString().slice(0,10);
 }
-function computeMonths(weeks){
-  const months = [];
-  for(let i=0;i<weeks.length;i+=4){
-    const chunk = weeks.slice(i,i+4);
-    if(chunk.length<4) break;
-    months.push({index:months.length+1, weeks:chunk, score:chunk.reduce((a,w)=>a+w.score,0)/4});
+function mostRecentSaturday(isoDate){
+  const d = new Date(isoDate+'T12:00:00');
+  const diff = (d.getDay()+1)%7; // فاصله‌ی روزهای گذشته از آخرین شنبه (شنبه=۰،یکشنبه=۱،...جمعه=۶)
+  return addDays(isoDate, -diff);
+}
+function weekDates(cycleStart, w){ // ۵ تاریخ (شنبه تا چهارشنبه) هفته‌ی w (۰-ایندکس) از شروع دوره
+  const base = addDays(cycleStart, w*7);
+  return [0,1,2,3,4].map(i=>addDays(base,i));
+}
+function allCycleDates(cycleStart){
+  const all = [];
+  for(let w=0; w<4; w++) all.push(...weekDates(cycleStart, w));
+  return all; // دقیقاً ۲۰ تاریخ
+}
+function iranNowDateTimeStr(){
+  const p = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Tehran', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false }).formatToParts(new Date());
+  const g = t=>p.find(x=>x.type===t).value;
+  return `${g('year')}-${g('month')}-${g('day')}T${g('hour')}:${g('minute')}`;
+}
+function weekRevealed(cycleStart, w){
+  // نمره‌ی هفته دقیقاً ساعت ۱۲:۱۰ بامداد پنجشنبه (۱۰ دقیقه بعد از نیمه‌شب چهارشنبه) اعلام میشه
+  const wed = weekDates(cycleStart, w)[4];
+  const threshold = addDays(wed,1)+'T00:10';
+  return iranNowDateTimeStr() >= threshold;
+}
+async function loadCycleStart(code){
+  try{ const r = await window.storage.get('cyclestart:'+code, true); return r && r.value ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function saveCycleStart(code, val){
+  try{ await window.storage.set('cyclestart:'+code, JSON.stringify(val), true); }catch(e){ console.error(e); }
+}
+// همه‌ی محاسبات دوره‌ی فعلی کاربر رو برمی‌گردونه — هیچ داده‌ای رو تغییر نمی‌ده، فقط dailyRecords رو بازخوانی می‌کنه
+function computeCycle(cycleStart){
+  if(!cycleStart) return null;
+  const weeks = [];
+  for(let w=0; w<4; w++){
+    const dates = weekDates(cycleStart, w);
+    const revealed = weekRevealed(cycleStart, w);
+    const scores = dates.map(d=>dailyRecords[d] ? dailyRecords[d].dailyScore : 0);
+    const score = scores.reduce((a,b)=>a+b,0)/5;
+    const st = revealed ? weeklyStatus(score) : null;
+    weeks.push({ index:w+1, dates, scores, score, revealed, grade:st?st.grade:null, label:st?st.label:null, cls:st?st.cls:null });
   }
-  return months;
+  const monthComplete = weeks[3].revealed;
+  let monthInfo = null;
+  if(monthComplete){
+    const monthScore = weeks.reduce((a,w)=>a+w.score,0)/4;
+    const st = monthlyStatus(monthScore);
+    monthInfo = { score:monthScore, grade:st.grade, label:st.label, cls:st.cls };
+  }
+  const todayISO = iranTodayISO();
+  const dayIndex = Math.min(allCycleDates(cycleStart).filter(d=>d<=todayISO).length, 20);
+  const currentWeekIndex = weeks.findIndex(w=>!w.revealed)+1 || 4;
+  return { cycleStart, weeks, monthComplete, monthInfo, dayIndex, currentWeekIndex };
 }
 function weeklyStatus(s){ if(s<=49) return {label:'ضعیف',grade:'D',cls:'bad'}; if(s<=79) return {label:'متوسط خوب',grade:'C+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
 function monthlyStatus(s){ if(s<=49) return {label:'افتضاح',grade:'D',cls:'bad'}; if(s<=69) return {label:'متوسط ضعیف',grade:'C+',cls:'bad'}; if(s<=79) return {label:'خوب',grade:'B+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
 
-function updateHeaderStats(){
+async function loadMonthHistory(code){
+  try{ const r = await window.storage.get('monthhistory:'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
+  catch(e){ return []; }
+}
+async function saveMonthHistory(code, list){
+  try{ await window.storage.set('monthhistory:'+code, JSON.stringify(list), true); }catch(e){ console.error(e); }
+}
+// اگه ماه کامل شده، به تاریخچه اضافه‌ش می‌کنه (اگه قبلاً نشده) و دوره رو برای شروع ماه بعد پاک می‌کنه
+async function archiveCompletedCycleIfNeeded(code, cycleStart, info){
+  if(!info || !info.monthComplete) return false;
+  const hist = await loadMonthHistory(code);
+  if(hist.some(m=>m.cycleStart===cycleStart)) return false; // قبلاً آرشیو شده
+  hist.push({ index:hist.length+1, cycleStart, weeks:info.weeks, score:info.monthInfo.score, grade:info.monthInfo.grade, label:info.monthInfo.label, completedAt:iranTodayISO() });
+  await saveMonthHistory(code, hist);
+  await saveCycleStart(code, null);
+  return true;
+}
+async function updateHeaderStats(){
   const el = document.getElementById('masSub');
   if(!el) return;
-  el.textContent = `${sortedDates().length} روز ثبت‌شده · ${computeWeeks().length} هفته کامل · ${computeMonths(computeWeeks()).length} ماه کامل`;
+  el.textContent = `${sortedDates().length} روز ثبت‌شده`;
+  await renderCycleReminder();
+}
+async function renderCycleReminder(){
+  const box = document.getElementById('cycleReminder');
+  if(!box) return;
+  let cycleStart = await loadCycleStart(currentCode);
+  if(cycleStart){
+    const infoCheck = computeCycle(cycleStart);
+    const archived = await archiveCompletedCycleIfNeeded(currentCode, cycleStart, infoCheck);
+    if(archived) cycleStart = null;
+  }
+  if(!cycleStart){
+    box.innerHTML = `<div class="cycle-reminder"><div class="cr-title">📅 دوره‌ی جدید</div><div class="cr-sub">با اولین تسکی که ثبت کنی، شمارش ۲۰ روزه شروع میشه</div></div>`;
+    return;
+  }
+  const info = computeCycle(cycleStart);
+  const pct = Math.round((info.dayIndex/20)*100);
+  box.innerHTML = `<div class="cycle-reminder">
+    <div class="cr-title">📅 روز ${info.dayIndex} از ۲۰</div>
+    <div class="cr-bar"><div class="cr-fill" style="width:${pct}%;"></div></div>
+    <div class="cr-sub">هفته ${info.currentWeekIndex} از ۴ — امتیاز این هفته پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</div>
+  </div>`;
 }
 
 // ================= main app tabs =================
@@ -1168,9 +1275,11 @@ function renderToday(){
     const done = {};
     checklistArea.querySelectorAll('[data-chk]').forEach(chk=>{ done[chk.dataset.chk] = chk.checked; });
     const {sum, score} = recalcLive();
-    dailyRecords[currentDate] = {done, totalPoints:sum, dailyScore:score, weekday:weekdayFa};
+    dailyRecords[currentDate] = {done, totalPoints:sum, dailyScore:score, weekday:weekdayFa, time:iranNowTime()};
     await saveDaily();
-    updateHeaderStats();
+    let cs = await loadCycleStart(currentCode);
+    if(!cs){ cs = mostRecentSaturday(currentDate); await saveCycleStart(currentCode, cs); }
+    await updateHeaderStats();
     renderToday();
   }));
 
@@ -1213,12 +1322,12 @@ function renderRecordedDays(){
 }
 
 // ================= dashboard panel =================
-function renderDashboard(){
+async function renderDashboard(){
   const el = document.getElementById('panel-dashboard');
-  const dates = sortedDates();
-  const weeks = computeWeeks();
-  const months = computeMonths(weeks);
-  updateHeaderStats();
+  await updateHeaderStats();
+  const cycleStart = await loadCycleStart(currentCode);
+  const cycle = cycleStart ? computeCycle(cycleStart) : null;
+  const monthHistory = await loadMonthHistory(currentCode);
 
   el.innerHTML = `
     <div class="card"><h2>روند امتیاز روزانه</h2><div id="chartEmptyMsg" class="empty hidden">هنوز روزی ثبت نشده — بعد از اولین «ثبت امتیاز امروز» نمودار اینجا نشون داده میشه</div><div class="chart-wrap" id="chartWrap"><canvas id="dailyChart"></canvas></div></div>
@@ -1227,25 +1336,28 @@ function renderDashboard(){
   `;
 
   const wWrap = document.getElementById('weeklyTable');
-  if(weeks.length===0){ wWrap.innerHTML = '<div class="empty">هنوز ۵ روز کامل ثبت نشده</div>'; }
+  if(!cycle){ wWrap.innerHTML = '<div class="empty">هنوز دوره‌ای شروع نشده — با اولین ثبت تسک شروع میشه</div>'; }
   else{
     let h = '<table><tr><th>هفته</th><th>امتیاز</th><th>وضعیت</th></tr>';
-    weeks.forEach(w=>{
-      const st=weeklyStatus(w.score);
-      const dayBreak = w.dates.map((d,i)=>`${dailyRecords[d]?.weekday||iranWeekday(d)}: ${w.scores[i]}`).join(' — ');
-      h+=`<tr><td>هفته ${w.index}</td><td>${Math.round(w.score*10)/10}</td><td><span class="stamp ${st.cls}">${st.label} · ${st.grade}</span></td></tr>
-        <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${dayBreak}</td></tr>`;
+    cycle.weeks.forEach(w=>{
+      const dayBreak = w.dates.map((d,i)=>`${iranWeekday(d)}: ${w.scores[i]}`).join(' — ');
+      if(w.revealed){
+        h+=`<tr><td>هفته ${w.index}</td><td>${Math.round(w.score*10)/10}</td><td><span class="stamp ${w.cls}">${w.label} · ${w.grade}</span></td></tr>
+          <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${dayBreak}</td></tr>`;
+      }else if(w.index===cycle.currentWeekIndex){
+        h+=`<tr><td>هفته ${w.index}</td><td colspan="2" style="font-size:11px;color:var(--white-dim);">در حال ثبت — پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</td></tr>
+          <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${dayBreak}</td></tr>`;
+      }
     });
     wWrap.innerHTML = h+'</table>';
   }
   const mWrap = document.getElementById('monthlyTable');
-  if(months.length===0){ mWrap.innerHTML = '<div class="empty">هنوز ۴ هفته کامل ثبت نشده</div>'; }
+  if(monthHistory.length===0){ mWrap.innerHTML = '<div class="empty">هنوز ماهی کامل نشده</div>'; }
   else{
     let h = '<table><tr><th>ماه</th><th>امتیاز</th><th>وضعیت</th></tr>';
-    months.forEach(m=>{
-      const st=monthlyStatus(m.score);
+    monthHistory.forEach(m=>{
       const weekBreak = m.weeks.map((w,i)=>`هفته ${i+1}: ${Math.round(w.score*10)/10}`).join(' — ');
-      h+=`<tr><td>ماه ${m.index}</td><td>${Math.round(m.score*10)/10}</td><td><span class="stamp ${st.cls}">${st.label} · ${st.grade}</span></td></tr>
+      h+=`<tr><td>ماه ${m.index}</td><td>${Math.round(m.score*10)/10}</td><td><span class="stamp ${m.grade==='A+'?'good':(m.grade==='D'?'bad':'mid')}">${m.label} · ${m.grade}</span></td></tr>
         <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${weekBreak}</td></tr>`;
     });
     mWrap.innerHTML = h+'</table>';
@@ -1255,15 +1367,16 @@ function renderDashboard(){
   if(chartInstance){ chartInstance.destroy(); chartInstance = null; }
   const chartWrap = document.getElementById('chartWrap');
   const chartEmptyMsg = document.getElementById('chartEmptyMsg');
-  if(dates.length===0){
+  if(!cycle){
     chartWrap.classList.add('hidden');
     chartEmptyMsg.classList.remove('hidden');
     return;
   }
   chartWrap.classList.remove('hidden');
   chartEmptyMsg.classList.add('hidden');
-  const labels = dates.map(d=>iranJalaliShort(d));
-  const data = dates.map(d=>dailyRecords[d].dailyScore);
+  const cycleDates = allCycleDates(cycleStart);
+  const labels = cycleDates.map(d=>iranJalaliShort(d));
+  const data = cycleDates.map(d=>dailyRecords[d] ? dailyRecords[d].dailyScore : 0);
   const weekIndexOf = (i)=>Math.floor(i/5);
   const weekBandsPlugin = {
     id:'weekBands',
@@ -1339,7 +1452,7 @@ function renderFbList(){
   let html = '';
   feedbackList.slice().reverse().forEach(f=>{
     html += `<div class="fb-entry">
-      <div class="cyc">${escapeHtml(f.cycle)} <span style="color:var(--white-dim);font-weight:400;font-size:11px;">· ${f.date}${f.time?` · ساعت ${f.time}`:''}</span>
+      <div class="cyc">${escapeHtml(f.cycle)} <span style="color:var(--white-dim);font-weight:400;font-size:11px;">· ${iranJalaliDate(f.date)}${f.time?` · ساعت ${f.time}`:''}</span>
         ${isViewOnly?'':`<button class="icon-btn" style="float:left;" data-del-fb="${f.id}">✕</button>`}
       </div>
       ${f.g?`<div class="fb-line"><b>✅ قوت:</b> ${escapeHtml(f.g)}</div>`:''}
@@ -1374,7 +1487,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
   const el = document.getElementById(panelId);
   if(!el) return;
   const goal = await loadMonthlyGoal(code);
-  const journal = await loadJournal(code);
+  let journal = await loadJournal(code);
 
   let html = '<div class="card"><h2>🎯 Monthly Goal</h2>';
   if(viewOnly){
@@ -1382,7 +1495,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
       html += `<div class="fb-line"><b>هدف:</b> ${escapeHtml(goal.goal||'')}</div>
         <div class="fb-line"><b>تا کی:</b> ${escapeHtml(goal.deadline||'')}</div>
         <div class="fb-line"><b>دلیل:</b> ${escapeHtml(goal.reason||'')}</div>
-        <div class="meta">آخرین ثبت: ${goal.date||''}${goal.time?` · ساعت ${goal.time}`:''}</div>`;
+        <div class="meta">آخرین ثبت: ${goal.date?iranJalaliDate(goal.date):''}${goal.time?` · ساعت ${goal.time}`:''}</div>`;
     }else{ html += '<div class="empty">هنوز هدفی ثبت نشده</div>'; }
   }else{
     html += `<label class="field-label">هدف ماه من چیه؟</label>
@@ -1404,19 +1517,21 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
   el.innerHTML = html;
 
   const jWrap = el.querySelector('#journalList_'+panelId);
-  if(journal.length===0){ jWrap.innerHTML = '<div class="empty">هنوز ژورنالی ثبت نشده</div>'; }
-  else{
+  function paintJournal(){
+    if(journal.length===0){ jWrap.innerHTML = '<div class="empty">هنوز ژورنالی ثبت نشده</div>'; return; }
     let jHtml = '';
     journal.slice().reverse().forEach(j=>{
-      jHtml += `<div class="fb-entry"><div class="cyc">${j.date}${j.time?` · ساعت ${j.time}`:''} ${(!viewOnly)?`<button class="icon-btn" style="float:left;" data-del-j="${j.id}" title="حذف">✕</button>`:''}</div><div class="fb-line">${escapeHtml(j.text)}</div></div>`;
+      jHtml += `<div class="fb-entry"><div class="cyc">${iranJalaliDate(j.date)}${j.time?` · ساعت ${j.time}`:''} ${(!viewOnly)?`<button class="icon-btn" style="float:left;" data-del-j="${j.id}" title="حذف">✕</button>`:''}</div><div class="fb-line">${escapeHtml(j.text)}</div></div>`;
     });
     jWrap.innerHTML = jHtml;
-    jWrap.querySelectorAll('[data-del-j]').forEach(btn=>btn.addEventListener('click', async ()=>{
+    jWrap.querySelectorAll('[data-del-j]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+      journal = journal.filter(j=>j.id!==btn.dataset.delJ);
+      paintJournal(); // حذف فوری از صفحه
       const fresh = await loadJournal(code);
       await saveJournal(code, fresh.filter(j=>j.id!==btn.dataset.delJ));
-      renderPersonalNotesPanel(panelId, code, viewOnly);
-    }));
+    })));
   }
+  paintJournal();
 
   if(!viewOnly){
     const goalBtn = el.querySelector('#goalBtn_'+panelId);
@@ -1448,11 +1563,14 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
       const ta = el.querySelector('#journalText_'+panelId);
       const val = ta.value.trim();
       if(!val) return;
-      const fresh = await loadJournal(code);
-      fresh.push({id:uid(), text:val, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
+      ta.value='';
+      const newEntry = {id:uid(), text:val, date:new Date().toISOString().slice(0,10), time:iranNowTime()};
+      journal.push(newEntry);
+      paintJournal(); // نمایش فوری، بدون معطلی
+      const fresh = await loadJournal(code); // آخرین نسخه رو می‌گیریم که چیزی گم نشه
+      fresh.push(newEntry);
       await saveJournal(code, fresh);
-      showToast('ژورنال ثبت شد');
-      renderPersonalNotesPanel(panelId, code, viewOnly);
+      journal = fresh;
     }));
   }
 }
@@ -1476,33 +1594,42 @@ async function renderRulesPanel(panelId, canEdit, authorRole, authorName){
       <div style="margin-top:10px;"><button class="btn small" id="ruleBtn_${panelId}">ثبت قانون</button></div>
     </div>`;
   }
-  html += '<div class="card"><h2>📜 Rules</h2>';
-  if(list.length===0){ html += '<div class="empty">هنوز قانونی ثبت نشده</div>'; }
-  else{
-    list.slice().reverse().forEach(r=>{
+  html += '<div class="card"><h2>📜 Rules</h2><div id="rulesList_'+panelId+'"></div></div>';
+  el.innerHTML = html;
+  const rWrap = el.querySelector('#rulesList_'+panelId);
+  let liveList = list.slice();
+  function paintRules(){
+    if(liveList.length===0){ rWrap.innerHTML = '<div class="empty">هنوز قانونی ثبت نشده</div>'; return; }
+    let h = '';
+    liveList.slice().reverse().forEach(r=>{
       const authorLabel = r.authorRole==='admin' ? 'مدیر' : `منتور ${escapeHtml(r.authorName||'')}`;
       const canDelete = canEdit && (authorRole==='admin' || (r.authorRole===authorRole && r.authorName===authorName));
-      html += `<div class="update-card"><div>${escapeHtml(r.text)}</div><div class="meta">${authorLabel} · ${r.date}${r.time?` · ساعت ${r.time}`:''} ${canDelete?`<button class="icon-btn-sm" data-del-rule="${r.id}" style="margin-right:8px;">✕</button>`:''}</div></div>`;
+      h += `<div class="update-card"><div>${escapeHtml(r.text)}</div><div class="meta">${authorLabel} · ${iranJalaliDate(r.date)}${r.time?` · ساعت ${r.time}`:''} ${canDelete?`<button class="icon-btn-sm" data-del-rule="${r.id}" style="margin-right:8px;">✕</button>`:''}</div></div>`;
     });
+    rWrap.innerHTML = h;
+    rWrap.querySelectorAll('[data-del-rule]').forEach(delBtn=>delBtn.addEventListener('click', guard(delBtn, async ()=>{
+      liveList = liveList.filter(r=>r.id!==delBtn.dataset.delRule);
+      paintRules(); // حذف فوری
+      const fresh = await loadRules();
+      await saveRulesList(fresh.filter(r=>r.id!==delBtn.dataset.delRule));
+    })));
   }
-  html += '</div>';
-  el.innerHTML = html;
+  paintRules();
   if(canEdit){
     const btn = el.querySelector('#ruleBtn_'+panelId);
     btn.addEventListener('click', guard(btn, async ()=>{
       const ta = el.querySelector('#ruleInput_'+panelId);
       const val = ta.value.trim();
       if(!val) return;
-      const fresh = await loadRules();
-      fresh.push({id:uid(), text:val, authorRole, authorName, date:new Date().toISOString().slice(0,10), time:iranNowTime()});
-      await saveRulesList(fresh);
+      ta.value='';
+      const newRule = {id:uid(), text:val, authorRole, authorName, date:new Date().toISOString().slice(0,10), time:iranNowTime()};
+      liveList.push(newRule);
+      paintRules(); // نمایش فوری
       showToast('قانون ثبت شد');
-      renderRulesPanel(panelId, canEdit, authorRole, authorName);
-    }));
-    el.querySelectorAll('[data-del-rule]').forEach(delBtn=>delBtn.addEventListener('click', async ()=>{
       const fresh = await loadRules();
-      await saveRulesList(fresh.filter(r=>r.id!==delBtn.dataset.delRule));
-      renderRulesPanel(panelId, canEdit, authorRole, authorName);
+      fresh.push(newRule);
+      await saveRulesList(fresh);
+      liveList = fresh;
     }));
   }
 }
@@ -1521,7 +1648,7 @@ function commitmentExpired(rec){
   const days = (Date.now() - new Date(rec.date).getTime()) / 86400000;
   return days > COMMITMENT_TTL_DAYS;
 }
-async function renderCommitmentPanel(panelId, code, memberName){
+async function renderCommitmentPanel(panelId, code, memberName, canReset){
   const el = document.getElementById(panelId);
   if(!el) return;
   const rec = await loadCommitment(code);
@@ -1529,7 +1656,7 @@ async function renderCommitmentPanel(panelId, code, memberName){
   el.innerHTML = `<div class="card">
     <h2>Commitment</h2>
     <div class="fb-line"><b>نام:</b> ${escapeHtml(rec.name||memberName||'')}</div>
-    <div class="fb-line"><b>تاریخ ثبت:</b> ${rec.date}</div>
+    <div class="fb-line"><b>تاریخ ثبت:</b> ${iranJalaliDate(rec.date)}${rec.time?` · ساعت ${rec.time}`:''}</div>
     <div class="fb-line" style="margin-top:8px;"><b>متن تعهد کاربر:</b></div>
     <div class="fb-line" style="white-space:pre-wrap;">${escapeHtml(rec.text)}</div>
     <div class="fb-line" style="margin-top:10px;"><b>امضا:</b></div>
@@ -1537,7 +1664,16 @@ async function renderCommitmentPanel(panelId, code, memberName){
       <img src="${rec.signature}" style="max-width:280px;display:block;background:#F4F6F9;border:2px solid var(--line);border-radius:8px;padding:4px;">
     </div>
     ${commitmentExpired(rec)?'<div class="err-msg" style="margin-top:10px;">⚠️ این تعهدنامه منقضی شده (بیش از یک ماه از ثبتش گذشته)</div>':''}
+    ${canReset?`<div style="margin-top:10px;"><button class="btn ghost small" id="forceResignBtn_${panelId}">لغو تعهدنامه و اجبار به امضای دوباره</button></div>`:''}
   </div>`;
+  if(canReset){
+    const btn = document.getElementById('forceResignBtn_'+panelId);
+    btn.addEventListener('click', guard(btn, async ()=>{
+      await saveCommitment(code, null);
+      showToast('تعهدنامه لغو شد — کاربر باید دوباره امضا کنه');
+      renderCommitmentPanel(panelId, code, memberName, canReset);
+    }));
+  }
 }
 
 // ---- بوم امضا (Signature Pad) ----
@@ -1650,16 +1786,17 @@ async function renderAchievementsPanel(panelId, code, readOnlyView){
   let html = '<div class="card"><h2>🏅 افتخارات</h2>';
   list.slice().reverse().forEach(a=>{
     const info = medalInfo(a.name || a.text);
-    html += `<div class="medal-card"><div class="ic">${info.emoji}</div><div style="flex:1;"><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${a.date}${a.time?` · ساعت ${a.time}`:''}</div></div>${readOnlyView?'':`<button class="icon-btn" data-del-medal="${a.id}" title="حذف مدال">✕</button>`}</div>`;
+    html += `<div class="medal-card"><div class="ic">${info.emoji}</div><div style="flex:1;"><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${iranJalaliDate(a.date)}${a.time?` · ساعت ${a.time}`:''}</div></div>${readOnlyView?'':`<button class="icon-btn" data-del-medal="${a.id}" title="حذف مدال">✕</button>`}</div>`;
   });
   html += '</div>';
   el.innerHTML = html;
   if(!readOnlyView){
     el.querySelectorAll('[data-del-medal]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+      const card = btn.closest('.medal-card');
+      if(card) card.remove(); // حذف فوری از صفحه
+      showToast('مدال حذف شد');
       const fresh = await loadAchievements(code);
       await saveAchievements(code, fresh.filter(a=>a.id!==btn.dataset.delMedal));
-      showToast('مدال حذف شد');
-      renderAchievementsPanel(panelId, code, readOnlyView);
     })));
   }
 }
@@ -1844,31 +1981,39 @@ async function renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, auth
       <div style="margin-top:10px;"><button class="btn small" id="updateBtn_${panelId}">ارسال به همه</button></div>
     </div>`;
   }
-  html += '<div class="card"><h2>📢 اپدیت‌ها</h2>';
-  if(list.length===0){ html += '<div class="empty">هنوز اپدیتی ثبت نشده</div>'; }
-  else{
-    list.slice().reverse().forEach(u=>{
+  html += '<div class="card"><h2>📢 اپدیت‌ها</h2><div id="updatesList_'+panelId+'"></div></div>';
+  el.innerHTML = html;
+  const uWrap = el.querySelector('#updatesList_'+panelId);
+  let liveList = list.slice();
+  function paintUpdates(){
+    if(liveList.length===0){ uWrap.innerHTML = '<div class="empty">هنوز اپدیتی ثبت نشده</div>'; return; }
+    let h = '';
+    liveList.slice().reverse().forEach(u=>{
       const authorLabel = u.authorRole==='admin' ? 'از طرف مدیر' : `از طرف منتور ${escapeHtml(u.authorName||'')}`;
       const canDelete = canPost && (authorRole==='admin' || (u.authorRole===authorRole && u.authorName===authorName));
-      html += `<div class="update-card"><div>${escapeHtml(u.text)}</div><div class="meta">${authorLabel} · ${u.date}${u.ts?` · ساعت ${iranTimeFromTs(u.ts)}`:''}${canDelete?` <button class="icon-btn" data-del-update="${u.id}" title="حذف" style="margin-right:8px;">✕</button>`:''}</div></div>`;
+      h += `<div class="update-card"><div>${escapeHtml(u.text)}</div><div class="meta">${authorLabel} · ${iranJalaliDate(u.date)}${u.ts?` · ساعت ${iranTimeFromTs(u.ts)}`:''}${canDelete?` <button class="icon-btn" data-del-update="${u.id}" title="حذف" style="margin-right:8px;">✕</button>`:''}</div></div>`;
     });
-  }
-  html += '</div>';
-  el.innerHTML = html;
-  if(canPost){
-    el.querySelectorAll('[data-del-update]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
-      await deleteUpdate(btn.dataset.delUpdate);
+    uWrap.innerHTML = h;
+    uWrap.querySelectorAll('[data-del-update]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+      liveList = liveList.filter(u=>u.id!==btn.dataset.delUpdate);
+      paintUpdates(); // حذف فوری
       showToast('اپدیت حذف شد');
-      renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, authorName);
+      await deleteUpdate(btn.dataset.delUpdate);
     })));
+  }
+  paintUpdates();
+  if(canPost){
     const btn = el.querySelector('#updateBtn_'+panelId);
     btn.addEventListener('click', guard(btn, async ()=>{
       const ta = el.querySelector('#updateInput_'+panelId);
       const val = ta.value.trim();
       if(!val) return;
-      await postUpdate(authorRole, authorName, val);
+      ta.value='';
+      const newUpdate = { id:uid(), authorRole, authorName, text:val, date:new Date().toISOString().slice(0,10), ts:Date.now() };
+      liveList.push(newUpdate);
+      paintUpdates(); // نمایش فوری
       showToast('اپدیت ارسال شد');
-      renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, authorName);
+      await saveUpdates([...(await loadUpdates()), newUpdate]);
     }));
   }
   await markUpdatesSeen(viewerCode);
@@ -1906,7 +2051,7 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     list.forEach(m=>{
       const mine = m.from===myRole;
       const canDel = mine || myRole==='admin';
-      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))} ${canDel?`<button class="icon-btn-sm" data-del-msg="${m.id}" title="حذف">✕</button>`:''}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${m.date}${m.time?` · ${m.time}`:''}</div></div>`;
+      html += `<div class="chat-bubble ${mine?'mine':'theirs'}"><div class="chat-sender">${escapeHtml(senderLabelFn(m.from))} ${canDel?`<button class="icon-btn-sm" data-del-msg="${m.id}" title="حذف">✕</button>`:''}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${iranJalaliShort(m.date)}${m.time?` · ${m.time}`:''}</div></div>`;
     });
     logEl.innerHTML = html;
     if(nearBottom) logEl.scrollTop = logEl.scrollHeight;
@@ -2361,12 +2506,14 @@ document.querySelectorAll('#adminApp [data-atab]').forEach(btn=>{
 (function(){
   const btn = document.getElementById('themeToggle');
   const icon = btn.querySelector('.themeIcon');
+  const moonSVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+  const sunSVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"/></svg>';
   btn.addEventListener('click', ()=>{
     document.body.classList.toggle('light');
     const isLight = document.body.classList.contains('light');
     btn.classList.add('spin');
     setTimeout(()=>btn.classList.remove('spin'), 550);
-    icon.textContent = isLight ? '☀️' : '🌙';
+    icon.innerHTML = isLight ? sunSVG : moonSVG;
   });
 })();
 </script>
