@@ -210,11 +210,7 @@
     box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14), 0 8px 22px rgba(0,0,0,.3);
     flex-wrap:nowrap;scrollbar-width:thin;
   }
-  .tabs::before{
-    content:'';position:absolute;top:0;right:8%;left:8%;height:45%;border-radius:14px 14px 60px 60px;
-    background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0));pointer-events:none;
-  }
-  .tab-btn{background:none;border:none;color:var(--white-dim);font-family:inherit;font-size:13px;font-weight:600;padding:9px 13px;cursor:pointer;border-radius:11px;transition:.35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;flex-shrink:0;position:relative;z-index:1;}
+  .tab-btn{background:none;border:none;color:var(--white-dim);font-family:inherit;font-size:13px;font-weight:600;padding:9px 13px;cursor:pointer;border-radius:11px;transition:.35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;flex-shrink:0;position:relative;z-index:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.10);}
   .tab-btn:active{transform:scale(.92);}
   .tab-btn.active{
     color:var(--white);
@@ -285,13 +281,18 @@
   .ink-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;padding:0;}
   .ink-swatch.active{border-color:var(--lightblue);box-shadow:0 0 0 2px rgba(111,168,220,.35);transform:scale(1.08);}
   .cycle-reminder{
-    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:8px 12px;
-    backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);min-width:190px;
+    position:relative;overflow:hidden;
+    background:linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border:1px solid rgba(111,168,220,0.35);border-radius:14px;padding:9px 13px;
+    backdrop-filter:blur(20px) saturate(200%);-webkit-backdrop-filter:blur(20px) saturate(200%);
+    box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14), 0 4px 16px rgba(0,0,0,.25), 0 0 20px 1px rgba(111,168,220,.12);
+    min-width:200px;
   }
-  .cr-title{font-size:12px;font-weight:800;}
-  .cr-bar{height:5px;border-radius:4px;background:rgba(255,255,255,.12);margin:6px 0;overflow:hidden;}
-  .cr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg, rgba(150,197,238,.95), rgba(88,132,205,.9));transition:width .4s ease;}
+  .cr-title{font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px;color:var(--white);letter-spacing:.2px;}
+  .cr-bar{height:6px;border-radius:5px;background:rgba(255,255,255,.10);margin:7px 0;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);}
+  .cr-fill{position:relative;height:100%;border-radius:5px;background:linear-gradient(90deg, #6FA8DC, #3E5FCB);transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 8px rgba(111,168,220,.6);}
+  .cr-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);animation:crShine 2.6s ease-in-out infinite;}
+  @keyframes crShine{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
   .cr-sub{font-size:10.5px;color:var(--white-dim);line-height:1.5;}
   input[type=checkbox]{
     appearance:none; -webkit-appearance:none; width:20px; height:20px; border-radius:6px;
@@ -433,7 +434,7 @@
     <div class="lf-line">This website and its contents are protected by copyright and intellectual property laws.</div>
     <div class="lf-line">Unauthorized copying, reproduction, modification, or distribution of this website or its contents is strictly prohibited.</div>
     <div class="lf-line">Designed &amp; Developed by <span class="lf-name">Sina Zomorodi</span></div>
-    <div class="lf-line">Version 2.2.1</div>
+    <div class="lf-line">Version 2.3.0</div>
   </div>
 </div>
 
@@ -482,7 +483,7 @@
       <div id="cycleReminder"></div>
       <button class="back-btn hidden" id="backToListBtn">↩ بازگشت به لیست</button>
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
-        <button class="install-btn hidden" id="installBtn1">📲 افزودن به صفحه اصلی</button>
+        <button class="install-btn hidden" id="installBtn1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> افزودن به صفحه اصلی</button>
         <button class="logout-btn" id="logoutBtn">خروج</button>
       </div>
     </div>
@@ -519,12 +520,12 @@
 <div class="wrap hidden" id="mentorHome">
   <div class="masthead">
     <div>
-      <h1>👤 MENTOR PANEL</h1>
+      <h1><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg> MENTOR PANEL</h1>
       <div class="sub" id="mentorSub"></div>
     </div>
     <div class="member-box">
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
-        <button class="install-btn hidden" id="installBtn2">📲 افزودن به صفحه اصلی</button>
+        <button class="install-btn hidden" id="installBtn2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> افزودن به صفحه اصلی</button>
         <button class="logout-btn" id="mentorLogoutBtn">خروج</button>
       </div>
     </div>
@@ -551,12 +552,12 @@
 <div class="wrap hidden" id="adminApp">
   <div class="masthead">
     <div>
-      <h1>👑 BOSS PANEL</h1>
+      <h1><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/></svg> BOSS PANEL</h1>
       <div class="sub">مدیریت کاربران، منتورها، افتخارات و پیام‌ها</div>
     </div>
     <div class="member-box">
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
-        <button class="install-btn hidden" id="installBtn3">📲 افزودن به صفحه اصلی</button>
+        <button class="install-btn hidden" id="installBtn3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> افزودن به صفحه اصلی</button>
         <button class="logout-btn" id="adminLogoutBtn">خروج</button>
       </div>
     </div>
@@ -583,7 +584,7 @@
 <div class="wrap hidden" id="mentorProfileView">
   <div class="masthead">
     <div>
-      <h1>🧑‍🏫 MENTOR PROFILE</h1>
+      <h1><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg> MENTOR PROFILE</h1>
       <div class="sub" id="mentorProfileSub"></div>
     </div>
     <div class="member-box">
@@ -683,7 +684,7 @@ function showCloudBanner(ok){
   if(!b) return;
   b.classList.remove('hidden');
   if(ok){
-    b.textContent = '☁️ متصل به دیتابیس ابری — اطلاعات بین همه دستگاه‌ها مشترکه';
+    b.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.5A4 4 0 0117 18H7z"/></svg> متصل به دیتابیس ابری — اطلاعات بین همه دستگاه‌ها مشترکه';
     b.classList.remove('warn');
   }else{
     b.textContent = '⚠️ اتصال به دیتابیس ابری برقرار نشد — فعلاً روی حافظه همین مرورگر ذخیره میشه (بین دستگاه‌ها مشترک نیست). تنظیمات Supabase رو چک کن.';
@@ -766,6 +767,23 @@ function iranTimeFromTs(ts){
 let chartInstance = null;
 
 const uid = () => Math.random().toString(36).slice(2,9);
+// ---- آیکون‌های SVG یکدست (به‌جای ایموجی) ----
+const ICONS = {
+  user: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>',
+  crown: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/></svg>',
+  mentor: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>',
+  calendar: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  checkCircle: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.3 2.3L16 10"/></svg>',
+  note: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>',
+  target: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>',
+  book: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20V4H6.5A2.5 2.5 0 004 6.5v13z"/><path d="M4 19.5A2.5 2.5 0 006.5 22H20"/></svg>',
+  scroll: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h11v14a2.5 2.5 0 01-2.5 2.5H8"/><path d="M8 4a2.5 2.5 0 00-2.5 2.5V17A2.5 2.5 0 008 19.5"/><path d="M11 9h5M11 13h5"/></svg>',
+  medal: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M9 3l3 5 3-5M9 3l1.5 6M15 3l-1.5 6"/><path d="M12 12v6"/></svg>',
+  trophy: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v6a4 4 0 01-8 0V4z"/><path d="M8 5H4v2a4 4 0 004 4M16 5h4v2a4 4 0 01-4 4"/><path d="M12 14v3M9 21h6M9 21c0-2 1-3 3-3s3 1 3 3"/></svg>',
+  megaphone: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 001 1h2l9 4V5L6 9H4a1 1 0 00-1 1z"/><path d="M17 9a3 3 0 010 6"/></svg>',
+  chat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-9 8.4A8.5 8.5 0 113 11.5 8.38 8.38 0 0111.5 3a8.5 8.5 0 019.5 8.5z"/></svg>',
+};
+function icon(name){ return `<span style="display:inline-flex;vertical-align:-2px;">${ICONS[name]||''}</span>`; }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function showToast(msg){
   const t = document.getElementById('toast');
@@ -1190,13 +1208,13 @@ async function renderCycleReminder(){
     if(archived) cycleStart = null;
   }
   if(!cycleStart){
-    box.innerHTML = `<div class="cycle-reminder"><div class="cr-title">📅 دوره‌ی جدید</div><div class="cr-sub">با اولین تسکی که ثبت کنی، شمارش ۲۰ روزه شروع میشه</div></div>`;
+    box.innerHTML = `<div class="cycle-reminder"><div class="cr-title">${icon('calendar')} دوره‌ی جدید</div><div class="cr-sub">با اولین تسکی که ثبت کنی، شمارش ۲۰ روزه شروع میشه</div></div>`;
     return;
   }
   const info = computeCycle(cycleStart);
   const pct = Math.round((info.dayIndex/20)*100);
   box.innerHTML = `<div class="cycle-reminder">
-    <div class="cr-title">📅 روز ${info.dayIndex} از ۲۰</div>
+    <div class="cr-title">${icon('calendar')} روز ${info.dayIndex} از ۲۰</div>
     <div class="cr-bar"><div class="cr-fill" style="width:${pct}%;"></div></div>
     <div class="cr-sub">هفته ${info.currentWeekIndex} از ۴ — امتیاز این هفته پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</div>
   </div>`;
@@ -1488,11 +1506,11 @@ function renderFeedback(){
       <h2>ثبت بازخورد دوره جدید</h2>
       <label class="field-label">نام دوره</label>
       <input type="text" id="fbCycle" placeholder="مثلاً بوت‌کمپ ۱" style="width:100%;margin-bottom:10px;">
-      <label class="field-label">✅ نقاط قوت (G)</label>
+      <label class="field-label">${icon('checkCircle')} نقاط قوت (G)</label>
       <textarea id="fbG"></textarea>
       <label class="field-label" style="margin-top:8px;">⚠️ نقاط ضعف (W)</label>
       <textarea id="fbW"></textarea>
-      <label class="field-label" style="margin-top:8px;">💭 نظر شخصی و جمله انگیزشی (I)</label>
+      <label class="field-label" style="margin-top:8px;">${icon('note')} نظر شخصی و جمله انگیزشی (I)</label>
       <textarea id="fbI"></textarea>
       <div style="margin-top:12px;"><button class="btn" id="fbSaveBtn">ذخیره بازخورد</button></div>
     </div>`;
@@ -1520,9 +1538,9 @@ function renderFbList(){
       <div class="cyc">${escapeHtml(f.cycle)} <span style="color:var(--white-dim);font-weight:400;font-size:11px;">· ${iranJalaliDate(f.date)}${f.time?` · ساعت ${f.time}`:''}</span>
         ${isViewOnly?'':`<button class="icon-btn" style="float:left;" data-del-fb="${f.id}">✕</button>`}
       </div>
-      ${f.g?`<div class="fb-line"><b>✅ قوت:</b> ${escapeHtml(f.g)}</div>`:''}
+      ${f.g?`<div class="fb-line"><b>${icon('checkCircle')} قوت:</b> ${escapeHtml(f.g)}</div>`:''}
       ${f.w?`<div class="fb-line"><b>⚠️ ضعف:</b> ${escapeHtml(f.w)}</div>`:''}
-      ${f.i?`<div class="fb-line"><b>💭 نظر:</b> ${escapeHtml(f.i)}</div>`:''}
+      ${f.i?`<div class="fb-line"><b>${icon('note')} نظر:</b> ${escapeHtml(f.i)}</div>`:''}
     </div>`;
   });
   wrap.innerHTML = html;
@@ -1554,7 +1572,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
   const goal = await loadMonthlyGoal(code);
   let journal = await loadJournal(code);
 
-  let html = '<div class="card"><h2>🎯 Monthly Goal</h2>';
+  let html = `<div class="card"><h2>${icon('target')} Monthly Goal</h2>`;
   if(viewOnly){
     if(goal){
       html += `<div class="fb-line"><b>هدف:</b> ${escapeHtml(goal.goal||'')}</div>
@@ -1573,7 +1591,7 @@ async function renderPersonalNotesPanel(panelId, code, viewOnly){
   }
   html += '</div>';
 
-  html += '<div class="card"><h2>📔 Journal</h2>';
+  html += `<div class="card"><h2>${icon('book')} Journal</h2>`;
   if(!viewOnly){
     html += `<textarea id="journalText_${panelId}" placeholder="امروز چی گذشت؟..."></textarea>
       <div style="margin-top:10px;"><button class="btn small" id="journalBtn_${panelId}">ثبت ژورنال</button></div>`;
@@ -1659,7 +1677,7 @@ async function renderRulesPanel(panelId, canEdit, authorRole, authorName){
       <div style="margin-top:10px;"><button class="btn small" id="ruleBtn_${panelId}">ثبت قانون</button></div>
     </div>`;
   }
-  html += '<div class="card"><h2>📜 Rules</h2><div id="rulesList_'+panelId+'"></div></div>';
+  html += `<div class="card"><h2>${icon('scroll')} Rules</h2><div id="rulesList_${panelId}"></div></div>`;
   el.innerHTML = html;
   const rWrap = el.querySelector('#rulesList_'+panelId);
   let liveList = list.slice();
@@ -1830,11 +1848,12 @@ function initCommitmentScreen(memberCode, memberName){
 
 // سه مدال ثابت با رتبه و ایموجی مشخص
 const MEDAL_TIERS = [
-  { name:'FOCUS SOLDIER', tier:1, emoji:'🥉' },
-  { name:'FOCUS FIGHTER', tier:2, emoji:'🥈' },
-  { name:'FOCUS WARRIOR', tier:3, emoji:'🥇' }
+  { name:'FOCUS SOLDIER', tier:1, color:'#B08D57' },
+  { name:'FOCUS FIGHTER', tier:2, color:'#B7BFC6' },
+  { name:'FOCUS WARRIOR', tier:3, color:'#E8C158' }
 ];
-function medalInfo(name){ return MEDAL_TIERS.find(m=>m.name===name) || { name, tier:0, emoji:'🏅' }; }
+function medalSVG(color){ return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><circle cx="12" cy="15" r="2.4" fill="${color}" stroke="none"/><path d="M9 3l3 5 3-5M9 3l1.5 6M15 3l-1.5 6"/></svg>`; }
+function medalInfo(name){ const m = MEDAL_TIERS.find(m=>m.name===name); return m || { name, tier:0, color:'#6FA8DC' }; }
 
 async function loadAchievements(code){
   try{ const r = await window.storage.get('achv:'+code, true); return r && r.value ? JSON.parse(r.value) : []; }
@@ -1848,10 +1867,10 @@ async function renderAchievementsPanel(panelId, code, readOnlyView){
   if(!el) return;
   const list = await loadAchievements(code);
   if(list.length===0){ el.innerHTML = '<div class="card"><div class="empty">هنوز مدالی گرفته نشده</div></div>'; return; }
-  let html = '<div class="card"><h2>🏅 افتخارات</h2>';
+  let html = `<div class="card"><h2>${icon('medal')} افتخارات</h2>`;
   list.slice().reverse().forEach(a=>{
     const info = medalInfo(a.name || a.text);
-    html += `<div class="medal-card"><div class="ic">${info.emoji}</div><div style="flex:1;"><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${iranJalaliDate(a.date)}${a.time?` · ساعت ${a.time}`:''}</div></div>${readOnlyView?'':`<button class="icon-btn" data-del-medal="${a.id}" title="حذف مدال">✕</button>`}</div>`;
+    html += `<div class="medal-card"><div class="ic">${medalSVG(info.color)}</div><div style="flex:1;"><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${iranJalaliDate(a.date)}${a.time?` · ساعت ${a.time}`:''}</div></div>${readOnlyView?'':`<button class="icon-btn" data-del-medal="${a.id}" title="حذف مدال">✕</button>`}</div>`;
   });
   html += '</div>';
   el.innerHTML = html;
@@ -1878,16 +1897,16 @@ async function renderBootcampLeaderboard(panelId){
     const list = await loadAchievements(p.code);
     if(list.length>0){
       const bestTier = Math.max(...list.map(a=>medalInfo(a.name||a.text).tier));
-      rows.push({ ...p, count:list.length, bestTier, bestEmoji: medalInfo(MEDAL_TIERS.find(m=>m.tier===bestTier)?.name||'').emoji });
+      rows.push({ ...p, count:list.length, bestTier, bestColor: medalInfo(MEDAL_TIERS.find(m=>m.tier===bestTier)?.name||'').color });
     }
   }
   rows.sort((a,b)=> b.bestTier - a.bestTier || b.count - a.count);
-  let html = '<div class="card"><h2>🏆 لیدربورد افتخارات بوت‌کمپ</h2>';
+  let html = `<div class="card"><h2>${icon('trophy')} لیدربورد افتخارات بوت‌کمپ</h2>`;
   if(rows.length===0){ html += '<div class="empty">هنوز کسی مدالی نگرفته</div>'; }
   else{
     const rankLabel = i => i===0?'نفر اول':i===1?'نفر دوم':i===2?'نفر سوم':`رتبه ${i+1}`;
     rows.forEach((r,i)=>{
-      html += `<div class="del-row"><div><b>${rankLabel(i)} — ${escapeHtml(r.name)}</b> <span class="cd">(${escapeHtml(r.role)})</span></div><div class="cat-badge ok">${r.bestEmoji} ${r.count} مدال</div></div>`;
+      html += `<div class="del-row"><div><b>${rankLabel(i)} — ${escapeHtml(r.name)}</b> <span class="cd">(${escapeHtml(r.role)})</span></div><div class="cat-badge ok">${medalSVG(r.bestColor)} ${r.count} مدال</div></div>`;
     });
   }
   html += '</div>';
@@ -2046,7 +2065,7 @@ async function renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, auth
       <div style="margin-top:10px;"><button class="btn small" id="updateBtn_${panelId}">ارسال به همه</button></div>
     </div>`;
   }
-  html += '<div class="card"><h2>📢 اپدیت‌ها</h2><div id="updatesList_'+panelId+'"></div></div>';
+  html += `<div class="card"><h2>${icon('megaphone')} اپدیت‌ها</h2><div id="updatesList_${panelId}"></div></div>`;
   el.innerHTML = html;
   const uWrap = el.querySelector('#updatesList_'+panelId);
   let liveList = list.slice();
@@ -2177,18 +2196,18 @@ async function renderMessagesTab(panelId, memberCode, viewerRole){
       chatWrap.innerHTML = '';
       const target = pickerWrap.querySelector('select').value;
       if(target==='admin'){
-        await renderChatCard(chatWrap, memberCode, 'thread_admin', 'member', '💬 چت با مدیریت', adminLabel);
+        await renderChatCard(chatWrap, memberCode, 'thread_admin', 'member', icon('chat')+' چت با مدیریت', adminLabel);
       }else{
         const mentorName = mentors.find(m=>m.code===target)?.name || 'منتور';
-        await renderChatCard(chatWrap, memberCode, 'thread_mentor:'+target, 'member', `💬 چت با ${escapeHtml(mentorName)}`, f=>f==='mentor'?mentorName:'من');
+        await renderChatCard(chatWrap, memberCode, 'thread_mentor:'+target, 'member', `${icon('chat')} چت با ${escapeHtml(mentorName)}`, f=>f==='mentor'?mentorName:'من');
       }
     }
     pickerWrap.querySelector('select').addEventListener('change', renderSelected);
     await renderSelected();
   }else if(viewerRole==='admin'){
-    await renderChatCard(el, memberCode, 'thread_admin', 'admin', '💬 چت با این کاربر', f=>f==='admin'?'من':'کاربر');
+    await renderChatCard(el, memberCode, 'thread_admin', 'admin', icon('chat')+' چت با این کاربر', f=>f==='admin'?'من':'کاربر');
   }else if(viewerRole==='mentor'){
-    await renderChatCard(el, memberCode, 'thread_mentor:'+currentMentorCode, 'mentor', '💬 چت با این کاربر', f=>f==='mentor'?'من':'کاربر');
+    await renderChatCard(el, memberCode, 'thread_mentor:'+currentMentorCode, 'mentor', icon('chat')+' چت با این کاربر', f=>f==='mentor'?'من':'کاربر');
   }
 }
 
@@ -2197,9 +2216,9 @@ async function renderMentorAdminChatPanel(panelId, mentorCode, viewerRole){
   if(!el) return;
   el.innerHTML = '';
   if(viewerRole==='mentor'){
-    await renderChatCard(el, mentorCode, 'thread_mentor_admin', 'mentor', '💬 چت با مدیریت', f=>f==='mentor'?'من':'مدیریت');
+    await renderChatCard(el, mentorCode, 'thread_mentor_admin', 'mentor', icon('chat')+' چت با مدیریت', f=>f==='mentor'?'من':'مدیریت');
   }else{
-    await renderChatCard(el, mentorCode, 'thread_mentor_admin', 'admin', '💬 چت با این منتور', f=>f==='admin'?'من':'منتور');
+    await renderChatCard(el, mentorCode, 'thread_mentor_admin', 'admin', icon('chat')+' چت با این منتور', f=>f==='admin'?'من':'منتور');
   }
 }
 
@@ -2229,7 +2248,7 @@ async function renderAdminQna(){
   const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
   const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
   const wrap = document.createElement('div');
-  wrap.innerHTML = '<h2 style="margin:6px 2px;">💬 چت با کاربران</h2>';
+  wrap.innerHTML = `<h2 style="margin:6px 2px;">${icon('chat')} چت با کاربران</h2>`;
   for(const m of members){
     const box = document.createElement('div');
     box.className = 'card';
@@ -2237,7 +2256,7 @@ async function renderAdminQna(){
     wrap.appendChild(box);
     await renderChatCard(box, m.code, 'thread_admin', 'admin', '', f=>f==='admin'?'من':escapeHtml(m.name));
   }
-  wrap.insertAdjacentHTML('beforeend', '<h2 style="margin:16px 2px 6px;">💬 چت با منتورها</h2>');
+  wrap.insertAdjacentHTML('beforeend', `<h2 style="margin:16px 2px 6px;">${icon('chat')} چت با منتورها</h2>`);
   for(const m of mentors){
     const box = document.createElement('div');
     box.className = 'card';
@@ -2522,10 +2541,10 @@ async function renderAdminMedals(){
   const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
   const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
   const opts = [
-    ...members.map(m=>`<option value="${m.code}">👤 ${escapeHtml(m.name)} (${m.code})</option>`),
-    ...mentors.map(m=>`<option value="${m.code}">🧑‍🏫 ${escapeHtml(m.name)} (${m.code})</option>`)
+    ...members.map(m=>`<option value="${m.code}">${escapeHtml(m.name)} (${m.code})</option>`),
+    ...mentors.map(m=>`<option value="${m.code}">${escapeHtml(m.name)} (${m.code})</option>`)
   ].join('');
-  const medalOpts = MEDAL_TIERS.map(m=>`<option value="${m.name}">${m.emoji} ${m.name}</option>`).join('');
+  const medalOpts = MEDAL_TIERS.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
   el.innerHTML = `
     <div class="card">
       <h2>اهدای مدال</h2>
