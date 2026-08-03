@@ -446,7 +446,7 @@
     <div class="lf-line">This website and its contents are protected by copyright and intellectual property laws.</div>
     <div class="lf-line">Unauthorized copying, reproduction, modification, or distribution of this website or its contents is strictly prohibited.</div>
     <div class="lf-line">Designed &amp; Developed by <span class="lf-name">Sina Zomorodi</span></div>
-    <div class="lf-line">Version 2.3.2</div>
+    <div class="lf-line">Version 2.3.3</div>
   </div>
 </div>
 
@@ -912,21 +912,24 @@ document.getElementById('userSubmit').addEventListener('click', guard(document.g
   if(!code){ errEl.textContent='کد عضویت رو وارد کن.'; errEl.classList.remove('hidden'); return; }
   errEl.classList.add('hidden'); errEl.textContent='';
   await storageReadyPromise; // منتظر بمون تا اتصال دیتابیس مشخص بشه (ابری یا محلی)، تا اطلاعات قدیمی/ناقص خونده نشه
-  const registry = await loadMemberRegistry(); // این با anon هم قابل‌خوندنه، مشکلی نداره
+  // ثبت‌نام و برقراری نشست امن هم‌زمان انجام میشن (به هم وابسته نیستن) تا لاگین سریع‌تر بشه
+  const [registry, linked] = await Promise.all([
+    loadMemberRegistry(), // این با anon هم قابل‌خوندنه، مشکلی نداره
+    linkAuthSession(code, 'member')
+  ]);
   const mem = registry.find(m=>m.code===code && !m.deleted);
   if(!mem){
     errEl.textContent = 'این کد پیدا نشد یا حذف شده. با رئیس دوره هماهنگ کن.';
     errEl.classList.remove('hidden');
     return;
   }
-  errEl.classList.add('hidden');
-  viaMentorList = false;
-  const linked = await linkAuthSession(code, 'member'); // باید قبل از خوندن دیتای شخصی (تعهدنامه و غیره) کامل بشه، وگرنه RLS جلوی خوندنش رو می‌گیره
   if(!linked){
     errEl.textContent = 'اتصال امن برقرار نشد — اینترنتت رو چک کن و دوباره امتحان کن.';
     errEl.classList.remove('hidden');
     return;
   }
+  errEl.classList.add('hidden');
+  viaMentorList = false;
   const commitRec = await loadCommitment(code); // حالا که نشست واقعی برقراره، این باید درست خونده بشه
   if(!commitRec || commitmentExpired(commitRec)){
     document.getElementById('loginScreen').classList.add('hidden');
@@ -942,23 +945,24 @@ document.getElementById('mentorSubmit').addEventListener('click', guard(document
   if(!code){ errEl.textContent='کد منتور رو وارد کن.'; errEl.classList.remove('hidden'); return; }
   errEl.classList.add('hidden'); errEl.textContent='';
   await storageReadyPromise; // همون رفع رِیس‌کاندیشن — تا وصل نشده جستجو نکن
-  const registry = await loadMentorRegistry();
+  const [registry, linked] = await Promise.all([
+    loadMentorRegistry(),
+    linkAuthSession(code, 'mentor')
+  ]);
   const mentor = registry.find(m=>m.code===code && !m.deleted);
   if(!mentor){
     errEl.textContent = 'کد منتور پیدا نشد.';
     errEl.classList.remove('hidden');
     return;
   }
-  errEl.classList.add('hidden');
-  currentMentorCode = code;
-  currentMentorProfile = mentor;
-  const linked = await linkAuthSession(code, 'mentor'); // باید قبل از رندر پنل‌هایی که دیتای دیگران رو می‌خونن کامل بشه، وگرنه RLS جلوشون رو می‌گیره
   if(!linked){
     errEl.textContent = 'اتصال امن برقرار نشد — اینترنتت رو چک کن و دوباره امتحان کن.';
     errEl.classList.remove('hidden');
-    currentMentorCode = null; currentMentorProfile = null;
     return;
   }
+  errEl.classList.add('hidden');
+  currentMentorCode = code;
+  currentMentorProfile = mentor;
   startPresenceHeartbeat(code);
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('mentorHome').classList.remove('hidden');
