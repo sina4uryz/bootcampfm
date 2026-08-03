@@ -240,7 +240,11 @@
   .panel.active{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
 
-  .card{background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px;}
+  .card{
+    background:linear-gradient(165deg, var(--navy), var(--navy-alt));
+    border:1px solid rgba(111,168,220,0.18);border-radius:12px;padding:16px;margin-bottom:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
+  }
   .card h2{font-size:15px;font-weight:700;margin:0 0 12px;color:var(--white);}
   .cat-head{display:flex;justify-content:space-between;align-items:center;}
   .cat-badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;font-variant-numeric:tabular-nums;}
@@ -257,6 +261,17 @@
     background:var(--navy-alt);border:1px solid var(--line);color:var(--white);border-radius:6px;padding:9px 10px;font-family:inherit;font-size:13px;
   }
   input:focus,textarea:focus,select:focus{outline:1.5px solid var(--lightblue);}
+  select{
+    background:linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)) !important;
+    border:1px solid rgba(111,168,220,0.35) !important;
+    backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);
+    box-shadow:inset 0 1.5px 0 rgba(255,255,255,.10);
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239AA3B2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat;background-position:left 10px center;background-size:14px;
+    padding-left:30px;
+  }
+  select option{background:var(--navy);color:var(--white);}
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus{
@@ -309,7 +324,8 @@
   .cr-title{font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px;color:var(--white);letter-spacing:.2px;}
   .cr-num{font-size:15px;font-weight:900;background:linear-gradient(135deg,#BFDCF5,#6FA8DC);-webkit-background-clip:text;background-clip:text;color:transparent;}
   .cr-bar{height:6px;border-radius:5px;background:rgba(255,255,255,.10);margin:5px 0 2px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);}
-  .cr-fill{position:relative;height:100%;border-radius:5px;background:linear-gradient(90deg, #6FA8DC, #3E5FCB);transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 8px rgba(111,168,220,.6);}
+  .cr-fill{position:relative;height:100%;border-radius:5px;background:linear-gradient(90deg, #FF5F6D, #FFC371, #6FDC8C, #6FA8DC, #A66FDC, #FF5F6D);background-size:300% 100%;animation:crRainbow 6s linear infinite;transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 10px rgba(111,168,220,.5);}
+  @keyframes crRainbow{0%{background-position:0% 0;}100%{background-position:300% 0;}}
   .cr-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);animation:crShine 2.6s ease-in-out infinite;}
   @keyframes crShine{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
   .cr-sub{font-size:10.5px;color:var(--white-dim);line-height:1.5;margin-top:6px;}
@@ -374,12 +390,34 @@
   .qna-item .a.pending{color:var(--white-dim);font-style:italic;}
   .qna-item .meta{font-size:10px;color:var(--white-dim);margin-top:4px;}
   .new-tag{color:var(--lightblue);font-size:10px;font-weight:800;margin-right:6px;}
-  .badge-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gray);box-shadow:0 0 6px 2px var(--gray);margin-right:4px;vertical-align:middle;}
-  .chat-log{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px;}
-  .chat-bubble{max-width:80%;padding:8px 12px;border-radius:10px;font-size:13px;line-height:1.6;}
-  .chat-bubble.mine{align-self:flex-end;background:var(--lightblue-dim);color:var(--white);border:1px solid var(--lightblue);}
-  .chat-bubble.theirs{align-self:flex-start;background:var(--navy-alt);border:1px solid var(--line);}
-  .chat-sender{font-size:10px;color:var(--white-dim);margin-bottom:3px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .badge-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--gray);box-shadow:0 0 6px 2px var(--gray);margin-right:4px;vertical-align:middle;}
+  #updatesBadgeMember:not(.hidden), #updatesBadgeMentor:not(.hidden){
+    background:linear-gradient(135deg,#FF8A65,#E64A3B);
+    box-shadow:0 0 8px 2px rgba(230,74,59,.7);
+    animation:badgePulse 1.4s ease-in-out infinite;
+  }
+  @keyframes badgePulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.35);opacity:.75;}}
+  .chat-log{
+    max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px 12px;
+    background:linear-gradient(160deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.08);border-radius:14px;
+  }
+  .chat-bubble{max-width:78%;padding:9px 13px;border-radius:16px;font-size:13px;line-height:1.6;box-shadow:0 3px 10px rgba(0,0,0,.18);}
+  .chat-bubble.mine{
+    align-self:flex-end;
+    background:linear-gradient(155deg, rgba(175,213,247,.98), rgba(78,124,200,.94));
+    color:#0b1220;border-bottom-left-radius:16px;border-bottom-right-radius:5px;
+    box-shadow:0 3px 12px rgba(111,168,220,.4), inset 0 1.5px 0 rgba(255,255,255,.6);
+  }
+  .chat-bubble.mine .chat-sender, .chat-bubble.mine .chat-time{color:#0b1220;opacity:.65;}
+  .chat-bubble.theirs{
+    align-self:flex-start;
+    background:rgba(255,255,255,0.07);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);
+    border:1px solid rgba(255,255,255,0.14);color:var(--white);
+    border-bottom-right-radius:16px;border-bottom-left-radius:5px;
+  }
+  .chat-bubble.theirs .chat-sender, .chat-bubble.theirs .chat-time{color:var(--white-dim);}
+  .chat-sender{font-size:10px;margin-bottom:3px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
   .icon-btn-sm{background:none;border:none;color:var(--white-dim);cursor:pointer;font-size:10px;padding:0 2px;}
   .icon-btn-sm:hover{color:#C94F4F;}
   .chat-time{font-size:10px;color:var(--white-dim);margin-top:4px;text-align:left;}
@@ -392,7 +430,12 @@
   .member-list-row:hover{background:var(--navy-alt);}
   .member-list-row .nm{font-weight:700;font-size:13px;}
   .member-list-row .cd{font-size:11px;color:var(--white-dim);}
-  .del-row{display:flex;justify-content:space-between;align-items:center;padding:9px 4px;border-top:1px solid var(--line);}
+  .del-row{
+    display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:6px;
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;
+    transition:.25s cubic-bezier(.22,1,.36,1);
+  }
+  .del-row:hover{background:rgba(111,168,220,0.08);border-color:rgba(111,168,220,0.3);}
   .del-row:first-of-type{border-top:none;}
 </style>
 </head>
@@ -453,7 +496,7 @@
     <div class="lf-line">This website and its contents are protected by copyright and intellectual property laws.</div>
     <div class="lf-line">Unauthorized copying, reproduction, modification, or distribution of this website or its contents is strictly prohibited.</div>
     <div class="lf-line">Designed &amp; Developed by <span class="lf-name">Sina Zomorodi</span></div>
-    <div class="lf-line">Version 2.3.3</div>
+    <div class="lf-line">Version 2.4.1</div>
   </div>
 </div>
 
@@ -1336,14 +1379,39 @@ function updateTaskField(taskId, field, value){
 // ================= today panel =================
 function renderToday(){
   const el = document.getElementById('panel-today');
-  if(isViewOnly){
-    el.innerHTML = '<div class="card"><div class="empty">در حالت مشاهده، ثبت تسک روزانه غیرفعاله. برای دیدن روند به تب «داشبورد» برو.</div></div>';
-    return;
-  }
   currentDate = iranTodayISO(); // قفل روی همین امروز (به وقت ایران) — روزهای قبل قابل ویرایش نیستن
   const rec = dailyRecords[currentDate] || {done:{}};
   const weekdayFa = iranWeekday(currentDate);
   const isWorkday = !['جمعه','پنجشنبه'].includes(weekdayFa);
+
+  if(isViewOnly){
+    let sumV = 0;
+    let checklistHtml = '';
+    categories.forEach(cat=>{
+      checklistHtml += `<div class="checklist-cat"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
+      cat.tasks.forEach(task=>{
+        const checked = !!rec.done[task.id];
+        if(checked) sumV += Number(task.points||0);
+        checklistHtml += `<div class="chk-row"><input type="checkbox" disabled ${checked?'checked':''}><label>${escapeHtml(task.name)}</label><span class="pts">${task.points}</span></div>`;
+      });
+      checklistHtml += '</div>';
+    });
+    const scoreV = Math.round((sumV/5)*10)/10;
+    el.innerHTML = `
+      <div class="card">
+        <div class="today-header">
+          <div><label class="field-label">تاریخ</label><div style="padding:9px 2px;font-size:13px;color:var(--white-dim);">${iranJalaliDate(currentDate)} · فقط نمایش</div></div>
+          <span class="weekday-pill ${isWorkday?'':'warn'}">${weekdayFa}${isWorkday?'':' · روز کاری نیست'}</span>
+        </div>
+        ${checklistHtml}
+        <div class="today-footer"><div class="live-score">امتیاز امروز: <b>${scoreV}</b> / ۱۰۰</div></div>
+      </div>
+      <div class="card"><h2>روزهای ثبت‌شده</h2><div id="recordedDaysList"></div></div>
+      <div class="card hidden" id="dayDetailCard"></div>
+    `;
+    renderRecordedDays();
+    return;
+  }
 
   el.innerHTML = `
     <div class="card">
