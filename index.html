@@ -106,22 +106,27 @@
   }
   .id-card::before{
     content:'';position:absolute;top:0;right:0;left:0;height:4px;
-    background:repeating-linear-gradient(90deg, var(--lightblue) 0 10px, transparent 10px 20px);
-    opacity:.9;box-shadow:0 0 8px 1px rgba(111,168,220,.9), 0 0 18px 3px rgba(111,168,220,.5);
+    background:linear-gradient(90deg, #FF3B6B, #FFC93B, #6BFF8F, #3BC5FF, #A63BFF, #FF3B6B);
+    background-size:400% 100%;
+    animation:idLineFlow 10s linear infinite;
+    box-shadow:0 0 10px 2px rgba(120,140,255,.6), 0 0 22px 4px rgba(255,80,150,.35);
   }
   .id-card::after{
     content:'';position:absolute;bottom:0;right:0;left:0;height:4px;
-    background:repeating-linear-gradient(90deg, var(--lightblue) 0 10px, transparent 10px 20px);
-    opacity:.9;box-shadow:0 0 8px 1px rgba(111,168,220,.9), 0 0 18px 3px rgba(111,168,220,.5);
+    background:linear-gradient(90deg, #FF3B6B, #FFC93B, #6BFF8F, #3BC5FF, #A63BFF, #FF3B6B);
+    background-size:400% 100%;
+    animation:idLineFlow 10s linear infinite reverse;
+    box-shadow:0 0 10px 2px rgba(120,140,255,.6), 0 0 22px 4px rgba(255,80,150,.35);
   }
+  @keyframes idLineFlow{ to{ background-position:400% 0; } }
   .id-card h1{font-size:19px;font-weight:800;margin:6px 0 2px;}
   .id-card .sub{color:var(--white-dim);font-size:12px;margin-bottom:14px;}
 
   .quote-line{
-    max-width:420px;width:100%;text-align:center;font-size:14px;font-weight:700;padding:12px 10px;
+    max-width:420px;width:100%;text-align:center;font-size:15.5px;font-weight:800;padding:12px 10px;
     background:linear-gradient(100deg,var(--navy) 20%, var(--lightblue) 50%, var(--navy) 80%);
     background-size:220% 100%; -webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:shine 5s ease-in-out infinite; cursor:default; letter-spacing:.2px;
+    animation:shine 5s ease-in-out infinite; cursor:default; letter-spacing:.3px; line-height:1.7;
   }
   .quote-line:hover{animation:shineFast 1.1s ease-in-out infinite;}
   @keyframes shine{0%{background-position:180% 0;}50%{background-position:0% 0;}100%{background-position:-180% 0;}}
@@ -163,18 +168,36 @@
   .err-msg{color:var(--lightblue);font-size:12px;margin:-6px 0 10px;font-weight:700;}
 
   /* ---------- shared main app chrome ---------- */
-  .masthead{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--lightblue);padding-bottom:14px;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+  .masthead{display:flex;justify-content:space-between;align-items:flex-end;position:relative;border-bottom:2px solid transparent;padding-bottom:14px;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+  .masthead::after{
+    content:'';position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;
+    background:linear-gradient(90deg, #FF3B6B, #FFC93B, #6BFF8F, #3BC5FF, #A63BFF, #FF3B6B);
+    background-size:400% 100%;
+    animation:idLineFlow 10s linear infinite;
+    box-shadow:0 0 10px 2px rgba(120,140,255,.55), 0 0 20px 3px rgba(255,80,150,.3);
+  }
   .masthead h1{font-size:20px;font-weight:800;margin:0;letter-spacing:.3px;}
   .masthead .sub{color:var(--white-dim);font-size:12px;margin-top:4px;}
   .member-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .member-chip{
-    display:inline-flex;align-items:center;
+    position:relative;
+    display:inline-flex;align-items:center;gap:10px;
     background:linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-    border:1px solid rgba(111,168,220,0.35);border-radius:20px;padding:7px 15px;font-size:12px;
+    border:1px solid rgba(111,168,220,0.35);border-radius:16px;padding:6px 16px 6px 8px;font-size:12px;
     backdrop-filter:blur(20px) saturate(200%);-webkit-backdrop-filter:blur(20px) saturate(200%);
     box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14), 0 4px 16px rgba(0,0,0,.25), 0 0 20px 1px rgba(111,168,220,.12);
     animation:crPulse 3.5s ease-in-out infinite;
+    overflow:hidden;
   }
+  .mc-avatar{
+    flex-shrink:0;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:900;color:#0b1220;
+    background:linear-gradient(155deg,#BFDCF5,#6FA8DC);
+    box-shadow:0 0 0 2px rgba(111,168,220,.32), 0 0 8px rgba(111,168,220,.6), inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .mc-info{display:flex;flex-direction:column;line-height:1.35;}
+  .mc-name{font-weight:800;color:var(--white);font-size:12.5px;letter-spacing:.2px;}
+  .mc-code{font-size:10px;color:var(--white-dim);font-variant-numeric:tabular-nums;}
   .member-chip b{color:var(--lightblue);}
   .view-only-badge{background:var(--lightblue-dim);color:var(--lightblue);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;}
   .logout-btn{
@@ -182,6 +205,7 @@
     border-radius:10px;padding:7px 12px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;
     backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    display:inline-flex;align-items:center;justify-content:center;line-height:0;
   }
   .logout-btn::after{
     content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle, rgba(255,120,120,.55) 0%, transparent 70%);
@@ -236,7 +260,7 @@
     55%{ opacity:1; }
     100%{ opacity:1; filter:blur(0) saturate(1); transform:scale(1) translateY(0); }
   }
-  .panel.active.glass-anim{ animation:glassSwitchIn .45s cubic-bezier(.22,1,.36,1); }
+  .panel.active.glass-anim, .chat-pv-wrap.glass-anim{ animation:glassSwitchIn .45s cubic-bezier(.22,1,.36,1); }
   .panel.active{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
 
@@ -285,8 +309,8 @@
   .icon-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
   .add-task-btn{margin-top:10px;background:none;border:1px dashed var(--line);color:var(--white-dim);border-radius:6px;padding:8px;width:100%;cursor:pointer;font-family:inherit;font-size:12px;}
   .add-task-btn:hover{border-color:var(--lightblue);color:var(--lightblue);}
-  .btn{background:var(--lightblue);color:var(--black);border:none;border-radius:7px;padding:10px 18px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;transition:.15s;}
-  .btn:hover{filter:brightness(1.12);}
+  .btn{background:rgba(255,255,255,0.12);color:var(--white);border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:10px 18px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;transition:.15s;}
+  .btn:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.32);}
   .btn:disabled{opacity:.5;cursor:not-allowed;}
   .btn.ghost{background:none;border:1px solid var(--line);color:var(--white);}
   .btn.ghost:hover{border-color:var(--lightblue);color:var(--lightblue);}
@@ -311,6 +335,15 @@
     min-width:210px;
     animation:crPulse 3.5s ease-in-out infinite;
   }
+  .member-chip::before, .cycle-reminder.cr-v2::before{
+    content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+    background:linear-gradient(120deg, rgba(191,220,245,.9), rgba(111,168,220,0) 30%, rgba(111,168,220,0) 70%, rgba(191,220,245,.9));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    background-size:220% 100%; animation:mcSheen 4.5s linear infinite;
+  }
+  @keyframes mcSheen{0%{background-position:180% 0;}100%{background-position:-40% 0;}}
+
   @keyframes crPulse{
     0%,100%{ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14), 0 4px 16px rgba(0,0,0,.25), 0 0 20px 1px rgba(111,168,220,.12); }
     50%{ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14), 0 4px 16px rgba(0,0,0,.25), 0 0 26px 4px rgba(111,168,220,.28); }
@@ -329,6 +362,26 @@
   .cr-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);animation:crShine 2.6s ease-in-out infinite;}
   @keyframes crShine{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
   .cr-sub{font-size:10.5px;color:var(--white-dim);line-height:1.5;margin-top:6px;}
+  /* ---------- نسخه‌ی جدید ریمایندر دوره: گیج دایره‌ای HUD-وار ---------- */
+  .cycle-reminder.cr-v2{ display:flex;align-items:center;gap:13px;padding:9px 17px 9px 11px;min-width:auto; }
+  .cr-ring{position:relative;width:50px;height:50px;flex-shrink:0;}
+  .cr-ring svg{width:100%;height:100%;transform:rotate(-90deg);shape-rendering:geometricPrecision;}
+  .cr-ring-bg{fill:none;stroke:rgba(255,255,255,.14);stroke-width:4.5;}
+  .cr-ring-fill{fill:none;stroke:url(#crRingGrad);stroke-width:4.5;stroke-linecap:round;filter:drop-shadow(0 0 2.5px rgba(111,168,220,.9));transition:stroke-dasharray .6s cubic-bezier(.22,1,.36,1);}
+  .cr-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--white);font-variant-numeric:tabular-nums;text-shadow:0 0 6px rgba(0,0,0,.4);}
+  .cr-badge-glow{
+    flex-shrink:0;width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(155deg, rgba(150,197,238,.35), rgba(78,124,200,.35));
+    color:#BFDCF5;box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 0 14px rgba(111,168,220,.5);
+    animation:crGlowPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes crGlowPulse{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 0 10px rgba(111,168,220,.4);}50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 0 20px rgba(111,168,220,.75);}}
+  .cr-title2{font-size:12px;font-weight:800;color:var(--white);letter-spacing:.2px;}
+  .cr-title2 b{color:var(--lightblue);font-size:14px;}
+  .cr-week-tag{
+    display:inline-block;font-size:10px;font-weight:800;color:#BFDCF5;background:rgba(111,168,220,.14);
+    border:1px solid rgba(111,168,220,.3);border-radius:20px;padding:1px 9px;margin-top:4px;
+  }
   input[type=checkbox]{
     appearance:none; -webkit-appearance:none; width:20px; height:20px; border-radius:6px;
     border:1.5px solid var(--line); background:var(--navy-alt); cursor:pointer; position:relative; flex-shrink:0;
@@ -417,6 +470,29 @@
     border-bottom-right-radius:16px;border-bottom-left-radius:5px;
   }
   .chat-bubble.theirs .chat-sender, .chat-bubble.theirs .chat-time{color:var(--white-dim);}
+  .contact-row{position:relative;}
+  .contact-row.active-contact{background:rgba(111,168,220,0.12);border-color:rgba(111,168,220,0.4);}
+  .contact-avatar{
+    position:relative;flex-shrink:0;width:36px;height:36px;border-radius:50%;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#0b1220;
+    background:linear-gradient(155deg, rgba(175,213,247,.98), rgba(78,124,200,.94));
+  }
+  .contact-avatar img{width:100%;height:100%;object-fit:cover;}
+  .contact-online-dot{position:absolute;bottom:-1px;left:-1px;width:11px;height:11px;border-radius:50%;background:#3BC96A;border:2px solid var(--navy);box-shadow:0 0 6px 1px rgba(59,201,106,.7);}
+  .chat-pv-wrap{margin-top:10px;}
+  .typing-indicator{font-size:11px;color:var(--lightblue);display:flex;align-items:center;gap:5px;padding:2px 4px;}
+  .typing-dots span{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--lightblue);margin:0 1px;animation:typingBounce 1.2s infinite;}
+  .typing-dots span:nth-child(2){animation-delay:.2s;}
+  .typing-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-3px);opacity:1;}}
+  .avatar-upload-btn{width:56px;height:56px;border-radius:50%;overflow:hidden;position:relative;cursor:pointer;border:2px dashed rgba(111,168,220,0.4);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);flex-shrink:0;}
+  .switch-toggle{position:relative;display:inline-block;width:42px;height:24px;flex-shrink:0;}
+  .switch-toggle input{opacity:0;width:0;height:0;}
+  .switch-toggle span{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:24px;transition:.3s;}
+  .switch-toggle span::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:2px;background:#E9EAEC;border-radius:50%;transition:.3s cubic-bezier(.34,1.56,.64,1);}
+  .switch-toggle input:checked + span{background:linear-gradient(155deg, rgba(175,213,247,.98), rgba(78,124,200,.94));border-color:rgba(111,168,220,.6);}
+  .switch-toggle input:checked + span::before{transform:translateX(18px);}
+  .avatar-upload-btn img{width:100%;height:100%;object-fit:cover;}
   .chat-sender{font-size:10px;margin-bottom:3px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
   .icon-btn-sm{background:none;border:none;color:var(--white-dim);cursor:pointer;font-size:10px;padding:0 2px;}
   .icon-btn-sm:hover{color:#C94F4F;}
@@ -478,7 +554,7 @@
       <label class="field-label">رمز عبور</label>
       <div style="position:relative;">
         <input type="password" id="adminPassword" placeholder="رمز عبور" style="width:100%;padding-left:38px;">
-        <button type="button" id="togglePassBtn" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--white-dim);cursor:pointer;padding:4px;display:flex;" title="نمایش رمز"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button type="button" id="togglePassBtn" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:26px;height:26px;background:none;border:none;color:var(--white-dim);cursor:pointer;padding:0;margin:0;display:flex;align-items:center;justify-content:center;line-height:0;" title="نمایش رمز"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="err-msg hidden" id="adminErr"></div>
       <button class="btn btn-glass-cta" id="adminSubmit">ورود به پنل مدیریت</button>
@@ -496,7 +572,7 @@
     <div class="lf-line">This website and its contents are protected by copyright and intellectual property laws.</div>
     <div class="lf-line">Unauthorized copying, reproduction, modification, or distribution of this website or its contents is strictly prohibited.</div>
     <div class="lf-line">Designed &amp; Developed by <span class="lf-name">Sina Zomorodi</span></div>
-    <div class="lf-line">Version 2.4.1</div>
+    <div class="lf-line">Version 3.1.1</div>
   </div>
 </div>
 
@@ -546,7 +622,7 @@
       <button class="back-btn hidden" id="backToListBtn">↩ بازگشت به لیست</button>
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
         <button class="install-btn hidden" id="installBtn1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> افزودن به صفحه اصلی</button>
-        <button class="logout-btn" id="logoutBtn">خروج</button>
+        <button class="logout-btn" id="logoutBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
       </div>
     </div>
   </div>
@@ -588,7 +664,7 @@
     <div class="member-box">
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
         <button class="install-btn hidden" id="installBtn2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> افزودن به صفحه اصلی</button>
-        <button class="logout-btn" id="mentorLogoutBtn">خروج</button>
+        <button class="logout-btn" id="mentorLogoutBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
       </div>
     </div>
   </div>
@@ -620,7 +696,7 @@
     <div class="member-box">
       <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch;">
         <button class="install-btn hidden" id="installBtn3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> افزودن به صفحه اصلی</button>
-        <button class="logout-btn" id="adminLogoutBtn">خروج</button>
+        <button class="logout-btn" id="adminLogoutBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
       </div>
     </div>
   </div>
@@ -632,6 +708,7 @@
     <button class="tab-btn" data-atab="qna">Connect To Team</button>
     <button class="tab-btn" data-atab="status">Status</button>
     <button class="tab-btn" data-atab="rules">Rules</button>
+    <button class="tab-btn" data-atab="controls">Controls</button>
   </div>
   <div class="panel active" id="apanel-members"></div>
   <div class="panel" id="apanel-mentors"></div>
@@ -640,6 +717,7 @@
   <div class="panel" id="apanel-qna"></div>
   <div class="panel" id="apanel-status"></div>
   <div class="panel" id="apanel-rules"></div>
+  <div class="panel" id="apanel-controls"></div>
 </div>
 
 <!-- ===================== MENTOR PROFILE VIEW (برای رئیس) ===================== -->
@@ -845,6 +923,8 @@ const ICONS = {
   trophy: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v6a4 4 0 01-8 0V4z"/><path d="M8 5H4v2a4 4 0 004 4M16 5h4v2a4 4 0 01-4 4"/><path d="M12 14v3M9 21h6M9 21c0-2 1-3 3-3s3 1 3 3"/></svg>',
   megaphone: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 001 1h2l9 4V5L6 9H4a1 1 0 00-1 1z"/><path d="M17 9a3 3 0 010 6"/></svg>',
   chat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-9 8.4A8.5 8.5 0 113 11.5 8.38 8.38 0 0111.5 3a8.5 8.5 0 019.5 8.5z"/></svg>',
+  eye: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a18.5 18.5 0 015.06-5.94"/><path d="M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><path d="M14.12 14.12a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>',
 };
 function icon(name){ return `<span style="display:inline-flex;vertical-align:-2px;">${ICONS[name]||''}</span>`; }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -970,6 +1050,11 @@ document.getElementById('userSubmit').addEventListener('click', guard(document.g
   const mem = registry.find(m=>m.code===code && !m.deleted);
   if(!mem){
     errEl.textContent = 'این کد پیدا نشد یا حذف شده. با رئیس دوره هماهنگ کن.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  if(mem.loginLocked){
+    errEl.textContent = 'ورودت فعلاً قفله. با منتور یا رئیس دوره هماهنگ کن تا بازش کنه.';
     errEl.classList.remove('hidden');
     return;
   }
@@ -1135,14 +1220,27 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   document.getElementById('mainApp').classList.remove('hidden');
   document.getElementById('viewOnlyBadge').classList.toggle('hidden', !viewOnly);
   document.getElementById('backToListBtn').classList.toggle('hidden', !viaMentorList);
-  document.getElementById('memberChip').innerHTML = `<b>${escapeHtml(memberInfo.name||'')}</b> · کد ${escapeHtml(code)}`;
+  document.getElementById('memberChip').innerHTML = `<span class="mc-avatar">${escapeHtml((memberInfo.name||'?').trim()[0]||'?')}</span><span class="mc-info"><span class="mc-name">${escapeHtml(memberInfo.name||'')}</span><span class="mc-code">کد ${escapeHtml(code)}</span></span>`;
 
-  renderTasks();
-  renderToday();
-  renderFeedback();
   const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
+  if(msgViewerRole==='mentor' && memberInfo.todosHiddenFromMentor){
+    document.getElementById('panel-tasks').innerHTML = '<div class="card"><div class="empty">این بخش برای منتورها مخفیه</div></div>';
+    document.getElementById('panel-today').innerHTML = '<div class="card"><div class="empty">این بخش برای منتورها مخفیه</div></div>';
+  }else{
+    renderTasks();
+    renderToday();
+  }
+  if(msgViewerRole==='mentor' && memberInfo.feedbackHiddenFromMentor){
+    document.getElementById('panel-feedback').innerHTML = '<div class="card"><div class="empty">این بخش برای منتورها مخفیه</div></div>';
+  }else{
+    renderFeedback();
+  }
   renderCommitmentPanel('panel-commitment', currentCode, memberInfo.name||'', msgViewerRole==='admin');
-  renderPersonalNotesPanel('panel-notes', currentCode, isViewOnly);
+  if(msgViewerRole==='mentor' && memberInfo.notesHiddenFromMentor){
+    document.getElementById('panel-notes').innerHTML = '<div class="card"><div class="empty">این بخش برای منتورها مخفیه</div></div>';
+  }else{
+    renderPersonalNotesPanel('panel-notes', currentCode, isViewOnly);
+  }
   renderRulesPanel('panel-rules', false, null, null);
   registerLiveListRefresh('panel-rules', loadRules, renderRulesPanel, false, null, null);
   renderAchievementsPanel('panel-achievements', currentCode, msgViewerRole!=='admin');
@@ -1296,20 +1394,29 @@ async function renderCycleReminder(){
     if(archived) cycleStart = null;
   }
   if(!cycleStart){
-    box.innerHTML = `<div class="cycle-reminder"><div class="cr-row"><div class="cr-badge">${icon('calendar')}</div><div><div class="cr-title">دوره‌ی جدید</div><div class="cr-sub">با اولین تسکی که ثبت کنی، شمارش ۲۰ روزه شروع میشه</div></div></div></div>`;
+    box.innerHTML = `<div class="cycle-reminder cr-v2"><div class="cr-badge-glow">${icon('calendar')}</div><div><div class="cr-title2">دوره‌ی جدید</div><div class="cr-sub" style="margin-top:2px;">با اولین تسکی که ثبت کنی، شمارش ۲۰ روزه شروع میشه</div></div></div>`;
     return;
   }
   const info = computeCycle(cycleStart);
-  const pct = Math.round((info.dayIndex/20)*100);
-  box.innerHTML = `<div class="cycle-reminder">
-    <div class="cr-row">
-      <div class="cr-badge">${icon('calendar')}</div>
-      <div style="flex:1;">
-        <div class="cr-title"><span class="cr-num">${info.dayIndex}</span> از ۲۰ روز</div>
-        <div class="cr-bar"><div class="cr-fill" style="width:${pct}%;"></div></div>
-      </div>
+  const pct = Math.min(100, Math.round((info.dayIndex/20)*100));
+  const R = 18, C = Math.round(2*Math.PI*R);
+  const dash = Math.round((pct/100)*C);
+  box.innerHTML = `<div class="cycle-reminder cr-v2">
+    <div class="cr-ring">
+      <svg viewBox="0 0 44 44">
+        <defs><linearGradient id="crRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#BFDCF5"/><stop offset="100%" stop-color="#6FA8DC"/>
+        </linearGradient></defs>
+        <circle class="cr-ring-bg" cx="22" cy="22" r="${R}"></circle>
+        <circle class="cr-ring-fill" cx="22" cy="22" r="${R}" stroke-dasharray="${dash} ${C}"></circle>
+      </svg>
+      <span class="cr-ring-num">${info.dayIndex}</span>
     </div>
-    <div class="cr-sub">هفته ${info.currentWeekIndex} از ۴ — امتیاز این هفته پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</div>
+    <div>
+      <div class="cr-title2">روز <b>${info.dayIndex}</b> از ۲۰</div>
+      <span class="cr-week-tag">هفته ${info.currentWeekIndex} از ۴</span>
+      <div class="cr-sub" style="margin-top:5px;">امتیاز این هفته پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</div>
+    </div>
   </div>`;
 }
 
@@ -1325,6 +1432,7 @@ document.querySelectorAll('#mainTabs .tab-btn').forEach(btn=>{
     if(btn.dataset.tab==='dashboard') renderDashboard();
     if(btn.dataset.tab==='today') renderToday();
     if(btn.dataset.tab==='status') renderStatusPanel('panel-status', 'member');
+    if(btn.dataset.tab==='adminmsg'){ markUpdatesSeen(currentCode); document.getElementById('updatesBadgeMember').classList.add('hidden'); }
   });
 });
 
@@ -1525,6 +1633,10 @@ function renderRecordedDays(){
 // ================= dashboard panel =================
 async function renderDashboard(){
   const el = document.getElementById('panel-dashboard');
+  if(currentMentorCode && currentMember && currentMember.scoreHiddenFromMentor){
+    el.innerHTML = '<div class="card"><div class="empty">این بخش برای منتورها مخفیه</div></div>';
+    return;
+  }
   await updateHeaderStats();
   const cycleStart = await loadCycleStart(currentCode);
   const cycle = cycleStart ? computeCycle(cycleStart) : null;
@@ -1603,8 +1715,8 @@ async function renderDashboard(){
     chartInstance = new Chart(ctx, {
       type:'line',
       data:{ labels, datasets:[{ label:'امتیاز روزانه', data, borderColor:'#3E5FCB', backgroundColor:'rgba(62,95,203,0.45)',
-        pointBackgroundColor:'#3E5FCB', pointBorderColor:'#3E5FCB', pointRadius:4, pointHoverRadius:6, borderWidth:2.5, tension:0.25, fill:true }] },
-      options:{ responsive:true, maintainAspectRatio:false, animation:false, plugins:{ legend:{display:false}, tooltip:{rtl:true} },
+        pointBackgroundColor:'#3E5FCB', pointBorderColor:'#3E5FCB', pointRadius:2.5, pointHoverRadius:5, borderWidth:2.5, tension:0.25, fill:true }] },
+      options:{ responsive:true, maintainAspectRatio:false, animation:false, devicePixelRatio:Math.max(2, window.devicePixelRatio||1), plugins:{ legend:{display:false}, tooltip:{rtl:true} },
         scales:{ y:{min:0,max:100,ticks:{color:'#9AA3B2',stepSize:10},grid:{color:'#3A4152'}}, x:{ticks:{color:'#9AA3B2',font:{size:10}},grid:{display:false}} } },
       plugins:[weekBandsPlugin]
     });
@@ -2071,6 +2183,62 @@ setInterval(async ()=>{
 }, 800);
 
 const PRESENCE_TTL = 6000; // اگه تا ۶ ثانیه پیش heartbeat نداشته باشه، آفلاین حساب میشه
+
+// ---- در حال نوشتن — با دیبانس سنگین که هر حرف یه بار ننویسه، دیتابیس پر نشه ----
+const _typingLast = {};
+async function setTyping(key, role){
+  const now = Date.now();
+  const k = key+':'+role;
+  if(_typingLast[k] && now - _typingLast[k] < 2500) return; // حداکثر هر ۲.۵ ثانیه یه‌بار می‌نویسه
+  _typingLast[k] = now;
+  try{ await window.storage.set('typing:'+k, String(now), true); }catch(e){}
+}
+async function isTyping(key, otherRole){
+  try{
+    const r = await window.storage.get('typing:'+key+':'+otherRole, true);
+    if(!r || !r.value) return false;
+    return (Date.now() - Number(r.value)) < 3500;
+  }catch(e){ return false; }
+}
+
+// ---- عکس پروفایل — همیشه قبل از ذخیره فشرده میشه (۹۶×۹۶، کیفیت پایین) که فضای دیتابیس پر نشه ----
+async function loadAvatar(code){
+  try{ const r = await window.storage.get('avatar:'+code, true); return r && r.value ? r.value : null; }
+  catch(e){ return null; }
+}
+async function saveAvatar(code, dataUrl){
+  try{ await window.storage.set('avatar:'+code, dataUrl, true); return true; }catch(e){ console.error(e); return false; }
+}
+function compressImageFile(file){
+  return new Promise((resolve, reject)=>{
+    if(!file.type.startsWith('image/')){ reject(new Error('فقط عکس مجازه')); return; }
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const size = 256; // خروجی بزرگ‌تر و شارپ‌تر — رو صفحه‌های رتینا/های‌رزولوشن دیگه محو نمیشه
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+        const s = Math.min(img.width, img.height);
+        ctx.drawImage(img, (img.width-s)/2, (img.height-s)/2, s, s, 0, 0, size, size);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = ()=>reject(new Error('عکس خونده نشد'));
+      img.src = e.target.result;
+    };
+    reader.onerror = ()=>reject(new Error('فایل خونده نشد'));
+    reader.readAsDataURL(file);
+  });
+}
+async function loadSelfAvatarAllowed(){
+  try{ const r = await window.storage.get('settings:avatarSelfAllowed', true); return r && r.value ? JSON.parse(r.value) : true; }
+  catch(e){ return true; }
+}
+async function saveSelfAvatarAllowed(val){
+  try{ await window.storage.set('settings:avatarSelfAllowed', JSON.stringify(val), true); }catch(e){ console.error(e); }
+}
 let presenceInterval = null;
 let currentPresenceCode = null;
 async function updatePresence(code){
@@ -2118,7 +2286,7 @@ async function renderStatusPanel(panelId, mode){
     }
     html += '</div>';
   }else{
-    const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
+    const members = (await loadMemberRegistry()).filter(m=>!m.deleted && !(mode==='mentor' && m.hideFromMentor));
     let mentors = [];
     if(mode==='admin') mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
     html += '<div class="card"><h2>Status — کاربران</h2>';
@@ -2218,7 +2386,6 @@ async function renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, auth
       await saveUpdates([...(await loadUpdates()), newUpdate]);
     }));
   }
-  await markUpdatesSeen(viewerCode);
 }
 
 // ================= Q&A — generic by code =================
@@ -2235,13 +2402,19 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
   const wrapId = ('chatwrap_'+threadKey+'_'+memberCode+'_'+myRole).replace(/[^a-zA-Z0-9_-]/g, '_');
   const card = document.createElement('div');
   card.className = 'card';
-  card.innerHTML = `${title?`<h2>${title}</h2>`:''}<div class="chat-log" id="${wrapId}_log"></div>
+  card.innerHTML = `${title?`<h2>${title}</h2>`:''}<div class="typing-indicator hidden" id="${wrapId}_typing"><span class="typing-dots"><span></span><span></span><span></span></span> در حال نوشتن...</div><div class="chat-log" id="${wrapId}_log"></div>
     <div class="row-flex" style="margin-top:10px;">
       <input type="text" id="${wrapId}_input" placeholder="پیامتو بنویس...">
       <button class="btn small" id="${wrapId}_btn">ارسال</button>
     </div>`;
   containerEl.appendChild(card);
   const logEl = card.querySelector('#'+wrapId+'_log');
+  const typingEl = card.querySelector('#'+wrapId+'_typing');
+  const inputEl = card.querySelector('#'+wrapId+'_input');
+  const otherRole = threadKey.startsWith('thread_mentor_admin') ? (myRole==='mentor'?'admin':'mentor')
+    : threadKey.startsWith('thread_mentor:') ? (myRole==='member'?'mentor':'member')
+    : (myRole==='member'?'admin':'member'); // thread_admin
+  inputEl.addEventListener('input', ()=>setTyping(threadKey+':'+memberCode, myRole));
 
   let lastList = [];
   let sending = false;
@@ -2269,6 +2442,7 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
     if(sending) return true; // یه پیام همین الان داره ارسال میشه، فعلاً رفرش نکن که پیام محو نشه
     const list = await loadThread(memberCode, threadKey);
     renderList(list);
+    isTyping(threadKey+':'+memberCode, otherRole).then(t=>typingEl.classList.toggle('hidden', !t));
     return true;
   }
   await refreshLog();
@@ -2292,6 +2466,45 @@ async function renderChatCard(containerEl, memberCode, threadKey, myRole, title,
   }));
 }
 
+// یه UI مثل پیام‌رسان: لیست مخاطب‌ها، کلیک روی هرکدوم چت خصوصیِ همون‌ آدم رو با یه ترنزیشن قشنگ باز می‌کنه
+async function renderContactChatPicker(el, contacts, openChat){
+  // contacts: [{ key, name, sub }]  — openChat(chatWrap, contact) باید چت رو رندر کنه
+  el.innerHTML = '';
+  const listWrap = document.createElement('div');
+  listWrap.className = 'card';
+  listWrap.innerHTML = `<h2>${icon('chat')} مخاطبین</h2><div id="contactList"></div>`;
+  el.appendChild(listWrap);
+  const chatWrap = document.createElement('div');
+  chatWrap.className = 'chat-pv-wrap';
+  el.appendChild(chatWrap);
+  const listEl = listWrap.querySelector('#contactList');
+  if(contacts.length===0){ listEl.innerHTML = '<div class="empty">کسی نیست</div>'; return; }
+  const [avatars, onlineFlags] = await Promise.all([
+    Promise.all(contacts.map(c=>loadAvatar(c.key))),
+    Promise.all(contacts.map(c=>isOnline(c.key)))
+  ]);
+  listEl.innerHTML = contacts.map((c,i)=>`
+    <div class="del-row contact-row" data-key="${c.key}" style="cursor:pointer;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="contact-avatar">${avatars[i]?`<img src="${avatars[i]}">`:escapeHtml((c.name||'?').trim()[0]||'?')}${onlineFlags[i]?'<span class="contact-online-dot"></span>':''}</div>
+        <div><b>${escapeHtml(c.name)}</b><div class="cd">${onlineFlags[i]?'آنلاین':(c.sub?escapeHtml(c.sub):'آفلاین')}</div></div>
+      </div>
+      <span style="color:var(--white-dim);font-size:16px;">‹</span>
+    </div>`).join('');
+  listEl.querySelectorAll('.contact-row').forEach(row=>{
+    row.addEventListener('click', async ()=>{
+      const c = contacts.find(x=>x.key===row.dataset.key);
+      listEl.querySelectorAll('.contact-row').forEach(r=>r.classList.remove('active-contact'));
+      row.classList.add('active-contact');
+      await openChat(chatWrap, c);
+      glassSwitchIn(chatWrap);
+      if(window.innerWidth < 700) chatWrap.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+  // اولین مخاطب رو خودکار باز می‌کنیم که خالی نمونه
+  listEl.querySelector('.contact-row')?.click();
+}
+
 // تب پیام‌های یه کاربر خاص — بسته به اینکه چه کسی داره نگاه می‌کنه (خود کاربر/منتور/رئیس) نمای مناسب رو می‌سازه
 async function renderMessagesTab(panelId, memberCode, viewerRole){
   const el = document.getElementById(panelId);
@@ -2300,28 +2513,22 @@ async function renderMessagesTab(panelId, memberCode, viewerRole){
   const adminLabel = f => f==='admin' ? 'مدیریت' : 'من';
   if(viewerRole==='member'){
     const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
-    const pickerWrap = document.createElement('div');
-    pickerWrap.className = 'card';
-    pickerWrap.innerHTML = `<h2>ارتباط با تیم</h2><label class="field-label">پیام به</label>
-      <select id="teamTarget_${panelId}" style="width:100%;">
-        <option value="admin">مدیریت</option>
-        ${mentors.map(m=>`<option value="${m.code}">${escapeHtml(m.name)}</option>`).join('')}
-      </select>`;
-    el.appendChild(pickerWrap);
-    const chatWrap = document.createElement('div');
-    el.appendChild(chatWrap);
-    async function renderSelected(){
+    const registryAll = await loadMemberRegistry();
+    const myRec = registryAll.find(m=>m.code===memberCode);
+    const assignedMentor = myRec && myRec.mentorCode ? mentors.find(m=>m.code===myRec.mentorCode) : null;
+    const mentorContacts = assignedMentor ? [assignedMentor] : mentors; // اگه رئیس منتور مشخصی رو تعیین کرده باشه، فقط همون یکی نشون داده میشه
+    const contacts = [
+      { key:'admin', name:'مدیریت', sub:'ارتباط با مدیریت دوره' },
+      ...mentorContacts.map(m=>({ key:m.code, name:m.name, sub:'منتور شما' }))
+    ];
+    await renderContactChatPicker(el, contacts, async (chatWrap, c)=>{
       chatWrap.innerHTML = '';
-      const target = pickerWrap.querySelector('select').value;
-      if(target==='admin'){
+      if(c.key==='admin'){
         await renderChatCard(chatWrap, memberCode, 'thread_admin', 'member', icon('chat')+' چت با مدیریت', adminLabel);
       }else{
-        const mentorName = mentors.find(m=>m.code===target)?.name || 'منتور';
-        await renderChatCard(chatWrap, memberCode, 'thread_mentor:'+target, 'member', `${icon('chat')} چت با ${escapeHtml(mentorName)}`, f=>f==='mentor'?mentorName:'من');
+        await renderChatCard(chatWrap, memberCode, 'thread_mentor:'+c.key, 'member', `${icon('chat')} چت با ${escapeHtml(c.name)}`, f=>f==='mentor'?c.name:'من');
       }
-    }
-    pickerWrap.querySelector('select').addEventListener('change', renderSelected);
-    await renderSelected();
+    });
   }else if(viewerRole==='admin'){
     await renderChatCard(el, memberCode, 'thread_admin', 'admin', icon('chat')+' چت با این کاربر', f=>f==='admin'?'من':'کاربر');
   }else if(viewerRole==='mentor'){
@@ -2340,50 +2547,34 @@ async function renderMentorAdminChatPanel(panelId, mentorCode, viewerRole){
   }
 }
 
-// اینباکس منتورها — همه‌ی مکالمات کاربرا با منتور، یه‌جا، تا بدون باز کردن پروفایل کامل جواب بدن
+// اینباکس منتورها — لیست کاربرا، کلیک روی هرکدوم چت خصوصیش باز میشه
 async function renderMentorUserQuestions(){
   const el = document.getElementById('mpanel-userq');
   if(!el) return;
   el.innerHTML = '<div class="card"><div class="empty">در حال بارگذاری...</div></div>';
-  const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
-  const wrap = document.createElement('div');
-  const threadKey = 'thread_mentor:'+currentMentorCode; // هر منتور یه ترد جدا با هر کاربر داره
-  for(const m of members){
-    const box = document.createElement('div');
-    box.className = 'card';
-    box.innerHTML = `<h2>${escapeHtml(m.name)} (${m.code})</h2>`;
-    wrap.appendChild(box);
-    await renderChatCard(box, m.code, threadKey, 'mentor', '', f=>f==='mentor'?'من':escapeHtml(m.name));
-  }
-  el.innerHTML = '';
-  el.appendChild(wrap);
+  const members = (await loadMemberRegistry()).filter(m=>!m.deleted && !m.archived && !m.hideFromMentor);
+  const threadKey = 'thread_mentor:'+currentMentorCode;
+  const contacts = members.map(m=>({ key:m.code, name:m.name, sub:'کد '+m.code }));
+  await renderContactChatPicker(el, contacts, async (chatWrap, c)=>{
+    chatWrap.innerHTML = '';
+    await renderChatCard(chatWrap, c.key, threadKey, 'mentor', '', f=>f==='mentor'?'من':c.name);
+  });
 }
 
-// اینباکس رئیس — همه‌ی مکالمات کاربرا با مدیریت
+// اینباکس رئیس — لیست کاربرا و منتورها، کلیک روی هرکدوم چت خصوصیش باز میشه (مدیریت آرشیوی‌ها رو هم می‌بینه)
 async function renderAdminQna(){
   const el = document.getElementById('apanel-qna');
   el.innerHTML = '<div class="card"><div class="empty">در حال بارگذاری...</div></div>';
   const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
   const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
-  const wrap = document.createElement('div');
-  wrap.innerHTML = `<h2 style="margin:6px 2px;">${icon('chat')} چت با کاربران</h2>`;
-  for(const m of members){
-    const box = document.createElement('div');
-    box.className = 'card';
-    box.innerHTML = `<h2>${escapeHtml(m.name)} (${m.code})</h2>`;
-    wrap.appendChild(box);
-    await renderChatCard(box, m.code, 'thread_admin', 'admin', '', f=>f==='admin'?'من':escapeHtml(m.name));
-  }
-  wrap.insertAdjacentHTML('beforeend', `<h2 style="margin:16px 2px 6px;">${icon('chat')} چت با منتورها</h2>`);
-  for(const m of mentors){
-    const box = document.createElement('div');
-    box.className = 'card';
-    box.innerHTML = `<h2>${escapeHtml(m.name)} (${m.code})</h2>`;
-    wrap.appendChild(box);
-    await renderChatCard(box, m.code, 'thread_mentor_admin', 'admin', '', f=>f==='admin'?'من':escapeHtml(m.name));
-  }
-  el.innerHTML = '';
-  el.appendChild(wrap);
+  const contacts = [
+    ...members.map(m=>({ key:m.code, name:m.name+(m.archived?' (آرشیو)':''), sub:'کاربر · '+m.code, thread:'thread_admin' })),
+    ...mentors.map(m=>({ key:m.code, name:m.name, sub:'منتور · '+m.code, thread:'thread_mentor_admin' }))
+  ];
+  await renderContactChatPicker(el, contacts, async (chatWrap, c)=>{
+    chatWrap.innerHTML = '';
+    await renderChatCard(chatWrap, c.key, c.thread, 'admin', '', f=>f==='admin'?'من':c.name);
+  });
 }
 
 // ================= mentor: member list =================
@@ -2402,7 +2593,7 @@ document.getElementById('mentorProfileBackBtn').addEventListener('click', ()=>{
 
 async function renderMentorMemberList(){
   const el = document.getElementById('mpanel-list');
-  const registry = (await loadMemberRegistry()).filter(m=>!m.deleted);
+  const registry = (await loadMemberRegistry()).filter(m=>!m.deleted && !m.archived && !m.hideFromMentor);
   if(registry.length===0){ el.innerHTML = '<div class="card"><div class="empty">هنوز کاربری ثبت نشده</div></div>'; return; }
   let html = '<div class="card"><h2>کاربران بوت‌کمپ</h2>';
   registry.forEach(m=>{
@@ -2432,6 +2623,7 @@ document.querySelectorAll('#mentorHome [data-mtab]').forEach(btn=>{
     targetPanel.classList.add('active');
     glassSwitchIn(targetPanel);
     if(btn.dataset.mtab==='status') renderStatusPanel('mpanel-status', 'mentor');
+    if(btn.dataset.mtab==='msg'){ markUpdatesSeen(currentMentorCode); document.getElementById('updatesBadgeMentor').classList.add('hidden'); }
   });
 });
 
@@ -2474,6 +2666,7 @@ async function migrateMentorCode(oldCode, newCode){
 async function renderAdminMembers(){
   const el = document.getElementById('apanel-members');
   const registry = await loadMemberRegistry();
+  const mentorsForAssign = (await loadMentorRegistry()).filter(m=>!m.deleted);
   el.innerHTML = `
     <div class="card">
       <h2>ساخت عضویت جدید</h2>
@@ -2493,17 +2686,44 @@ async function renderAdminMembers(){
   else{
     let html = '';
     active.slice().reverse().forEach(m=>{
-      html += `<div class="del-row">
-        <div><b>${escapeHtml(m.name)}</b> ${m.isNew?'<span class="new-tag">جدید</span>':''}<div class="cd" style="font-size:11px;color:var(--white-dim);">کد ${m.code} · ${escapeHtml(m.phone||'')}</div></div>
-        <div class="icon-row">
+      const mentorOptions = `<option value="">بدون منتور</option>` + mentorsForAssign.map(mn=>`<option value="${mn.code}" ${m.mentorCode===mn.code?'selected':''}>${escapeHtml(mn.name)}</option>`).join('');
+      html += `<div class="del-row" style="flex-wrap:wrap;gap:8px;${m.archived?'opacity:.55;':''}">
+        <div style="flex:1;min-width:170px;">
+          <b>${escapeHtml(m.name)}</b> ${m.isNew?'<span class="new-tag">جدید</span>':''}${m.archived?'<span class="new-tag" style="background:var(--gray);">آرشیو</span>':''}${m.hideFromMentor?'<span class="new-tag" style="background:#C94F4F;">مخفی از منتور</span>':''}
+          <div class="cd" style="font-size:11px;color:var(--white-dim);">کد ${m.code} · ${escapeHtml(m.phone||'')}</div>
+          <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <span class="field-label" style="margin:0;">منتور این کاربر:</span>
+            <select data-assign-mem="${m.code}" style="max-width:160px;font-size:11px;padding:5px 8px;">${mentorOptions}</select>
+          </div>
+        </div>
+        <div class="icon-row" style="flex-wrap:wrap;">
+          <button class="icon-btn" data-toggle-visible="${m.code}" title="${m.hideFromMentor?'کلاً از دید منتورها مخفیه — کلیک برای نمایش دوباره':'برای منتورها قابل مشاهده‌ست — کلیک برای مخفی کردن کامل'}">${icon(m.hideFromMentor?'eyeOff':'eye')}</button>
           <button class="icon-btn" data-view-mem="${m.code}" title="مشاهده پروفایل">◉</button>
           <button class="icon-btn" data-edit-mem="${m.code}" title="ویرایش">✎</button>
+          <button class="icon-btn" data-archive-mem="${m.code}" title="${m.archived?'خارج از آرشیو':'آرشیو کردن'}">${m.archived?'⤴':'⤵'}</button>
           <button class="icon-btn" data-del-mem="${m.code}" title="حذف">✕</button>
         </div>
       </div>`;
     });
     listEl.innerHTML = html;
   }
+  listEl.querySelectorAll('[data-assign-mem]').forEach(sel=>sel.addEventListener('change', guard(sel, async ()=>{
+    const reg = await loadMemberRegistry();
+    const target = reg.find(m=>m.code===sel.dataset.assignMem);
+    if(!target) return;
+    target.mentorCode = sel.value || '';
+    await saveMemberRegistry(reg);
+    showToast(target.mentorCode ? 'منتور این کاربر تنظیم شد' : 'منتور این کاربر برداشته شد');
+  })));
+  listEl.querySelectorAll('[data-toggle-visible]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+    const reg = await loadMemberRegistry();
+    const target = reg.find(m=>m.code===btn.dataset.toggleVisible);
+    if(!target) return;
+    target.hideFromMentor = !target.hideFromMentor;
+    await saveMemberRegistry(reg);
+    showToast(target.hideFromMentor ? 'این کاربر کلاً از دید منتورها مخفی شد' : 'این کاربر دوباره برای منتورها قابل مشاهده شد');
+    renderAdminMembers();
+  })));
   listEl.querySelectorAll('[data-view-mem]').forEach(btn=>btn.addEventListener('click', async ()=>{
     const code = btn.dataset.viewMem;
     const registryNow = await loadMemberRegistry();
@@ -2544,6 +2764,14 @@ async function renderAdminMembers(){
     if(target){ target.deleted = true; }
     await saveMemberRegistry(reg);
   })));
+  listEl.querySelectorAll('[data-archive-mem]').forEach(btn=>btn.addEventListener('click', guard(btn, async ()=>{
+    const reg = await loadMemberRegistry();
+    const target = reg.find(m=>m.code===btn.dataset.archiveMem);
+    if(target){ target.archived = !target.archived; }
+    await saveMemberRegistry(reg);
+    showToast(target.archived ? 'کاربر آرشیو شد (منتورها دیگه نمی‌بیننش)' : 'از آرشیو خارج شد');
+    renderAdminMembers();
+  })));
 
   const createBtn = el.querySelector('#newMemBtn');
   createBtn.addEventListener('click', guard(createBtn, async ()=>{
@@ -2556,7 +2784,7 @@ async function renderAdminMembers(){
     const code = 'PA_FM1_'+num;
     const reg = await loadMemberRegistry();
     if(reg.some(m=>m.code===code && !m.deleted)){ errEl.textContent='این کد قبلاً وجود داره.'; errEl.classList.remove('hidden'); return; }
-    reg.push({code, name, phone, num, createdAt:new Date().toISOString(), deleted:false, isNew:true});
+    reg.push({code, name, phone, num, createdAt:new Date().toISOString(), deleted:false, isNew:true, mentorCode:'', hideFromMentor:false});
     await saveMemberRegistry(reg);
     showToast('کاربر جدید ساخته شد');
     el.querySelector('#newMemName').value=''; el.querySelector('#newMemPhone').value=''; el.querySelector('#newMemNum').value='';
@@ -2689,6 +2917,150 @@ async function renderAdminMedals(){
 }
 
 // ================= admin: اپدیت‌ها =================
+// ================= Controls (فقط رئیس) =================
+async function renderAdminControls(){
+  const el = document.getElementById('apanel-controls');
+  el.innerHTML = '<div class="card"><div class="empty">در حال بارگذاری...</div></div>';
+  const selfAvatarAllowed = await loadSelfAvatarAllowed();
+  const members = (await loadMemberRegistry()).filter(m=>!m.deleted);
+  const mentorsForCtrl = (await loadMentorRegistry()).filter(m=>!m.deleted);
+  let html = `
+    <div class="card">
+      <h2>تنظیمات کلی</h2>
+      <div class="del-row"><div><b>عکس پروفایل توسط خودشون</b><div class="cd">کاربر و منتور بتونن خودشون عکس پروفایل بذارن</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlSelfAvatar" ${selfAvatarAllowed?'checked':''}><span></span></label>
+      </div>
+    </div>
+    <div class="card">
+      <h2>کنترل هر کاربر</h2>
+      <label class="field-label">انتخاب کاربر</label>
+      <select id="ctrlMemberPick" style="width:100%;">${members.map(m=>`<option value="${m.code}">${escapeHtml(m.name)} (${m.code})</option>`).join('')}</select>
+      <div id="ctrlMemberBox" style="margin-top:12px;"></div>
+    </div>
+  `;
+  el.innerHTML = html;
+
+  document.getElementById('ctrlSelfAvatar').addEventListener('change', async (e)=>{
+    await saveSelfAvatarAllowed(e.target.checked);
+    showToast('ذخیره شد');
+  });
+
+  const pick = document.getElementById('ctrlMemberPick');
+  const box = document.getElementById('ctrlMemberBox');
+  function paintMemberBox(){
+    const m = members.find(x=>x.code===pick.value);
+    if(!m) return;
+    box.innerHTML = `
+      <div class="del-row"><div><b>منتور این کاربر</b><div class="cd">فقط همین منتور تو «Connect To Team» این کاربر نشون داده میشه</div></div>
+        <select id="ctrlMentorAssign" style="max-width:170px;">
+          <option value="">بدون منتور</option>
+          ${mentorsForCtrl.map(mn=>`<option value="${mn.code}" ${m.mentorCode===mn.code?'selected':''}>${escapeHtml(mn.name)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="del-row"><div><b>مخفی‌کردن کامل این کاربر از منتورها</b><div class="cd">هیچ منتوری این کاربر رو تو لیست/چت/وضعیت نمی‌بینه</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlHideFromMentor" ${m.hideFromMentor?'checked':''}><span></span></label>
+      </div>
+      <div class="del-row"><div><b>مخفی‌کردن Personal Notes از منتور</b><div class="cd">فقط خودت می‌بینی، منتور نمی‌بینه</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlHideNotes" ${m.notesHiddenFromMentor?'checked':''}><span></span></label></div>
+      <div class="del-row"><div><b>مخفی‌کردن تسک‌ها (تودو) از منتور</b><div class="cd">منتور بخش تسک‌ها و امروزِ این کاربر رو نمی‌بینه</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlHideTodos" ${m.todosHiddenFromMentor?'checked':''}><span></span></label></div>
+      <div class="del-row"><div><b>مخفی‌کردن بازخورد از منتور</b><div class="cd">منتور بخش بازخورد این کاربر رو نمی‌بینه</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlHideFeedback" ${m.feedbackHiddenFromMentor?'checked':''}><span></span></label></div>
+      <div class="del-row"><div><b>مخفی‌کردن امتیاز/داشبورد از منتور</b><div class="cd">منتور نمودار، امتیاز هفتگی و ماهانه‌ی این کاربر رو نمی‌بینه</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlHideScore" ${m.scoreHiddenFromMentor?'checked':''}><span></span></label></div>
+      <div class="del-row"><div><b>قفل ورود</b><div class="cd">تا وقتی خاموشش نکنی، این کاربر اصلاً نمی‌تونه وارد پنلش بشه</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlLoginLock" ${m.loginLocked?'checked':''}><span></span></label></div>
+      <div class="del-row"><div><b>محدودسازی کاربر</b><div class="cd">امکانات کاربر محدود میشه (رزرو شده برای بعد)</div></div>
+        <label class="switch-toggle"><input type="checkbox" id="ctrlRestrict" ${m.restricted?'checked':''}><span></span></label></div>
+      <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px;">
+        <b style="font-size:13px;">مدال‌های این کاربر</b>
+        <div id="ctrlMedalsList" style="margin-top:8px;">در حال بارگذاری...</div>
+      </div>
+    `;
+    document.getElementById('ctrlMentorAssign').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.mentorCode = e.target.value || '';
+      await saveMemberRegistry(reg);
+      showToast(e.target.value ? 'منتور این کاربر تنظیم شد' : 'منتور این کاربر برداشته شد');
+    }));
+    document.getElementById('ctrlHideFromMentor').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.hideFromMentor = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast(e.target.checked ? 'این کاربر کلاً از دید منتورها مخفی شد' : 'این کاربر دوباره برای منتورها قابل مشاهده شد');
+    }));
+    document.getElementById('ctrlHideNotes').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.notesHiddenFromMentor = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast('ذخیره شد');
+    }));
+    document.getElementById('ctrlHideTodos').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.todosHiddenFromMentor = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast('ذخیره شد');
+    }));
+    document.getElementById('ctrlHideFeedback').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.feedbackHiddenFromMentor = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast('ذخیره شد');
+    }));
+    document.getElementById('ctrlHideScore').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.scoreHiddenFromMentor = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast('ذخیره شد');
+    }));
+    document.getElementById('ctrlLoginLock').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.loginLocked = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast(e.target.checked ? 'ورود این کاربر قفل شد' : 'قفل ورود برداشته شد');
+    }));
+    document.getElementById('ctrlRestrict').addEventListener('change', guard_(async (e)=>{
+      const reg = await loadMemberRegistry();
+      const t = reg.find(x=>x.code===m.code);
+      if(t) t.restricted = e.target.checked;
+      await saveMemberRegistry(reg);
+      showToast('ذخیره شد');
+    }));
+    paintMemberMedals(m.code);
+  }
+  async function paintMemberMedals(code){
+    const wrap = document.getElementById('ctrlMedalsList');
+    if(!wrap) return;
+    const list = await loadAchievements(code);
+    if(!list.length){ wrap.innerHTML = '<div class="empty">مدالی نداره</div>'; return; }
+    wrap.innerHTML = list.map(a=>`
+      <div class="del-row" style="padding:6px 0;">
+        <div>${escapeHtml(a.name)} <span class="cd">${a.date||''}</span></div>
+        <button class="icon-btn-sm" data-revoke-medal="${a.id}" title="پس گرفتن مدال">✕</button>
+      </div>
+    `).join('');
+    wrap.querySelectorAll('[data-revoke-medal]').forEach(b=>{
+      b.addEventListener('click', guard_(async ()=>{
+        const list2 = await loadAchievements(code);
+        const filtered = list2.filter(a=>a.id!==b.dataset.revokeMedal);
+        await saveAchievements(code, filtered);
+        showToast('مدال پس گرفته شد');
+        paintMemberMedals(code);
+      }));
+    });
+  }
+  pick.addEventListener('change', paintMemberBox);
+  if(members.length) paintMemberBox();
+}
+function guard_(fn){ return async (...a)=>{ try{ await fn(...a); }catch(e){ console.error(e); showToast('خطا رخ داد'); } }; }
+
 async function renderAdminMsgs(){
   await renderUpdatesPanel('apanel-msgs', 'ADMIN_VIEWER', true, 'admin', 'مدیریت');
   registerLiveListRefresh('apanel-msgs', loadUpdates, renderUpdatesPanel, 'ADMIN_VIEWER', true, 'admin', 'مدیریت');
@@ -2704,6 +3076,8 @@ document.querySelectorAll('#adminApp [data-atab]').forEach(btn=>{
     targetPanel.classList.add('active');
     glassSwitchIn(targetPanel);
     if(btn.dataset.atab==='status') renderStatusPanel('apanel-status', 'admin');
+    if(btn.dataset.atab==='controls') renderAdminControls();
+    if(btn.dataset.atab==='members') renderAdminMembers(); // هر بار میای این تب، دوباره از دیتابیس تازه می‌خونه (مثلاً اگه از تب Controls منتور/مخفی‌بودن رو عوض کرده باشی، اینجا هم آپدیت شده نشون میده)
   });
 });
 // ---- تعویض حالت روشن/تاریک ----
