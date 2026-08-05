@@ -353,6 +353,49 @@
   .notes-card{position:relative;border-color:rgba(157,140,230,.35);background:linear-gradient(160deg, rgba(157,140,230,.07), var(--navy-alt));}
   .notes-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #9D8CE6, transparent);}
   .notes-card h2{color:#B9ACF2;}
+  /* ============ بخش‌های قوانین/اپدیت/افتخارات/وضعیت — همون خانواده‌ی طراحی، بدون انیمیشن (سبک و بی‌لگ) ============ */
+  .rules-card{position:relative;overflow:hidden;border-color:rgba(93,201,217,.4);background:linear-gradient(160deg, rgba(93,201,217,.08), var(--navy-alt));}
+  .rules-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #5DC9D9, transparent);}
+  .rules-card h2{display:flex;align-items:center;gap:8px;color:#8FE0EC;}
+  .updates-card{position:relative;overflow:hidden;border-color:rgba(230,124,92,.4);background:linear-gradient(160deg, rgba(230,124,92,.08), var(--navy-alt));}
+  .updates-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #E67C5C, transparent);}
+  .updates-card h2{display:flex;align-items:center;gap:8px;color:#F0A488;}
+  .honor-card{position:relative;overflow:hidden;border-color:rgba(230,184,77,.4);background:linear-gradient(160deg, rgba(230,184,77,.08), var(--navy-alt));}
+  .honor-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #E6B84D, transparent);}
+  .honor-card h2{display:flex;align-items:center;gap:8px;color:#F0CD7C;}
+  .medal-summary{display:flex;gap:6px;margin-inline-start:auto;flex-wrap:wrap;}
+  .medal-count-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.06);border:1px solid color-mix(in srgb, var(--mc) 45%, transparent);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:800;color:var(--mc);}
+  .medal-count-chip svg{width:13px;height:13px;flex-shrink:0;}
+  .status-card{position:relative;overflow:hidden;border-color:rgba(92,217,160,.4);background:linear-gradient(160deg, rgba(92,217,160,.08), var(--navy-alt));}
+  .status-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #5CD9A0, transparent);}
+  .status-card h2{display:flex;align-items:center;gap:8px;color:#8DEBC0;}
+  /* ============ قاب رتبه دور آواتار — بر اساس بهترین مدالی که گرفته ============ */
+  .mc-avatar.rank-tier-1{ box-shadow:0 0 0 2px rgba(176,141,87,.9), 0 0 10px rgba(176,141,87,.65), inset 0 1px 0 rgba(255,255,255,.5); }
+  .mc-avatar.rank-tier-2{ box-shadow:0 0 0 2px rgba(183,191,198,.95), 0 0 10px rgba(183,191,198,.65), inset 0 1px 0 rgba(255,255,255,.5); }
+  .mc-avatar.rank-tier-3{ box-shadow:0 0 0 2.5px rgba(232,193,88,1), 0 0 14px rgba(232,193,88,.85), inset 0 1px 0 rgba(255,255,255,.5); }
+  /* ============ صفحه‌ی جشنِ گرفتن مدال جدید ============ */
+  .medal-celebration-overlay{
+    position:fixed;inset:0;z-index:9999;background:rgba(8,12,20,.72);
+    backdrop-filter:blur(6px) saturate(140%);-webkit-backdrop-filter:blur(6px) saturate(140%);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    animation:medalOverlayFade .25s ease-out;
+  }
+  @keyframes medalOverlayFade{ from{opacity:0;} to{opacity:1;} }
+  .medal-celebration-card{
+    background:linear-gradient(165deg, var(--navy), var(--navy-alt));
+    border:1px solid rgba(232,193,88,.5);border-radius:18px;padding:34px 26px 26px;text-align:center;max-width:320px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.5), 0 0 40px -8px rgba(232,193,88,.5);
+    animation:medalCardPop .45s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes medalCardPop{ from{transform:scale(.7);opacity:0;} to{transform:scale(1);opacity:1;} }
+  .mc-medal-big{display:flex;justify-content:center;margin-bottom:12px;filter:drop-shadow(0 0 16px currentColor);}
+  .mc-medal-big svg{width:64px;height:64px;}
+  .mc-cel-title{font-size:14px;color:var(--white-dim);margin-bottom:6px;}
+  .mc-cel-name{font-size:20px;font-weight:900;margin-bottom:22px;}
+  /* ============ فلش صعود/نزول رتبه تو لیدربورد ============ */
+  .rank-arrow{display:inline-flex;margin-inline-start:6px;}
+  .rank-arrow.up{color:#7CC4A9;}
+  .rank-arrow.down{color:#E68C8C;}
   /* ============ سه‌تایی بخش امتیازات: نمودار روزانه / هفتگی / ماهانه — همون الگوی بالا، با نوار متحرک ============ */
   .score-chart-card{position:relative;overflow:hidden;border-color:rgba(111,168,220,.4);background:linear-gradient(160deg, rgba(111,168,220,.08), var(--navy-alt));}
   .score-chart-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #6FA8DC, #BFDCF5, #6FA8DC, transparent);background-size:250% 100%;animation:scoreLineFlow 6s linear infinite;box-shadow:0 0 10px 1px rgba(111,168,220,.4);}
@@ -365,11 +408,8 @@
   .score-month-card h2{display:flex;align-items:center;gap:8px;color:#F0A0CC;}
   @keyframes scoreLineFlow{0%{background-position:0% 0;}100%{background-position:250% 0;}}
   /* ============ افزوده‌ی تزئینی بخش تسک‌ست/چک‌لیست — فقط اضافه‌شده، چیزی از قبل حذف نشده ============ */
-  .task-cat-card{ animation:taskCardGlow 5s ease-in-out infinite; }
-  @keyframes taskCardGlow{
-    0%,100%{ box-shadow:0 6px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04), 0 0 0px 0 var(--catColor, var(--lightblue)); }
-    50%{ box-shadow:0 6px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04), 0 0 20px -3px var(--catColor, var(--lightblue)); }
-  }
+  /* نور پشت کارت تسک‌ست حذف شد (باعث هنگ/لگ می‌شد) — به‌جاش یه هاله‌ی ثابت و سبک، بدون انیمیشن */
+  .task-cat-card{ box-shadow:0 6px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04), 0 0 14px -4px var(--catColor, var(--lightblue)); }
   .task-progress-track{position:relative;}
   .task-progress-fill{position:relative;overflow:hidden;}
   .task-progress-fill::after{
@@ -1383,6 +1423,9 @@ const ICONS = {
   trendUp: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
   calendarWeek: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7 14.5h10" stroke-width="2.6"/></svg>',
   calendarStar: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M12 12.3l1.05 2.15 2.35.35-1.7 1.65.4 2.35-2.1-1.1-2.1 1.1.4-2.35-1.7-1.65 2.35-.35z" fill="currentColor" stroke="none"/></svg>',
+  signal: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12a10 10 0 0120 0"/><path d="M6 12a6 6 0 0112 0"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>',
+  arrowUp: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  arrowDown: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
 };
 function icon(name){ return `<span style="display:inline-flex;vertical-align:-2px;">${ICONS[name]||''}</span>`; }
 const CAT_COLORS = ['#6FA8DC','#7CC4A9','#E6C466','#9D8CE6','#E68C8C','#6FD1C4'];
@@ -1687,7 +1730,10 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   document.getElementById('mainApp').classList.remove('hidden');
   document.getElementById('viewOnlyBadge').classList.toggle('hidden', !viewOnly);
   document.getElementById('backToListBtn').classList.toggle('hidden', !viaMentorList);
-  document.getElementById('memberChip').innerHTML = `<span class="mc-avatar">${escapeHtml((memberInfo.name||'?').trim()[0]||'?')}</span><span class="mc-info"><span class="mc-name">${escapeHtml(memberInfo.name||'')}</span><span class="mc-code">کد ${escapeHtml(code)}</span></span>`;
+  const achvForRank = await loadAchievements(code);
+  const bestRankTier = achvForRank.length ? Math.max(...achvForRank.map(a=>medalInfo(a.name||a.text).tier)) : 0;
+  document.getElementById('memberChip').innerHTML = `<span class="mc-avatar${bestRankTier>0?` rank-tier-${bestRankTier}`:''}">${escapeHtml((memberInfo.name||'?').trim()[0]||'?')}</span><span class="mc-info"><span class="mc-name">${escapeHtml(memberInfo.name||'')}</span><span class="mc-code">کد ${escapeHtml(code)}</span></span>`;
+  if(!viewOnly) checkAndCelebrateNewMedals(code); // فقط وقتی خودِ کاربر لاگین می‌کنه، نه وقتی منتور/مدیر پروفایلش رو می‌بینه
 
   const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
   if(msgViewerRole==='mentor' && memberInfo.todosHiddenFromMentor){
@@ -1973,8 +2019,9 @@ function renderToday(){
   if(isViewOnly){
     let sumV = 0;
     let checklistHtml = '';
-    categories.forEach(cat=>{
-      checklistHtml += `<div class="checklist-cat"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
+    categories.forEach((cat,idx)=>{
+      const accent = catColor(idx);
+      checklistHtml += `<div class="checklist-cat" style="--catColor:${accent};"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
       cat.tasks.forEach(task=>{
         const checked = !!rec.done[task.id];
         if(checked) sumV += Number(task.points||0);
@@ -2019,9 +2066,10 @@ function renderToday(){
   `;
 
   const checklistArea = el.querySelector('#checklistArea');
-  categories.forEach(cat=>{
+  categories.forEach((cat,idx)=>{
     const div = document.createElement('div');
     div.className = 'checklist-cat';
+    div.style.setProperty('--catColor', catColor(idx));
     div.innerHTML = `<div class="cat-title">${escapeHtml(cat.name)}</div>`;
     cat.tasks.forEach(task=>{
       const row = document.createElement('div');
@@ -2095,8 +2143,8 @@ function renderRecordedDays(){
     if(!card) return;
     card.classList.remove('hidden');
     let html2 = `<h2>جزئیات روز ${iranJalaliDate(d)} (${rec.weekday||''}) — فقط نمایش</h2>`;
-    categories.forEach(cat=>{
-      html2 += `<div class="checklist-cat"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
+    categories.forEach((cat,idx)=>{
+      html2 += `<div class="checklist-cat" style="--catColor:${catColor(idx)};"><div class="cat-title">${escapeHtml(cat.name)}</div>`;
       cat.tasks.forEach(task=>{
         const checked = rec.done && rec.done[task.id] ? 'checked' : '';
         html2 += `<div class="chk-row"><input type="checkbox" disabled ${checked}><label>${escapeHtml(task.name)}</label><span class="pts">${task.points}</span></div>`;
@@ -2438,7 +2486,7 @@ async function renderRulesPanel(panelId, canEdit, authorRole, authorName){
       <div style="margin-top:10px;"><button class="btn small" id="ruleBtn_${panelId}">ثبت قانون</button></div>
     </div>`;
   }
-  html += `<div class="card"><h2>${icon('scroll')} Rules</h2><div id="rulesList_${panelId}"></div></div>`;
+  html += `<div class="card rules-card"><h2>${icon('scroll')} Rules</h2><div id="rulesList_${panelId}"></div></div>`;
   el.innerHTML = html;
   const rWrap = el.querySelector('#rulesList_'+panelId);
   let liveList = list.slice();
@@ -2623,12 +2671,51 @@ async function loadAchievements(code){
 async function saveAchievements(code, list){
   try{ await window.storage.set('achv:'+code, JSON.stringify(list), true); } catch(e){ console.error(e); }
 }
+// ============ جشنِ گرفتن مدال جدید — وقتی کاربر لاگین می‌کنه، اگه از دفعه‌ی قبل مدال جدیدی گرفته باشه نشون داده میشه ============
+async function loadSeenMedalCount(code){
+  try{ const r = await window.storage.get('seenmedals:'+code, true); return r && r.value ? Number(r.value) : 0; }catch(e){ return 0; }
+}
+async function saveSeenMedalCount(code, n){
+  try{ await window.storage.set('seenmedals:'+code, String(n), true); }catch(e){ console.error(e); }
+}
+function showMedalCelebration(info){
+  const ov = document.createElement('div');
+  ov.className = 'medal-celebration-overlay';
+  ov.innerHTML = `
+    <div class="medal-celebration-card">
+      <div class="mc-medal-big" style="color:${info.color};">${medalSVG(info.color)}</div>
+      <div class="mc-cel-title">مدال جدید گرفتی!</div>
+      <div class="mc-cel-name" style="color:${info.color};">${escapeHtml(info.name)}</div>
+      <button class="btn" id="medalCelClose">عالیه!</button>
+    </div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('#medalCelClose').addEventListener('click', ()=>ov.remove());
+  ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.remove(); });
+}
+async function checkAndCelebrateNewMedals(code){
+  try{
+    const list = await loadAchievements(code);
+    const seen = await loadSeenMedalCount(code);
+    if(list.length > seen){
+      const newest = list[list.length-1];
+      const info = medalInfo(newest.name || newest.text);
+      showMedalCelebration(info);
+      await saveSeenMedalCount(code, list.length);
+    }
+  }catch(e){}
+}
 async function renderAchievementsPanel(panelId, code, readOnlyView){
   const el = document.getElementById(panelId);
   if(!el) return;
   const list = await loadAchievements(code);
-  if(list.length===0){ el.innerHTML = '<div class="card"><div class="empty">هنوز مدالی گرفته نشده</div></div>'; return; }
-  let html = `<div class="card"><h2>${icon('medal')} افتخارات</h2>`;
+  if(list.length===0){ el.innerHTML = '<div class="card honor-card"><h2>'+icon('medal')+' افتخارات</h2><div class="empty">هنوز مدالی گرفته نشده</div></div>'; return; }
+  // خلاصه‌ی تعداد هر نوع مدال — یه نگاه سریع، به‌جای اینکه کل لیست تک‌تک شمرده بشه
+  const counts = {};
+  list.forEach(a=>{ const n = a.name||a.text; counts[n] = (counts[n]||0)+1; });
+  const summaryHtml = MEDAL_TIERS.filter(t=>counts[t.name]).map(t=>
+    `<span class="medal-count-chip" style="--mc:${t.color};">${medalSVG(t.color)}<b>${counts[t.name]}</b></span>`
+  ).join('');
+  let html = `<div class="card honor-card"><h2>${icon('medal')} افتخارات${summaryHtml?`<span class="medal-summary">${summaryHtml}</span>`:''}</h2>`;
   list.slice().reverse().forEach(a=>{
     const info = medalInfo(a.name || a.text);
     html += `<div class="medal-card"><div class="ic">${medalSVG(info.color)}</div><div style="flex:1;"><div><b>${escapeHtml(info.name)}</b></div><div class="meta">${iranJalaliDate(a.date)}${a.time?` · ساعت ${a.time}`:''}</div></div>${readOnlyView?'':`<button class="icon-btn" data-del-medal="${a.id}" title="حذف مدال">✕</button>`}</div>`;
@@ -2647,6 +2734,12 @@ async function renderAchievementsPanel(panelId, code, readOnlyView){
 }
 
 // لیدربورد کلی افتخارات بوت‌کمپ — بر اساس بالاترین رتبه مدال، بعد تعداد
+async function loadPrevRanks(){
+  try{ const r = await window.storage.get('lb:prevranks', true); return r && r.value ? JSON.parse(r.value) : {}; }catch(e){ return {}; }
+}
+async function savePrevRanks(map){
+  try{ await window.storage.set('lb:prevranks', JSON.stringify(map), true); }catch(e){ console.error(e); }
+}
 async function renderBootcampLeaderboard(panelId){
   const el = document.getElementById(panelId);
   if(!el) return;
@@ -2662,16 +2755,33 @@ async function renderBootcampLeaderboard(panelId){
     }
   }
   rows.sort((a,b)=> b.bestTier - a.bestTier || b.count - a.count);
-  let html = `<div class="card"><h2>${icon('trophy')} لیدربورد افتخارات بوت‌کمپ</h2>`;
-  if(rows.length===0){ html += '<div class="empty">هنوز کسی مدالی نگرفته</div>'; }
+  let inner = `<h2>${icon('trophy')} لیدربورد افتخارات بوت‌کمپ</h2>`;
+  if(rows.length===0){ inner += '<div class="empty">هنوز کسی مدالی نگرفته</div>'; }
   else{
+    const prevRanks = await loadPrevRanks();
+    const newRanks = {};
+    rows.forEach((r,i)=>{ newRanks[r.code] = i; });
     const rankLabel = i => i===0?'نفر اول':i===1?'نفر دوم':i===2?'نفر سوم':`رتبه ${i+1}`;
     rows.forEach((r,i)=>{
-      html += `<div class="del-row"><div><b>${rankLabel(i)} — ${escapeHtml(r.name)}</b> <span class="cd">(${escapeHtml(r.role)})</span></div><div class="cat-badge ok">${medalSVG(r.bestColor)} ${r.count} مدال</div></div>`;
+      const prevRank = prevRanks[r.code];
+      let arrowHtml = '';
+      if(prevRank !== undefined && prevRank !== i){
+        arrowHtml = prevRank > i
+          ? `<span class="rank-arrow up" title="رتبه‌اش از دفعه‌ی قبل بالا رفته">${icon('arrowUp')}</span>`
+          : `<span class="rank-arrow down" title="رتبه‌اش از دفعه‌ی قبل پایین اومده">${icon('arrowDown')}</span>`;
+      }
+      inner += `<div class="del-row"><div><b>${rankLabel(i)} — ${escapeHtml(r.name)}</b>${arrowHtml} <span class="cd">(${escapeHtml(r.role)})</span></div><div class="cat-badge ok">${medalSVG(r.bestColor)} ${r.count} مدال</div></div>`;
     });
+    await savePrevRanks(newRanks);
   }
-  html += '</div>';
-  el.insertAdjacentHTML('beforeend', html);
+  // به‌جای اضافه‌کردنِ یه کارت جدید هر بار (که تکراری می‌شد و سایت رو سنگین می‌کرد)، همون کارت قبلی رو آپدیت می‌کنیم
+  const wrapId = panelId + '_bootLbWrap';
+  let wrap = document.getElementById(wrapId);
+  if(!wrap){
+    el.insertAdjacentHTML('beforeend', `<div class="card honor-card" id="${wrapId}"></div>`);
+    wrap = document.getElementById(wrapId);
+  }
+  wrap.innerHTML = inner;
 }
 
 // ================= admin messages — generic by code =================
@@ -2809,13 +2919,13 @@ async function renderStatusPanel(panelId, mode){
   const el = document.getElementById(panelId);
   if(!el) return;
   currentStatusRefresh = ()=>renderStatusPanel(panelId, mode);
-  if(el.children.length===0) el.innerHTML = '<div class="card"><div class="empty">در حال بررسی وضعیت...</div></div>';
+  if(el.children.length===0) el.innerHTML = '<div class="card status-card"><div class="empty">در حال بررسی وضعیت...</div></div>';
   let html = '';
   if(mode==='member'){
     const mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
     const online = [];
     for(const m of mentors){ if(await isOnline(m.code)) online.push(m); }
-    html += '<div class="card"><h2>Status — منتورهای آنلاین</h2>';
+    html += `<div class="card status-card"><h2>${icon('signal')} Status — منتورهای آنلاین</h2>`;
     if(online.length===0){ html += '<div class="empty">در حال حاضر منتوری آنلاین نیست</div>'; }
     else{
       online.forEach(m=>{
@@ -2827,14 +2937,14 @@ async function renderStatusPanel(panelId, mode){
     const members = (await loadMemberRegistry()).filter(m=>!m.deleted && !(mode==='mentor' && m.hideFromMentor));
     let mentors = [];
     if(mode==='admin') mentors = (await loadMentorRegistry()).filter(m=>!m.deleted);
-    html += '<div class="card"><h2>Status — کاربران</h2>';
+    html += `<div class="card status-card"><h2>${icon('signal')} Status — کاربران</h2>`;
     for(const m of members){
       const on = await isOnline(m.code);
       html += `<div class="del-row"><div><span class="badge-dot" style="box-shadow:0 0 6px 2px ${on?'var(--lightblue)':'var(--gray)'};background:${on?'var(--lightblue)':'var(--gray)'};"></span> ${escapeHtml(m.name)}</div><div class="cd">${on?'آنلاین':'آفلاین'}</div></div>`;
     }
     html += '</div>';
     if(mode==='admin'){
-      html += '<div class="card"><h2>Status — منتورها</h2>';
+      html += `<div class="card status-card"><h2>${icon('signal')} Status — منتورها</h2>`;
       for(const m of mentors){
         const on = await isOnline(m.code);
         html += `<div class="del-row"><div><span class="badge-dot" style="box-shadow:0 0 6px 2px ${on?'var(--lightblue)':'var(--gray)'};background:${on?'var(--lightblue)':'var(--gray)'};"></span> ${escapeHtml(m.name)}</div><div class="cd">${on?'آنلاین':'آفلاین'}</div></div>`;
@@ -2889,7 +2999,7 @@ async function renderUpdatesPanel(panelId, viewerCode, canPost, authorRole, auth
       <div style="margin-top:10px;"><button class="btn small" id="updateBtn_${panelId}">ارسال به همه</button></div>
     </div>`;
   }
-  html += `<div class="card"><h2>${icon('megaphone')} اپدیت‌ها</h2><div id="updatesList_${panelId}"></div></div>`;
+  html += `<div class="card updates-card"><h2>${icon('megaphone')} اپدیت‌ها</h2><div id="updatesList_${panelId}"></div></div>`;
   el.innerHTML = html;
   const uWrap = el.querySelector('#updatesList_'+panelId);
   let liveList = list.slice();
