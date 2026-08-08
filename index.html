@@ -555,22 +555,23 @@
     display:inline-block;font-size:10px;font-weight:800;color:#BFDCF5;background:rgba(111,168,220,.14);
     border:1px solid rgba(111,168,220,.3);border-radius:20px;padding:1px 9px;margin-top:4px;
   }
+  /* ============ چک‌باکس‌ها — طرح تازه، بدون آبی: گرادیان سبز-زمردی با درخشش ============ */
   input[type=checkbox]{
-    appearance:none; -webkit-appearance:none; width:22px; height:22px; border-radius:8px;
-    border:1.5px solid rgba(111,168,220,.38); background:linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,0));
+    appearance:none; -webkit-appearance:none; width:23px; height:23px; border-radius:8px;
+    border:1.5px solid rgba(255,255,255,.16); background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,0));
     cursor:pointer; position:relative; flex-shrink:0;
-    box-shadow:inset 0 1px 4px rgba(0,0,0,.3);
+    box-shadow:inset 0 1px 5px rgba(0,0,0,.35);
     transition:border-color .2s, box-shadow .2s, background .2s;
   }
-  input[type=checkbox]:hover{ border-color:var(--catColor, var(--lightblue)); }
+  input[type=checkbox]:hover{ border-color:#4ADE80; }
   input[type=checkbox]:checked{
-    background:linear-gradient(155deg, #D6EAFB, #6FA8DC 55%, #4574B5);
+    background:linear-gradient(150deg, #E4FCE9, #4ADE80 48%, #15925A 100%);
     border-color:transparent;
-    box-shadow:0 4px 14px rgba(111,168,220,.55), inset 0 1px 0 rgba(255,255,255,.65);
+    box-shadow:0 4px 18px rgba(74,222,128,.55), inset 0 1px 0 rgba(255,255,255,.7);
   }
   input[type=checkbox]:checked::after{
-    content:''; position:absolute; left:5px; top:6.5px; width:12px; height:9px;
-    background:#0b1220;
+    content:''; position:absolute; left:5.5px; top:7px; width:12px; height:9px;
+    background:#062814;
     clip-path:polygon(9% 43%, 0 55%, 33% 88%, 100% 15%, 87% 0%, 33% 62%);
   }
   /* ============ انیمیشنِ تیک‌خوردن خفن‌تر — رو همه‌ی چک‌باکس‌های سایت ============ */
@@ -583,7 +584,7 @@
   }
   input[type=checkbox]:checked::before{
     content:''; position:absolute; inset:-4px; border-radius:11px; pointer-events:none;
-    border:2px solid var(--catColor, var(--lightblue));
+    border:2px solid #4ADE80;
     animation:chkRingBurst .55s ease-out;
   }
   @keyframes chkBoxPop{
@@ -603,8 +604,19 @@
   .today-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px;}
   .live-score{font-size:13px;color:var(--white-dim);}
   .live-score b{color:var(--lightblue);font-size:16px;}
-  .stamp{display:inline-block;border:2px solid currentColor;border-radius:8px;padding:3px 12px;font-weight:800;font-size:12px;letter-spacing:.5px;transform:rotate(-3deg);}
-  .stamp.good{color:var(--lightblue);} .stamp.mid{color:var(--white);} .stamp.bad{color:var(--gray);}
+  .stamp{display:inline-block;border-radius:8px;padding:4px 13px;font-weight:900;font-size:12px;letter-spacing:.4px;transform:rotate(-3deg);border:1.5px solid transparent;box-shadow:0 3px 10px rgba(0,0,0,.22);}
+  /* ============ نمایش مرتب‌تر امتیاز هفتگی — فقط چیدمان عوض شده، رنگی اضافه نشده ============ */
+  .week-row{border:1px solid var(--line); border-radius:10px; padding:11px 13px; margin-bottom:9px;}
+  .week-row-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .week-row-title{font-size:12.5px; font-weight:800; color:var(--white);}
+  .week-row-score{font-size:12px; color:var(--white-dim); font-weight:700;}
+  .week-row-pending{font-size:11px; color:var(--white-dim);}
+  .week-days{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; padding-top:9px; border-top:1px dashed var(--line);}
+  .week-day-chip{font-size:10.5px; color:var(--white-dim); background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:7px; padding:3px 8px; white-space:nowrap;}
+  .week-day-chip b{color:var(--white); font-weight:800; margin-inline-start:3px;}
+  .stamp.good{background:linear-gradient(135deg, rgba(111,168,220,.24), rgba(111,168,220,.07));border-color:rgba(111,168,220,.55);color:#BFDCF5;box-shadow:0 3px 14px rgba(111,168,220,.35), inset 0 1px 0 rgba(255,255,255,.15);}
+  .stamp.mid{background:linear-gradient(135deg, rgba(230,184,77,.24), rgba(230,184,77,.07));border-color:rgba(230,184,77,.55);color:#F0CD7C;box-shadow:0 3px 14px rgba(230,184,77,.32), inset 0 1px 0 rgba(255,255,255,.15);}
+  .stamp.bad{background:linear-gradient(135deg, rgba(201,79,79,.22), rgba(201,79,79,.06));border-color:rgba(201,79,79,.5);color:#E89B9B;box-shadow:0 3px 14px rgba(201,79,79,.26), inset 0 1px 0 rgba(255,255,255,.1);}
   table{width:100%;border-collapse:collapse;font-size:13px;}
   th,td{padding:8px 6px;text-align:right;border-top:1px solid var(--line);font-variant-numeric:tabular-nums;}
   th{color:var(--white-dim);font-weight:600;font-size:11px;}
@@ -1889,7 +1901,7 @@ function computeCycle(cycleStart){
   const currentWeekIndex = weeks.findIndex(w=>!w.revealed)+1 || 4;
   return { cycleStart, weeks, monthComplete, monthInfo, dayIndex, currentWeekIndex };
 }
-function weeklyStatus(s){ if(s<=49) return {label:'بد',grade:'C+',cls:'bad'}; if(s<=79) return {label:'خوب',grade:'B+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
+function weeklyStatus(s){ if(s<=49) return {label:'افتضاح',grade:'D+',cls:'bad'}; if(s<=69) return {label:'متوسط',grade:'C+',cls:'bad'}; if(s<=79) return {label:'خوب',grade:'B+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
 function monthlyStatus(s){ if(s<=49) return {label:'افتضاح',grade:'D+',cls:'bad'}; if(s<=69) return {label:'متوسط',grade:'C+',cls:'bad'}; if(s<=79) return {label:'خوب',grade:'B+',cls:'mid'}; return {label:'عالی',grade:'A+',cls:'good'}; }
 
 async function loadMonthHistory(code){
@@ -2191,29 +2203,46 @@ async function renderDashboard(){
   const wWrap = document.getElementById('weeklyTable');
   if(!cycle){ wWrap.innerHTML = '<div class="empty">هنوز دوره‌ای شروع نشده — با اولین ثبت تسک شروع میشه</div>'; }
   else{
-    let h = '<table><tr><th>هفته</th><th>امتیاز</th><th>وضعیت</th></tr>';
+    let h = '';
     cycle.weeks.forEach(w=>{
-      const dayBreak = w.dates.map((d,i)=>`${iranWeekday(d)}: ${w.scores[i]}`).join(' — ');
+      const dayChips = w.dates.map((d,i)=>`<span class="week-day-chip">${iranWeekday(d)}<b>${w.scores[i]}</b></span>`).join('');
       if(w.revealed){
-        h+=`<tr><td>هفته ${w.index}</td><td>${Math.round(w.score*10)/10}</td><td><span class="stamp ${w.cls}">${w.label} · ${w.grade}</span></td></tr>
-          <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${dayBreak}</td></tr>`;
+        h+=`<div class="week-row">
+          <div class="week-row-head">
+            <span class="week-row-title">هفته ${w.index}</span>
+            <span class="week-row-score">${Math.round(w.score*10)/10} امتیاز</span>
+            <span class="stamp ${w.cls}">${w.label} · ${w.grade}</span>
+          </div>
+          <div class="week-days">${dayChips}</div>
+        </div>`;
       }else if(w.index===cycle.currentWeekIndex){
-        h+=`<tr><td>هفته ${w.index}</td><td colspan="2" style="font-size:11px;color:var(--white-dim);">در حال ثبت — پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</td></tr>
-          <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${dayBreak}</td></tr>`;
+        h+=`<div class="week-row">
+          <div class="week-row-head">
+            <span class="week-row-title">هفته ${w.index}</span>
+            <span class="week-row-pending">در حال ثبت — پنجشنبه ساعت ۱۲:۱۰ بامداد اعلام میشه</span>
+          </div>
+          <div class="week-days">${dayChips}</div>
+        </div>`;
       }
     });
-    wWrap.innerHTML = h+'</table>';
+    wWrap.innerHTML = h;
   }
   const mWrap = document.getElementById('monthlyTable');
   if(monthHistory.length===0){ mWrap.innerHTML = '<div class="empty">هنوز ماهی کامل نشده</div>'; }
   else{
-    let h = '<table><tr><th>ماه</th><th>امتیاز</th><th>وضعیت</th></tr>';
+    let h = '';
     monthHistory.forEach(m=>{
-      const weekBreak = m.weeks.map((w,i)=>`هفته ${i+1}: ${Math.round(w.score*10)/10}`).join(' — ');
-      h+=`<tr><td>ماه ${m.index}</td><td>${Math.round(m.score*10)/10}</td><td><span class="stamp ${m.grade==='A+'?'good':(m.grade==='D'?'bad':'mid')}">${m.label} · ${m.grade}</span></td></tr>
-        <tr><td colspan="3" style="border-top:1px dashed var(--line);font-size:11px;color:var(--white-dim);padding-top:6px;">${weekBreak}</td></tr>`;
+      const weekChips = m.weeks.map((w,i)=>`<span class="week-day-chip">هفته ${i+1}<b>${Math.round(w.score*10)/10}</b></span>`).join('');
+      h+=`<div class="week-row">
+        <div class="week-row-head">
+          <span class="week-row-title">ماه ${m.index}</span>
+          <span class="week-row-score">${Math.round(m.score*10)/10} امتیاز</span>
+          <span class="stamp ${m.grade==='A+'?'good':(m.grade==='B+'?'mid':'bad')}">${m.label} · ${m.grade}</span>
+        </div>
+        <div class="week-days">${weekChips}</div>
+      </div>`;
     });
-    mWrap.innerHTML = h+'</table>';
+    mWrap.innerHTML = h;
   }
 
   const ctx = document.getElementById('dailyChart');
