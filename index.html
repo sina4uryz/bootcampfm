@@ -327,9 +327,8 @@
   .tab-btn:hover{color:var(--white);}
   .panel{display:none;}
   @keyframes glassSwitchIn{
-    0%{ opacity:0; filter:blur(12px) saturate(1.5); transform:scale(.965) translateY(6px); }
-    55%{ opacity:1; }
-    100%{ opacity:1; filter:blur(0) saturate(1); transform:scale(1) translateY(0); }
+    0%{ opacity:0; transform:scale(.97) translateY(6px); }
+    100%{ opacity:1; transform:scale(1) translateY(0); }
   }
   .panel.active.glass-anim, .chat-pv-wrap.glass-anim{ animation:glassSwitchIn .45s cubic-bezier(.22,1,.36,1); }
   .panel.active{display:block;animation:fade .25s ease;}
@@ -358,20 +357,18 @@
   .project-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg, transparent, #D96C82, transparent);}
   .project-card h2{display:flex;align-items:center;gap:8px;color:#E79AAC;font-size:13px;}
   .project-card textarea, .project-card input[type=text]{width:100%;resize:vertical;}
-  .sq-grid{display:grid;grid-template-columns:repeat(10, 1fr);gap:5px;max-height:340px;overflow-y:auto;padding:4px;}
+  .sq-grid{display:grid;grid-template-columns:repeat(10, 36px);gap:8px;max-height:340px;overflow-y:auto;padding:6px;justify-content:start;contain:content;}
   .sq-cell{
     aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;
     border:1.5px solid rgba(255,255,255,.16);border-radius:7px;
-    background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+    background:rgba(255,255,255,.04);
     color:var(--white-dim);cursor:pointer;user-select:none;
-    box-shadow:inset 0 1px 3px rgba(0,0,0,.3);
     transition:border-color .15s;
   }
   .sq-cell:hover{border-color:#4ADE80;}
   .sq-cell.done{
     background:linear-gradient(150deg, #E4FCE9, #4ADE80 48%, #15925A 100%);
     border-color:transparent;color:#062814;
-    box-shadow:0 3px 10px rgba(74,222,128,.5), inset 0 1px 0 rgba(255,255,255,.7);
     animation:chkBoxPop .4s cubic-bezier(.34,1.76,.64,1);
   }
   .sq-progress{font-size:11px;color:var(--white-dim);margin-bottom:8px;}
@@ -1577,9 +1574,11 @@ async function linkAuthSession(code, role, isRetry){
     if(!data || !data.token_hash){ throw new Error('no token_hash in response'); }
     const { error: otpErr } = await sb.auth.verifyOtp({ token_hash: data.token_hash, type:'magiclink' });
     if(otpErr) throw otpErr;
-    // مطمئن می‌شیم نشست واقعاً برقرار شده، نه فقط اینکه تابع بدون خطا برگشته
-    const { data: sessionData } = await sb.auth.getSession();
-    if(!sessionData || !sessionData.session){ throw new Error('session not established after verifyOtp'); }
+    // چک نهاییِ نشست رو دیگه معطلِ ورود نمی‌کنیم — verifyOtp بدون خطا خودش یعنی نشست برقرار شده؛
+    // این فقط یه اطمینانِ اضافه‌ست که تو پس‌زمینه انجام میشه، بدون این‌که کاربر منتظرش بمونه
+    sb.auth.getSession().then(({data:sessionData})=>{
+      if(!sessionData || !sessionData.session) console.error('session not established after verifyOtp (background check)', role, code);
+    });
     console.log('auth session linked for', role, code);
     return true;
   }catch(e){
@@ -1781,9 +1780,13 @@ async function enterMemberApp(code, viewOnly, memberInfo){
   document.getElementById('mainApp').classList.remove('hidden');
   document.getElementById('viewOnlyBadge').classList.toggle('hidden', !viewOnly);
   document.getElementById('backToListBtn').classList.toggle('hidden', !viaMentorList);
-  const achvForRank = await loadAchievements(code);
-  const bestRankTier = achvForRank.length ? Math.max(...achvForRank.map(a=>medalInfo(a.name||a.text).tier)) : 0;
-  document.getElementById('memberChip').innerHTML = `<span class="mc-avatar${bestRankTier>0?` rank-tier-${bestRankTier}`:''}">${escapeHtml((memberInfo.name||'?').trim()[0]||'?')}</span><span class="mc-info"><span class="mc-name">${escapeHtml(memberInfo.name||'')}</span><span class="mc-code">کد ${escapeHtml(code)}</span></span>`;
+  document.getElementById('memberChip').innerHTML = `<span class="mc-avatar" id="mcAvatarSpan">${escapeHtml((memberInfo.name||'?').trim()[0]||'?')}</span><span class="mc-info"><span class="mc-name">${escapeHtml(memberInfo.name||'')}</span><span class="mc-code">کد ${escapeHtml(code)}</span></span>`;
+  // رنگِ قابِ آواتار (بر اساس بهترین مدال) دیگه چیز دیگه‌ای رو معطل نمی‌کنه — جدا و در پس‌زمینه میاد
+  loadAchievements(code).then(list=>{
+    const tier = list.length ? Math.max(...list.map(a=>medalInfo(a.name||a.text).tier)) : 0;
+    const av = document.getElementById('mcAvatarSpan');
+    if(av && tier>0) av.classList.add('rank-tier-'+tier);
+  }).catch(()=>{});
   if(!viewOnly) checkAndCelebrateNewMedals(code); // فقط وقتی خودِ کاربر لاگین می‌کنه، نه وقتی منتور/مدیر پروفایلش رو می‌بینه
 
   const msgViewerRole = !isViewOnly ? 'member' : (currentMentorCode ? 'mentor' : 'admin');
